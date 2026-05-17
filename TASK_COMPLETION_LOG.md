@@ -6,6 +6,43 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-111506] WindowsDoctor local-first management system
+- Time: `2026-05-17 11:15:06 +08:00`
+- Status: `PASS`
+- Summary: Established TdccAutoV3-inspired local-first management system with viewer/operator/admin/maintainer roles, PBKDF2 token hashing, JSONL audit trail, optional NAS profile, Settings management UI, USB sync, and verified incremental patch. F drive was not present; G drive USB package was updated and verified.
+- Evidence:
+  - `E:\WindowsDoctor\logs\management-system-readiness-20260517.json`
+  - `E:\WindowsDoctor\logs\management-system-readiness-g-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.management-system-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.management-system-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.management-system-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-management-system-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-management-system-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch.management-system-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.management-system-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.management-system-g-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\MANAGEMENT_SYSTEM.md`
+  - `E:\WindowsDoctor\nas\windowsdoctor-management-profile.json`
+  - `E:\WindowsDoctor\gui\broker\services\admin.js`
+  - `E:\WindowsDoctor\gui\broker\routes.js`
+  - `E:\WindowsDoctor\gui\src\components\SettingsPanel.tsx`
+  - `E:\WindowsDoctor\gui\src\lib\windowsDoctorApi.ts`
+  - `E:\WindowsDoctor\gui\src\types\windows-doctor.ts`
+  - `E:\WindowsDoctor\scripts\Test-ManagementSystemReadiness.ps1`
+  - `E:\WindowsDoctor\scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `E:\WindowsDoctor\scripts\New-PortableIncrementalPatch.ps1`
+  - `E:\WindowsDoctor\TASK_COMPLETION_LOG.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SECURITY_POLICY.md`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\API_CONTRACT.md`
+  - `E:\WindowsDoctor\INDEX.md`
+- Next actions:
+  - Keep NAS optional until deployment is explicitly requested; do not call external NAS/Graph services without approval.; Keep external software installation gated by source, signature/hash, purpose, and minimum-privilege review.; Recheck F drive only when the OS exposes F:\ again.
+
+
 ## [20260517-105207] Windows resource organizer capability matrix
 - Time: `2026-05-17 10:52:07 +08:00`
 - Status: `PASS`

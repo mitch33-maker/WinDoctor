@@ -772,6 +772,18 @@ Resource organizer policy:
 - These actions must stay preview-first and RUN-gated.
 - GitHub/community cleaner logic may be recorded as reference only; it must not be copied into formal execution until reviewed, locally validated, rollback documented, and allowlisted.
 
+Management system readiness:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-ManagementSystemReadiness.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\management-system-readiness.latest.json -Json
+```
+
+Management system policy:
+- Roles: `viewer`, `operator`, `admin`, `maintainer`.
+- Admin account tokens are stored as PBKDF2-SHA256 hashes only.
+- Audit events are append-only JSONL records.
+- NAS is optional; local and USB operation remain supported without NAS.
+- RUN-gated repair, cleanup, logoff, uninstall, USB write, and policy changes require the appropriate role and still require explicit `RUN` when state-changing.
+
 Execute an allowlisted repair script only after explicit confirmation:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Invoke-AllowedRepair.ps1 -ScriptName Repair-NetworkStack.bat -Execute -ConfirmToken RUN

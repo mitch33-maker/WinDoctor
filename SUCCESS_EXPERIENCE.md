@@ -68,3 +68,11 @@ for /f tokens^=5 %a in ('netstat -ano ^| findstr :3001 ^| findstr LISTENING') do
 新增 `scripts\Test-SpecializedIssueDiagnostics.ps1`，讓 AI issue plan 依分類執行唯讀專項診斷並回傳檢查數與狀態。新增 `Repair-WDReportCache.bat` 與 `RULE-WD-REPORT-CACHE.md`，只處理 WindowsDoctor 本身的報告快取，通過 safety policy 成為第一個 `autoBatchAllowed=true` 候選，但執行仍需 `RUN`。
 ### 驗證方式
 使用 `Test-SpecializedIssueDiagnostics.ps1` 驗證 printer/windows_update/network，使用 `Test-AutoRepairSafetyPolicy.ps1` 驗證 `AllowlistedCount=7`、`PolicyScriptCount=7`、`AutoBatchAllowedCount=1`，並以 broker tests/lint 驗證 AI plan 整合。
+
+## [SUCCESS-20260517-07] TdccAutoV3 管理架構移植為 WindowsDoctor Local-First 管理系統
+### 問題描述
+WindowsDoctor 需要管理使用者權限與後台控制，但不能因此讓 NAS 或外部服務變成必要依賴，也不能讓修復/清理繞過 RUN gate。
+### 成功解決方案
+參考 TdccAutoV3 的 management profile、角色、token hash 與 audit JSONL 模式，建立 WindowsDoctor local-first 管理系統。角色定義為 `viewer/operator/admin/maintainer`，管理 token 只保存 PBKDF2-SHA256 hash，操作稽核寫入 JSONL，NAS profile 僅作 optional storage。
+### 驗證方式
+使用 `scripts\Test-ManagementSystemReadiness.ps1` 驗證角色、token hashing、audit、API、前端管理 UI 與 NAS optional policy，並用 broker tests/lint/system baseline 驗證整合。

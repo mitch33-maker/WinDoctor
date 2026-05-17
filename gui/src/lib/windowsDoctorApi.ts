@@ -1,5 +1,5 @@
 import { readApiResponse } from "@/lib/api";
-import type { AiTriageResult, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, RuleIndexItem, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
+import type { AdminAccountList, AdminAudit, AdminStatus, AiTriageResult, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, RuleIndexItem, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
 
 const BASE_URL = "http://localhost:3001";
 
@@ -17,8 +17,33 @@ async function apiPost<T>(path: string, body?: unknown): Promise<T> {
   return readApiResponse<T>(res, `POST ${path}`);
 }
 
+async function apiGetWithToken<T>(path: string, token: string): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+  return readApiResponse<T>(res, `GET ${path}`);
+}
+
+async function apiPostWithToken<T>(path: string, token: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  return readApiResponse<T>(res, `POST ${path}`);
+}
+
 export const windowsDoctorApi = {
   getLockStatus: () => apiGet<LockStatus>("/api/vault/lock-status"),
+  getAdminStatus: () => apiGet<AdminStatus>("/api/admin/status"),
+  getAdminAccounts: (token: string) => apiGetWithToken<AdminAccountList>("/api/admin/accounts", token),
+  getAdminAudit: (token: string) => apiGetWithToken<AdminAudit>("/api/admin/audit", token),
+  createAdminAccount: (token: string, body: { adminId: string; displayName: string; role: string; token: string; note?: string }) => apiPostWithToken<AdminAccountList>("/api/admin/accounts", token, body),
+  setAdminDisabled: (token: string, body: { adminId: string; disabled: boolean; reason?: string }) => apiPostWithToken<AdminAccountList>("/api/admin/disable", token, body),
+  writeManagementProfile: (token: string) => apiPostWithToken<{ Status: string }>("/api/admin/profile/write", token),
   getRules: () => apiGet<RuleIndexItem[]>("/api/rules"),
   getAllowlist: () => apiGet<{ scripts: string[] }>("/api/repair/allowlist"),
   getVisionStatus: () => apiGet<VisionStatus>("/api/vision/status"),

@@ -56,6 +56,58 @@ export type AppStatus = {
   message: string;
 };
 
+export type AdminRole = "viewer" | "operator" | "admin" | "maintainer";
+
+export type AdminAccount = {
+  adminId: string;
+  displayName: string;
+  role: AdminRole;
+  disabled: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  lastSeenAt?: string;
+  note?: string;
+};
+
+export type AdminAccountList = {
+  Status: string;
+  Count?: number;
+  Admins?: AdminAccount[];
+  Admin?: AdminAccount;
+};
+
+export type AdminAudit = {
+  Status: string;
+  Total: number;
+  Events: Array<{ createdAt: string; actor: string; action: string; metadata?: Record<string, unknown> }>;
+};
+
+export type AdminStatus = {
+  Status: string;
+  Mode: string;
+  TokenEnvironmentConfigured: boolean;
+  AdminAccountCount: number;
+  AuditEventCount: number;
+  OperationClasses: Array<{ id: string; role: AdminRole; description: string }>;
+  Profile: {
+    service: string;
+    mode: string;
+    nas: string;
+    policies: {
+      externalAccessRequiresToken: boolean;
+      runGatedOperationsRequireAdmin: boolean;
+      maintainerOperationsRequireMaintainer: boolean;
+      nasServerRequired: boolean;
+    };
+  };
+  SafetyPolicy: {
+    NasRequired: boolean;
+    ExternalAccessRequiresToken: boolean;
+    RunGatedOperationsRequireAdmin: boolean;
+    NoRepairExecuted: boolean;
+  };
+};
+
 export type ScanError = {
   scope: "health" | "analyze" | "connection";
   message: string;

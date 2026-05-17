@@ -73,6 +73,7 @@ $relativePaths = @(
     "WindowsDoctor\TASK_COMPLETION_LOG.md",
     "WindowsDoctor\AUTO_REPAIR_SAFETY_POLICY.md",
     "WindowsDoctor\WINDOWS_RESOURCE_ORGANIZER_PLAN.md",
+    "WindowsDoctor\MANAGEMENT_SYSTEM.md",
     "WindowsDoctor\REPAIR_COVERAGE_ROADMAP.md",
     "WindowsDoctor\THIRD_PARTY_REPAIR_REFERENCE.md",
     "WindowsDoctor\PERFORMANCE_POLICY.md",
@@ -117,6 +118,7 @@ $relativePaths = @(
     "WindowsDoctor\scripts\Test-AutoRepairSafetyPolicy.ps1",
     "WindowsDoctor\scripts\Test-SpecializedIssueDiagnostics.ps1",
     "WindowsDoctor\scripts\Test-WindowsResourceOrganizerCapability.ps1",
+    "WindowsDoctor\scripts\Test-ManagementSystemReadiness.ps1",
     "WindowsDoctor\scripts\Update-MicrosoftOfficialRepairSources.ps1",
     "WindowsDoctor\scripts\Export-NormalizedKBDatabase.ps1",
     "WindowsDoctor\scripts\Test-NormalizedKBDatabase.ps1",
@@ -124,6 +126,7 @@ $relativePaths = @(
     "WindowsDoctor\scripts\Test-TaskHandoffArchiveReadiness.ps1",
     "WindowsDoctor\scripts\Watch-WDResourceSafety.ps1",
     "WindowsDoctor\gui\broker\routes.js",
+    "WindowsDoctor\gui\broker\services\admin.js",
     "WindowsDoctor\gui\broker\services\aiAssistant.js",
     "WindowsDoctor\gui\broker\services\issuePlanner.js",
     "WindowsDoctor\gui\broker\services\repairPlan.js",
@@ -133,10 +136,12 @@ $relativePaths = @(
     "WindowsDoctor\gui\src\components\AiAssistantPanel.tsx",
     "WindowsDoctor\gui\src\components\OneClickRepairPanel.tsx",
     "WindowsDoctor\gui\src\components\ProblemSolverPanel.tsx",
+    "WindowsDoctor\gui\src\components\SettingsPanel.tsx",
     "WindowsDoctor\gui\src\components\WorkStatusPanel.tsx",
     "WindowsDoctor\gui\src\lib\windowsDoctorApi.ts",
     "WindowsDoctor\gui\src\types\windows-doctor.ts",
-    "WindowsDoctor\knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md"
+    "WindowsDoctor\knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md",
+    "WindowsDoctor\nas\windowsdoctor-management-profile.json"
 )
 
 $entries = New-Object System.Collections.Generic.List[object]

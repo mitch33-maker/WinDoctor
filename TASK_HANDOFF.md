@@ -1,3 +1,36 @@
+# 2026-05-17 Management System From TdccAutoV3 Reference
+
+- User requested building WindowsDoctor management system using `E:\0零股投票\TdccAutoV3` architecture as reference.
+- Borrowed concepts, not copied behavior:
+  - management profile
+  - viewer/operator/admin role split, extended with `maintainer`
+  - PBKDF2 token hashing
+  - JSONL admin audit
+  - optional NAS profile
+  - management UI in settings
+- Added:
+  - `MANAGEMENT_SYSTEM.md`
+  - `gui\broker\services\admin.js`
+  - `scripts\Test-ManagementSystemReadiness.ps1`
+  - `nas\windowsdoctor-management-profile.json`
+- Updated:
+  - Broker admin APIs: `/api/admin/status`, `/api/admin/accounts`, `/api/admin/disable`, `/api/admin/audit`, `/api/admin/profile/write`
+  - GUI settings management section
+  - API client/types
+  - `SECURITY_POLICY.md`, `API_CONTRACT.md`, `OPERATIONS.md`, `INDEX.md`
+- Policy:
+  - NAS remains optional, not required.
+  - no external software was installed.
+  - no GUI/Broker was started.
+  - no repair/cleanup/destructive action was executed.
+  - state-changing operations still require role gate and explicit `RUN`.
+- Evidence:
+  - `E:\WindowsDoctor\logs\management-system-readiness-20260517.json`: `PASS`
+  - broker tests: `PASS`
+  - lint: `PASS`
+  - documentation sync: `PASS`
+  - system baseline: `PASS`
+
 # 2026-05-17 Windows Resource Organizer Capability Matrix
 
 - User asked whether WindowsDoctor includes Windows resource organizer functions:

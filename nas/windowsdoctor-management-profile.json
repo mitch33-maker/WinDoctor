@@ -1,0 +1,54 @@
+{
+  "service": "windowsdoctor-management",
+  "mode": "local-first",
+  "nas": "optional",
+  "broker": {
+    "baseUrl": "http://127.0.0.1:3001",
+    "bindHost": "127.0.0.1",
+    "port": 3001
+  },
+  "roles": {
+    "viewer": "WD_VIEWER_TOKEN",
+    "operator": "WD_OPERATOR_TOKEN",
+    "admin": "WD_ADMIN_TOKEN",
+    "maintainer": "WD_MAINTAINER_TOKEN"
+  },
+  "files": {
+    "adminAccounts": "management/admin_accounts.json",
+    "auditEvents": "management/admin_audit_events.jsonl",
+    "profile": "nas/windowsdoctor-management-profile.json"
+  },
+  "policies": {
+    "externalAccessRequiresToken": true,
+    "runGatedOperationsRequireAdmin": true,
+    "maintainerOperationsRequireMaintainer": true,
+    "nasServerRequired": false
+  },
+  "operationClasses": [
+    {
+      "id": "read_only",
+      "role": "viewer",
+      "description": "Health, rules, reports, AI preview, resource status."
+    },
+    {
+      "id": "preview",
+      "role": "operator",
+      "description": "Diagnostic preview, repair preview, resource organizer preview."
+    },
+    {
+      "id": "run_gated",
+      "role": "admin",
+      "description": "Repair, cleanup, logoff, uninstall, USB write, or any RUN-gated state change."
+    },
+    {
+      "id": "admin_only",
+      "role": "admin",
+      "description": "Create or disable admin accounts, read audit events, manage tokens."
+    },
+    {
+      "id": "maintainer_only",
+      "role": "maintainer",
+      "description": "Change allowlist, repair policy, KB promotion, release and package policy."
+    }
+  ]
+}

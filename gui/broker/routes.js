@@ -11,6 +11,7 @@ const { analyzeVision, getVisionStatus } = require('./services/vision');
 const { learnIssue } = require('./services/learn');
 const { importNotebookLmSourcePack } = require('./services/notebooklm');
 const { saveCredential, getLockStatus, bindLock } = require('./services/vault');
+const { listAdminAccounts, createAdminAccount, setAdminDisabled, getAdminAudit, getManagementStatus, writeManagementProfile, requireRole, recordAdminAudit } = require('./services/admin');
 const { ok, fail } = require('./services/response');
 const state = require('./state');
 
@@ -121,6 +122,58 @@ function registerRoutes(app) {
 
     app.post('/api/vision-analyze', async (req, res) => ok(res, await analyzeVision()));
     app.get('/api/vision/status', (req, res) => ok(res, getVisionStatus()));
+
+    app.get('/api/admin/status', (req, res) => {
+        try { ok(res, getManagementStatus()); }
+        catch (err) { fail(res, 500, 'ADMIN_STATUS_FAILED', err.message); }
+    });
+
+    app.get('/api/admin/accounts', (req, res) => {
+        try {
+            requireRole(req, 'admin');
+            ok(res, listAdminAccounts());
+        } catch (err) {
+            fail(res, err.status || 500, err.code || 'ADMIN_ACCOUNTS_FAILED', err.message);
+        }
+    });
+
+    app.post('/api/admin/accounts', (req, res) => {
+        try {
+            const auth = requireRole(req, 'admin');
+            ok(res, createAdminAccount({ ...req.body, actor: auth.adminId }));
+        } catch (err) {
+            fail(res, err.status || 500, err.code || 'ADMIN_CREATE_FAILED', err.message);
+        }
+    });
+
+    app.post('/api/admin/disable', (req, res) => {
+        try {
+            const auth = requireRole(req, 'admin');
+            ok(res, setAdminDisabled({ ...req.body, actor: auth.adminId }));
+        } catch (err) {
+            fail(res, err.status || 500, err.code || 'ADMIN_DISABLE_FAILED', err.message);
+        }
+    });
+
+    app.get('/api/admin/audit', (req, res) => {
+        try {
+            requireRole(req, 'admin');
+            ok(res, getAdminAudit({ limit: req.query.limit || 100 }));
+        } catch (err) {
+            fail(res, err.status || 500, err.code || 'ADMIN_AUDIT_FAILED', err.message);
+        }
+    });
+
+    app.post('/api/admin/profile/write', (req, res) => {
+        try {
+            const auth = requireRole(req, 'maintainer');
+            const profile = writeManagementProfile();
+            recordAdminAudit(auth.adminId, 'management.profile.write', { profile: 'nas/windowsdoctor-management-profile.json' });
+            ok(res, { Status: 'PASS', Profile: profile });
+        } catch (err) {
+            fail(res, err.status || 500, err.code || 'ADMIN_PROFILE_WRITE_FAILED', err.message);
+        }
+    });
 
     app.post('/api/sentry/elevate', async (req, res) => {
         const isAdmin = await testAdmin();

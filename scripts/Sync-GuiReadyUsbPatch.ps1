@@ -48,6 +48,7 @@ $scriptNames = @(
     "Test-AutoRepairSafetyPolicy.ps1",
     "Test-SpecializedIssueDiagnostics.ps1",
     "Test-WindowsResourceOrganizerCapability.ps1",
+    "Test-ManagementSystemReadiness.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",
@@ -97,6 +98,7 @@ foreach ($repairScriptFile in $repairScriptFiles) {
 
 $relativeFiles = @(
     "gui\broker\routes.js",
+    "gui\broker\services\admin.js",
     "gui\broker\services\aiAssistant.js",
     "gui\broker\services\issuePlanner.js",
     "gui\broker\services\repairPlan.js",
@@ -106,6 +108,7 @@ $relativeFiles = @(
     "gui\src\components\AiAssistantPanel.tsx",
     "gui\src\components\OneClickRepairPanel.tsx",
     "gui\src\components\ProblemSolverPanel.tsx",
+    "gui\src\components\SettingsPanel.tsx",
     "gui\src\components\WorkStatusPanel.tsx",
     "gui\src\lib\windowsDoctorApi.ts",
     "gui\src\types\windows-doctor.ts"
@@ -132,6 +135,7 @@ $rootFiles = @(
     "TASK_COMPLETION_LOG.md",
     "AUTO_REPAIR_SAFETY_POLICY.md",
     "WINDOWS_RESOURCE_ORGANIZER_PLAN.md",
+    "MANAGEMENT_SYSTEM.md",
     "REPAIR_COVERAGE_ROADMAP.md",
     "THIRD_PARTY_REPAIR_REFERENCE.md",
     "PERFORMANCE_POLICY.md",
@@ -212,6 +216,23 @@ foreach ($knowledgeBaseFile in $knowledgeBaseFiles) {
     $target = Join-Path $targetWdRoot $knowledgeBaseFile
     if (-not (Test-Path -LiteralPath $source)) {
         throw "Source KB file not found: $source"
+    }
+    $targetParent = Split-Path -Parent $target
+    if ($targetParent -and -not (Test-Path -LiteralPath $targetParent)) {
+        New-Item -Path $targetParent -ItemType Directory -Force | Out-Null
+    }
+    Copy-Item -LiteralPath $source -Destination $target -Force
+}
+
+$managementFiles = @(
+    "nas\windowsdoctor-management-profile.json"
+)
+
+foreach ($managementFile in $managementFiles) {
+    $source = Join-Path $resolvedSourceRoot $managementFile
+    $target = Join-Path $targetWdRoot $managementFile
+    if (-not (Test-Path -LiteralPath $source)) {
+        throw "Source management file not found: $source"
     }
     $targetParent = Split-Path -Parent $target
     if ($targetParent -and -not (Test-Path -LiteralPath $targetParent)) {
@@ -344,6 +365,7 @@ $result = [PSCustomObject]@{
     UpdatedDocFiles = $docFiles
     UpdatedDatabaseFiles = $databaseFiles
     UpdatedKnowledgeBaseFiles = $knowledgeBaseFiles
+    UpdatedManagementFiles = $managementFiles
     StartLauncher = $startPath
     StopLauncher = $stopPath
     LowResourceLauncher = $lowResourcePath

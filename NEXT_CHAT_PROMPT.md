@@ -1,5 +1,43 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 management-system-tdcc-reference`：
+- 使用者要求參考 `E:\0零股投票\TdccAutoV3` 架構，建立 WindowsDoctor 管理系統。
+- 已參考並移植適合 WindowsDoctor 的管理概念：
+  - management profile
+  - viewer/operator/admin/maintainer 角色
+  - PBKDF2 token hash
+  - JSONL admin audit
+  - Settings 管理系統 UI
+  - optional NAS profile
+- 已新增：
+  - `MANAGEMENT_SYSTEM.md`
+  - `gui\broker\services\admin.js`
+  - `scripts\Test-ManagementSystemReadiness.ps1`
+  - `nas\windowsdoctor-management-profile.json`
+- 已新增 Broker API：
+  - `GET /api/admin/status`
+  - `GET /api/admin/accounts`
+  - `POST /api/admin/accounts`
+  - `POST /api/admin/disable`
+  - `GET /api/admin/audit`
+  - `POST /api/admin/profile/write`
+- 安全政策：
+  - NAS optional，不是必要伺服器。
+  - 未安裝外部軟體。
+  - 未啟動 GUI/Broker。
+  - 未執行修復、清理、登出、強制移除或 production build。
+  - state-changing actions 仍需 role gate + RUN gate。
+- 驗證：
+  - management readiness: `PASS`
+  - broker tests: `PASS`
+  - lint: `PASS`
+  - documentation sync: `PASS`
+  - system baseline: `PASS`
+- 下一步：
+  - 將 RUN-gated API 逐步套用 `requireRole(req, 'admin')`。
+  - 將 KB/allowlist/policy promotion API 套用 `maintainer`。
+  - 若啟用 NAS，只同步 audit/package/profile，不讓 NAS 成為必要依賴。
+
 最新狀態 `2026-05-17 windows-resource-organizer-capability`：
 - 使用者要求確認/擴充 Windows 資源整理功能：
   - 網域或多使用者狀態下登出未使用帳號

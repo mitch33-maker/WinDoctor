@@ -8,6 +8,7 @@ const { invokeRecommendedRepairPlan } = require('../services/repairPlan');
 const { getAiAssistantTriage } = require('../services/aiAssistant');
 const { classifyIssue, buildIssuePlan } = require('../services/issuePlanner');
 const { analyzeVision, getVisionStatus } = require('../services/vision');
+const { hashToken, verifyTokenHash, roleAllows, getManagementStatus } = require('../services/admin');
 const config = require('../config');
 
 function testNormalizeRepairScript() {
@@ -87,6 +88,18 @@ function testRepairServiceAvoidsDynamicShellExec() {
     assert.ok(!source.includes('exec("'));
 }
 
+function testManagementService() {
+    const hashed = hashToken('test-token');
+    assert.strictEqual(verifyTokenHash('test-token', hashed), true);
+    assert.strictEqual(verifyTokenHash('bad-token', hashed), false);
+    assert.strictEqual(roleAllows('admin', 'operator'), true);
+    assert.strictEqual(roleAllows('viewer', 'admin'), false);
+    const status = getManagementStatus();
+    assert.strictEqual(status.Status, 'PASS');
+    assert.strictEqual(status.SafetyPolicy.NasRequired, false);
+    assert.ok(status.OperationClasses.some((item) => item.id === 'run_gated' && item.role === 'admin'));
+}
+
 async function testVisionFallback() {
     const status = getVisionStatus();
     assert.ok(['mock', 'gemini'].includes(status.provider));
@@ -146,6 +159,7 @@ async function testIssuePlanner() {
     testOfflineKbRulesAvailable();
     testPortableRootPath();
     testRepairServiceAvoidsDynamicShellExec();
+    testManagementService();
     await testVisionFallback();
     await testRecommendedRepairPlanPreview();
     await testAiAssistantTriage();

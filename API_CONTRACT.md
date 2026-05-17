@@ -118,6 +118,37 @@ Writes a learn-only KB rule into `knowledge_base/learned`.
 
 Returns current vision adapter result. Default provider is mock. If `WD_VISION_PROVIDER=gemini` but no API key is available or the provider fails, the Broker returns mock fallback without exposing secrets.
 
+## 8. Management
+`GET /api/admin/status`
+
+Returns management mode, role classes, audit count, local profile, and NAS optional policy. This endpoint is read-only.
+
+`GET /api/admin/accounts`
+
+Requires admin token through `Authorization: Bearer <token>`. Returns public admin account records only; token hashes are never returned.
+
+`POST /api/admin/accounts`
+
+Requires admin token. Body:
+```json
+{ "adminId": "ops1", "displayName": "Operator", "role": "operator", "token": "new-token" }
+```
+
+`POST /api/admin/disable`
+
+Requires admin token. Body:
+```json
+{ "adminId": "ops1", "disabled": true, "reason": "rotation" }
+```
+
+`GET /api/admin/audit`
+
+Requires admin token. Returns append-only management audit events.
+
+`POST /api/admin/profile/write`
+
+Requires maintainer token. Writes `nas/windowsdoctor-management-profile.json`. NAS remains optional.
+
 Gemini config:
 - `WD_VISION_PROVIDER=gemini`
 - `GEMINI_API_KEY` or `WD_GEMINI_API_KEY`

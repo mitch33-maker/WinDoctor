@@ -29,6 +29,11 @@ Last updated: `2026-05-09`
 - Repair execution uses a timeout (`WD_REPAIR_TIMEOUT_MS`, default 120000 ms) to avoid hanging privileged actions.
 - Credential vault data is encrypted with AES-GCM using the local machine UUID-derived key.
 - Environment lock status is advisory for the GUI and should not be treated as a complete access-control system.
+- Management roles are `viewer`, `operator`, `admin`, and `maintainer`.
+- Management account tokens are stored only as PBKDF2-SHA256 hashes under `management\admin_accounts.json`.
+- Management audit events are append-only JSONL records under `management\admin_audit_events.jsonl`.
+- NAS is optional for management; local disk and USB operation must remain available without NAS.
+- External management access requires token-based authorization.
 
 ## 4. Antivirus And EDR Compatibility
 - Standard operations use `ExecutionPolicy RemoteSigned`; `ExecutionPolicy Bypass`, encoded commands, and `Invoke-Expression` are prohibited in repository scripts.
