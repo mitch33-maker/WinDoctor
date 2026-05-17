@@ -1,6 +1,6 @@
 # WindowsDoctor API Contract
 
-Last updated: `2026-04-28`
+Last updated: `2026-05-17`
 
 Base URL: `http://localhost:3001`
 
@@ -57,6 +57,46 @@ Returns finding array:
 - `guided`: guidance only, no script execution.
 - `manual_review`: script reference exists but is not allowlisted.
 - `learn`: unknown issue, learn-only workflow.
+
+## 2.1 Event Log Analysis
+`POST /api/event-logs/analyze`
+
+Body:
+```json
+{ "recentHours": 24, "maxEvents": 120, "top": 10, "logName": ["System", "Application"] }
+```
+
+Returns MIS-readable Windows Event Log analysis:
+```json
+{
+  "ok": true,
+  "data": {
+    "Status": "PASS",
+    "Phase": "windows-event-log-analysis",
+    "EventCount": 120,
+    "Summary": {
+      "CriticalCount": 0,
+      "ErrorCount": 3,
+      "WarningCount": 117,
+      "UnknownCount": 20,
+      "KbMatchedCount": 100,
+      "PreviewRequiredCount": 1,
+      "ManualReviewCount": 99
+    },
+    "ProviderSummary": [],
+    "EventIdSummary": [],
+    "Findings": [],
+    "SafetyPolicy": {
+      "ReadOnly": true,
+      "NoRepairExecuted": true,
+      "NoServiceChanged": true,
+      "RunGateRequiredForRepair": true
+    }
+  }
+}
+```
+
+This endpoint is read-only and writes JSON/CSV reports under `logs` when invoked by the Broker service.
 
 ## 3. Rules
 `GET /api/rules`

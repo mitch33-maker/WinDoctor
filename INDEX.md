@@ -29,6 +29,7 @@ Last updated: `2026-05-17`
 |---|---|---|
 | [SECURITY_POLICY.md](SECURITY_POLICY.md) | 修復執行、allowlist、learn-only 與安全邊界 | High |
 | [MANAGEMENT_SYSTEM.md](MANAGEMENT_SYSTEM.md) | 本機優先管理系統、角色權限、審計紀錄、optional NAS profile | High |
+| [EVENT_LOG_ANALYSIS.md](EVENT_LOG_ANALYSIS.md) | MIS 事件日誌解讀、Provider/Event ID 摘要、KB 對應與唯讀安全政策 | High |
 | [KB_GOVERNANCE.md](KB_GOVERNANCE.md) | reviewed / learned / archived 晉升與歸檔規則 | High |
 | [OPERATIONS.md](OPERATIONS.md) | 啟動、重啟、驗證、WinPE preflight 操作指令 | High |
 | [DOCS_ARCHITECTURE_AUDIT.md](DOCS_ARCHITECTURE_AUDIT.md) | 文件體系安全性、效率與可持續性稽核紀錄 | High |
@@ -68,6 +69,7 @@ Last updated: `2026-05-17`
 | `scripts\Test-SpecializedIssueDiagnostics.ps1` | 對印表機、Windows Update、網路、開機、效能、硬體與系統完整性執行唯讀專項診斷 |
 | `scripts\Test-WindowsResourceOrganizerCapability.ps1` | 驗證 Windows 資源整理需求覆蓋狀態、風險分級與下一步，不執行清理或移除 |
 | `scripts\Test-ManagementSystemReadiness.ps1` | 驗證管理系統角色、token hash、audit、API、前端與 NAS optional policy |
+| `scripts\Analyze-WindowsEventLogs.ps1` | 唯讀分析 Windows 事件日誌，輸出 MIS JSON/CSV 摘要、KB 對應與處理分類 |
 | `scripts\Test-LowResourceStartup.ps1` | 驗證 Broker-only 低資源模式，不啟動 Next dev GUI |
 | `scripts\New-PortableIncrementalPatch.ps1` | 建立小型 USB 增量 patch zip，避免重壓完整 GUI-ready package |
 | `scripts\Test-PortableIncrementalPatch.ps1` | 驗證增量 patch zip、manifest 與 package root 內容一致 |

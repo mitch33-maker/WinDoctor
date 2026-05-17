@@ -1,3 +1,35 @@
+# 2026-05-17 MIS Windows Event Log Analysis
+
+- User asked whether WindowsDoctor can read system logs, interpret them, analyze problems, and help repair; requested a MIS-friendly system log interpretation feature.
+- Existing capability before this task:
+  - `core\WindowsDoctor.psm1` and `scripts\Test-SystemErrorScan.ps1` already read System/Application event logs and join KB matches.
+  - Broker `/api/analyze` already exposed a small recent event scan.
+- Added a dedicated MIS log analysis layer:
+  - `EVENT_LOG_ANALYSIS.md`
+  - `scripts\Analyze-WindowsEventLogs.ps1`
+  - `gui\broker\services\eventLogAnalyzer.js`
+  - `POST /api/event-logs/analyze`
+  - `gui\src\components\EventLogAnalysisPanel.tsx`
+- Capability:
+  - read-only System/Application event log analysis
+  - configurable logs, time window, MaxEvents, Top N
+  - Provider and Event ID hot spot summaries
+  - KB matching and primary recommendation
+  - `RepairState`: `preview_required`, `guided_or_manual_review`, `learn_only`
+  - JSON and CSV evidence for MIS review
+- Safety:
+  - no repair was executed.
+  - no service, registry, driver, account, storage, or network setting was changed.
+  - repair hints remain preview-first and still require allowlist, dry-run, rollback guidance, validation, and RUN gate.
+- Live read-only sample on this machine:
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.json`: `PASS`, `EventCount=23`, `KbMatchedCount=23`, top providers `Microsoft-Windows-DistributedCOM` and `Microsoft-Windows-WindowsUpdateClient`.
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.csv`
+- Validation:
+  - targeted Pester `*event logs into MIS-readable*`: `PASS`
+  - broker tests: `PASS`
+  - lint: `PASS`
+  - Broker service direct call: `PASS`, report `E:\WindowsDoctor\logs\event-log-analyzer-service-20260517.json`
+
 # 2026-05-17 Management System From TdccAutoV3 Reference
 
 - User requested building WindowsDoctor management system using `E:\0零股投票\TdccAutoV3` architecture as reference.

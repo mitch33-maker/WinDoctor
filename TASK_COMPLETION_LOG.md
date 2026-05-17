@@ -6,6 +6,46 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-112824] MIS Windows event log analysis
+- Time: `2026-05-17 11:28:24 +08:00`
+- Status: `PASS`
+- Summary: Added read-only Windows Event Log analysis for MIS: JSON/CSV reports, Provider/EventId summaries, KB matching, repair-state classification, Broker API, and GUI panel. No repair, service change, production build, GUI/Broker launch, or destructive maintenance was performed.
+- Evidence:
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.csv`
+  - `E:\WindowsDoctor\logs\event-log-analyzer-service-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-event-log-analysis-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-event-log-analysis-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch.event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.event-log-analysis-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.event-log-analysis-g-20260517.json`
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-g-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\EVENT_LOG_ANALYSIS.md`
+  - `E:\WindowsDoctor\scripts\Analyze-WindowsEventLogs.ps1`
+  - `E:\WindowsDoctor\gui\broker\services\eventLogAnalyzer.js`
+  - `E:\WindowsDoctor\gui\broker\routes.js`
+  - `E:\WindowsDoctor\gui\src\components\EventLogAnalysisPanel.tsx`
+  - `E:\WindowsDoctor\gui\src\app\page.tsx`
+  - `E:\WindowsDoctor\gui\src\lib\windowsDoctorApi.ts`
+  - `E:\WindowsDoctor\gui\src\types\windows-doctor.ts`
+  - `E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1`
+  - `E:\WindowsDoctor\scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `E:\WindowsDoctor\scripts\New-PortableIncrementalPatch.ps1`
+  - `E:\WindowsDoctor\INDEX.md`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\API_CONTRACT.md`
+  - `E:\WindowsDoctor\SECURITY_POLICY.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SUCCESS_EXPERIENCE.md`
+- Next actions:
+  - Use event-log findings as diagnostic evidence only; repair execution remains preview-first and RUN-gated.; Consider adding filters for Security, Setup, and Microsoft-Windows-* operational logs after permission and noise review.
+
+
 ## [20260517-111506] WindowsDoctor local-first management system
 - Time: `2026-05-17 11:15:06 +08:00`
 - Status: `PASS`

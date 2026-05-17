@@ -20,6 +20,7 @@ Describe "WindowsDoctor resource safety scripts" {
             "$script:root\scripts\Test-ManagementSystemReadiness.ps1",
             "$script:root\scripts\Test-PortableUsbReadiness.ps1",
             "$script:root\scripts\Test-SystemErrorScan.ps1",
+            "$script:root\scripts\Analyze-WindowsEventLogs.ps1",
             "$script:root\scripts\Test-SystemErroeScan.ps1",
             "$script:root\scripts\Test-SystemErrorsScan.ps1",
             "$script:root\scripts\Test-PortableRuntimeSelfTest.ps1",
@@ -849,6 +850,61 @@ Describe "WindowsDoctor resource safety scripts" {
         }
         finally {
             Remove-Item -LiteralPath $reportPath -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It "analyzes Windows event logs into MIS-readable findings without repairing" {
+        $inputPath = "$script:root\logs\event-log-analysis.sample.test.json"
+        $reportPath = "$script:root\logs\event-log-analysis.test.json"
+        $csvPath = "$script:root\logs\event-log-analysis.test.csv"
+        try {
+            @{
+                events = @(
+                    @{
+                        TimeCreated = "2026-05-17T10:00:00"
+                        LogName = "System"
+                        ProviderName = "Microsoft-Windows-DistributedCOM"
+                        Id = 10016
+                        Level = 3
+                        LevelDisplayName = "Warning"
+                        MachineName = "TEST-PC"
+                        Message = "DistributedCOM 10016 Local Activation permission warning"
+                    },
+                    @{
+                        TimeCreated = "2026-05-17T10:05:00"
+                        LogName = "System"
+                        ProviderName = "Service Control Manager"
+                        Id = 7031
+                        Level = 2
+                        LevelDisplayName = "Error"
+                        MachineName = "TEST-PC"
+                        Message = "The service terminated unexpectedly"
+                    }
+                )
+            } | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 -LiteralPath $inputPath
+
+            $json = & "$script:root\scripts\Analyze-WindowsEventLogs.ps1" `
+                -InputPath $inputPath `
+                -ReportPath $reportPath `
+                -CsvPath $csvPath `
+                -MaxEvents 10 `
+                -Top 5 `
+                -Json
+            $result = $json | ConvertFrom-Json
+
+            $result.Status | Should -Be "PASS"
+            $result.SafetyPolicy.ReadOnly | Should -BeTrue
+            $result.SafetyPolicy.NoRepairExecuted | Should -BeTrue
+            [int]$result.EventCount | Should -Be 2
+            [int]$result.Summary.KbMatchedCount | Should -BeGreaterThan 0
+            @($result.ProviderSummary).Count | Should -BeGreaterThan 0
+            Test-Path -LiteralPath $reportPath | Should -BeTrue
+            Test-Path -LiteralPath $csvPath | Should -BeTrue
+        }
+        finally {
+            Remove-Item -LiteralPath $inputPath -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $reportPath -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $csvPath -Force -ErrorAction SilentlyContinue
         }
     }
 

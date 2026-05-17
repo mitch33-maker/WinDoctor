@@ -13,8 +13,9 @@ import { OneClickRepairPanel } from "@/components/OneClickRepairPanel";
 import { WorkStatusPanel } from "@/components/WorkStatusPanel";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { ProblemSolverPanel } from "@/components/ProblemSolverPanel";
+import { EventLogAnalysisPanel } from "@/components/EventLogAnalysisPanel";
 import { windowsDoctorApi } from "@/lib/windowsDoctorApi";
-import type { AiTriageResult, AppStatus, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, ReportResult, RuleIndexItem, ScanError, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
+import type { AiTriageResult, AppStatus, EventLogAnalysis, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, ReportResult, RuleIndexItem, ScanError, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
 
 export default function Home() {
   const [health, setHealth] = useState<HealthData | null>(null);
@@ -41,6 +42,8 @@ export default function Home() {
   const [workLoading, setWorkLoading] = useState(false);
   const [aiTriage, setAiTriage] = useState<AiTriageResult | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [eventLogAnalysis, setEventLogAnalysis] = useState<EventLogAnalysis | null>(null);
+  const [eventLogLoading, setEventLogLoading] = useState(false);
   const [problemText, setProblemText] = useState("");
   const [issuePlan, setIssuePlan] = useState<IssuePlan | null>(null);
   const [issueLoading, setIssueLoading] = useState(false);
@@ -238,6 +241,18 @@ export default function Home() {
     setAiLoading(false);
   };
 
+  const runEventLogAnalysis = async () => {
+    setEventLogLoading(true);
+    try {
+      const analysis = await windowsDoctorApi.analyzeEventLogs({ recentHours: 24, maxEvents: 120, top: 10, logName: ["System", "Application"] });
+      setEventLogAnalysis(analysis);
+      setStatus({ tone: "info", message: `日誌分析完成：events=${analysis.EventCount}, matched=${analysis.Summary.KbMatchedCount}` });
+    } catch {
+      setStatus({ tone: "error", message: "無法分析系統日誌，請確認 Broker 權限與事件記錄服務狀態。" });
+    }
+    setEventLogLoading(false);
+  };
+
   const previewIssuePlan = async () => {
     if (!problemText.trim()) return;
     setIssueLoading(true);
@@ -343,6 +358,7 @@ export default function Home() {
       <NotebookLMImportPanel />
       <WinPEBootMediaPanel />
       <AiAssistantPanel triage={aiTriage} loading={aiLoading} onRun={runAiTriage} />
+      <EventLogAnalysisPanel analysis={eventLogAnalysis} loading={eventLogLoading} onRun={runEventLogAnalysis} />
       <WorkStatusPanel
         workStatus={workStatus}
         loading={workLoading}

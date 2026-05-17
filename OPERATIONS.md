@@ -140,6 +140,13 @@ Resource safety gate JSON report:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-ResourceSafety.ps1 -ReportPath E:\WindowsDoctor\logs\resource-safety.latest.json -Json
 ```
 
+MIS Windows event log analysis:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Analyze-WindowsEventLogs.ps1 -Root E:\WindowsDoctor -RecentHours 24 -MaxEvents 120 -Top 10 -ReportPath E:\WindowsDoctor\logs\windows-event-log-analysis.latest.json -CsvPath E:\WindowsDoctor\logs\windows-event-log-analysis.latest.csv -Json
+```
+
+This is read-only. It reads event logs, summarizes Provider/Event ID hot spots, joins reviewed KB recommendations, and never executes repairs.
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json

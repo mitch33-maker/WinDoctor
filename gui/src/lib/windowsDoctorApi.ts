@@ -1,5 +1,5 @@
 import { readApiResponse } from "@/lib/api";
-import type { AdminAccountList, AdminAudit, AdminStatus, AiTriageResult, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, RuleIndexItem, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
+import type { AdminAccountList, AdminAudit, AdminStatus, AiTriageResult, EventLogAnalysis, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, RuleIndexItem, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
 
 const BASE_URL = "http://localhost:3001";
 
@@ -67,6 +67,7 @@ export const windowsDoctorApi = {
   cancelWork: () => apiPost<WorkStatus>("/api/work/cancel"),
   startRepairPlanWork: (body: { execute: boolean; confirmToken?: string }) => apiPost<WorkStatus>("/api/work/repair-plan", body),
   getAiTriage: () => apiGet<AiTriageResult>("/api/ai/triage"),
+  analyzeEventLogs: (body?: { recentHours?: number; maxEvents?: number; top?: number; logName?: string[] }) => apiPost<EventLogAnalysis>("/api/event-logs/analyze", body || {}),
   buildIssuePlan: (problemText: string) => apiPost<IssuePlan>("/api/ai/plan", { problemText }),
   startIssueDiagnosticWork: (problemText: string) => apiPost<WorkStatus>("/api/work/diagnose", { problemText }),
   requestElevation: () => apiPost<{ status?: string; elevated?: boolean; message?: string }>("/api/sentry/elevate"),

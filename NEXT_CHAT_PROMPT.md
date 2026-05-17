@@ -1,5 +1,35 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 event-log-analysis-mis`：
+- 已新增 MIS 系統日誌解讀功能。
+- 新增：
+  - `EVENT_LOG_ANALYSIS.md`
+  - `scripts\Analyze-WindowsEventLogs.ps1`
+  - `gui\broker\services\eventLogAnalyzer.js`
+  - `gui\src\components\EventLogAnalysisPanel.tsx`
+- 新增 Broker API：
+  - `POST /api/event-logs/analyze`
+- 功能：
+  - 唯讀讀取 Windows Event Logs。
+  - 支援 System/Application 等指定 log、時間範圍、MaxEvents、Top N。
+  - 輸出 ProviderSummary、EventIdSummary、Findings、KB 對應與 RepairState。
+  - 寫出 JSON/CSV 報告，方便 MIS 篩選與分析。
+- 安全政策：
+  - 只讀取，不修復。
+  - 不變更服務、登錄、驅動、帳號、磁碟、網路或修復狀態。
+  - event-log-derived repair hints 仍需 preview-first、allowlist、dry-run、rollback、local validation、RUN gate。
+- 實測證據：
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\windows-event-log-analysis-20260517.csv`
+  - `E:\WindowsDoctor\logs\event-log-analyzer-service-20260517.json`: `PASS`
+- 驗證：
+  - targeted Pester `*event logs into MIS-readable*`: `PASS`
+  - `npm run test:broker --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+- 未啟動 GUI/Broker。
+- 未執行 production build。
+- 未執行修復或破壞性維護。
+
 最新狀態 `2026-05-17 management-system-tdcc-reference`：
 - 使用者要求參考 `E:\0零股投票\TdccAutoV3` 架構，建立 WindowsDoctor 管理系統。
 - 已參考並移植適合 WindowsDoctor 的管理概念：

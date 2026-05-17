@@ -247,6 +247,46 @@ export type AiTriageResult = {
   };
 };
 
+export type EventLogAnalysis = {
+  Status: string;
+  Phase: string;
+  EventCount: number;
+  RecentHours: number;
+  MaxEvents: number;
+  Summary: {
+    CriticalCount: number;
+    ErrorCount: number;
+    WarningCount: number;
+    UnknownCount: number;
+    KbMatchedCount: number;
+    PreviewRequiredCount: number;
+    ManualReviewCount: number;
+  };
+  ProviderSummary: Array<{ ProviderName: string; Count: number }>;
+  EventIdSummary: Array<{ LogName: string; ProviderName: string; EventId: number; Count: number; Level: string }>;
+  Findings: Array<{
+    TimeCreated?: string | null;
+    LogName: string;
+    ProviderName: string;
+    EventId: number;
+    LevelDisplayName: string;
+    Message: string;
+    KbMatchCount: number;
+    PrimaryRuleId: string;
+    PrimaryRecommendation: string;
+    RepairState: "learn_only" | "preview_required" | "guided_or_manual_review";
+  }>;
+  MisGuidance: string[];
+  SafetyPolicy: {
+    ReadOnly: boolean;
+    NoRepairExecuted: boolean;
+    NoServiceChanged: boolean;
+    RunGateRequiredForRepair: boolean;
+  };
+  ReportPath?: string;
+  CsvPath?: string;
+};
+
 export type IssuePlan = {
   Status: string;
   Mode: string;

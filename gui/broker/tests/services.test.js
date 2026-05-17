@@ -88,6 +88,14 @@ function testRepairServiceAvoidsDynamicShellExec() {
     assert.ok(!source.includes('exec("'));
 }
 
+function testEventLogAnalyzerService() {
+    const source = fs.readFileSync(path.join(__dirname, '..', 'services', 'eventLogAnalyzer.js'), 'utf8');
+    assert.ok(source.includes('Analyze-WindowsEventLogs.ps1'));
+    assert.ok(source.includes('shell: false'));
+    assert.ok(source.includes('windowsHide: true'));
+    assert.ok(!source.includes('exec('));
+}
+
 function testManagementService() {
     const hashed = hashToken('test-token');
     assert.strictEqual(verifyTokenHash('test-token', hashed), true);
@@ -159,6 +167,7 @@ async function testIssuePlanner() {
     testOfflineKbRulesAvailable();
     testPortableRootPath();
     testRepairServiceAvoidsDynamicShellExec();
+    testEventLogAnalyzerService();
     testManagementService();
     await testVisionFallback();
     await testRecommendedRepairPlanPreview();

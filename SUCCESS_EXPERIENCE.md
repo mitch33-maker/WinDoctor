@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-08] MIS 可讀的事件日誌解讀層
+### 問題描述
+既有事件掃描能取得 System/Application 錯誤並對應 KB，但 MIS 需要更容易篩選的 Provider/Event ID 統計、主要事件清單、JSON/CSV 證據與明確安全分類。
+### 成功解決方案
+新增 `scripts\Analyze-WindowsEventLogs.ps1` 作為唯讀分析器，輸出 `ProviderSummary`、`EventIdSummary`、`Findings`、`PrimaryRuleId`、`RepairState` 與 JSON/CSV 報告；Broker 透過 `eventLogAnalyzer.js` 與 `POST /api/event-logs/analyze` 暴露功能，前端新增 `EventLogAnalysisPanel`。
+### 驗證方式
+使用實機唯讀事件日誌分析、targeted Pester、broker service tests、lint 驗證；任何修復建議仍停留在 preview/guided/learn-only，不直接執行。
+
 ## [SUCCESS-20260427-01] 解決 Node.js EADDRINUSE Port 3001 背景卡死問題
 ### 問題描述
 當修改 `broker.js` 並且需要在背景重新啟動時（尤其透過 PowerShell 的非同步指令），舊的 Broker 進程往往不會正常退出。若直接重新下 `node broker.js` 會報錯或前端會收到 `404 Not Found` (因為 3001 Port 仍被舊進程無效佔用)。

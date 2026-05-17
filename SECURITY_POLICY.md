@@ -34,6 +34,8 @@ Last updated: `2026-05-09`
 - Management audit events are append-only JSONL records under `management\admin_audit_events.jsonl`.
 - NAS is optional for management; local disk and USB operation must remain available without NAS.
 - External management access requires token-based authorization.
+- Windows event log analysis is read-only; it may write JSON/CSV evidence but must not change services, registry, drivers, accounts, storage, network, or repair state.
+- Event-log repair hints remain preview-first and must still pass allowlist, dry-run impact, rollback guidance, local validation, and RUN gate before execution.
 
 ## 4. Antivirus And EDR Compatibility
 - Standard operations use `ExecutionPolicy RemoteSigned`; `ExecutionPolicy Bypass`, encoded commands, and `Invoke-Expression` are prohibited in repository scripts.

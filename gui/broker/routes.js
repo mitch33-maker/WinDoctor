@@ -7,6 +7,7 @@ const { invokeRecommendedRepairPlan } = require('./services/repairPlan');
 const { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus } = require('./services/work');
 const { getAiAssistantTriage } = require('./services/aiAssistant');
 const { buildIssuePlan } = require('./services/issuePlanner');
+const { analyzeEventLogs } = require('./services/eventLogAnalyzer');
 const { analyzeVision, getVisionStatus } = require('./services/vision');
 const { learnIssue } = require('./services/learn');
 const { importNotebookLmSourcePack } = require('./services/notebooklm');
@@ -113,6 +114,11 @@ function registerRoutes(app) {
     app.get('/api/ai/triage', async (req, res) => {
         try { ok(res, await getAiAssistantTriage()); }
         catch (err) { fail(res, err.status || 500, 'AI_TRIAGE_FAILED', err.message); }
+    });
+
+    app.post('/api/event-logs/analyze', async (req, res) => {
+        try { ok(res, await analyzeEventLogs(req.body || {})); }
+        catch (err) { fail(res, err.status || 500, 'EVENT_LOG_ANALYSIS_FAILED', err.message); }
     });
 
     app.post('/api/ai/plan', async (req, res) => {
