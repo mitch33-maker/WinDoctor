@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-05-17 10:25:01",
+    "generatedAt":  "2026-05-17 10:42:14",
     "root":  "E:\\WindowsDoctor",
     "allowlist":  [
                       "Repair-BCDBoot.bat",
@@ -8,13 +8,14 @@
                       "Repair-Services.bat",
                       "Repair-SystemMaintenance.bat",
                       "Repair-SystemIntegrity.bat",
+                      "Repair-WDReportCache.bat",
                       "Repair-WUSoftwareDistribution.bat"
                   ],
     "stats":  {
-                  "totalRules":  64,
-                  "reviewedRules":  63,
+                  "totalRules":  65,
+                  "reviewedRules":  64,
                   "learnedRules":  1,
-                  "autoRepairRules":  20,
+                  "autoRepairRules":  21,
                   "guidedRules":  44,
                   "manualReviewRules":  0
               },
@@ -1011,6 +1012,22 @@
                       "actionType":  "auto_repair",
                       "details":  "WMI Repository 異常造成管理工具或查詢失敗",
                       "sourceFile":  "knowledge_base/reviewed/RULE-SYS-WMI-REPOSITORY.md"
+                  },
+                  {
+                      "id":  "RULE-WD-REPORT-CACHE",
+                      "title":  "WindowsDoctor AI workflow report cache repair",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "WD_REPORT_CACHE",
+                                       "gui-work-issue-diagnostic",
+                                       "AI workflow report cache",
+                                       "WindowsDoctor report cache"
+                                   ],
+                      "script":  "Repair-WDReportCache.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "WindowsDoctor AI workflow report cache is stale or corrupted",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-WD-REPORT-CACHE.md"
                   },
                   {
                       "id":  "RULE-WU-0x8024",

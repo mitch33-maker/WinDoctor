@@ -70,6 +70,11 @@ export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onT
             <div className="mt-1 text-2xl font-semibold text-white">{displayPlan.UserReport.NotFixed.length}</div>
             <div className="text-sm text-slate-300">已阻擋高風險自動修復</div>
           </div>
+          <div className="rounded-md border border-white/10 bg-black/30 p-3">
+            <div className="text-xs uppercase text-slate-400">專項診斷</div>
+            <div className="mt-1 text-2xl font-semibold text-white">{displayPlan.SpecializedDiagnostics?.CheckCount ?? 0}</div>
+            <div className="text-sm text-slate-300">{displayPlan.SpecializedDiagnostics?.Status ?? "UNKNOWN"}</div>
+          </div>
           <div className="md:col-span-3 rounded-md border border-white/10 bg-black/30 p-3">
             <div className="text-sm font-medium text-white">{displayPlan.UserReport.Summary}</div>
             <ul className="mt-2 list-disc pl-5 text-sm text-slate-300">

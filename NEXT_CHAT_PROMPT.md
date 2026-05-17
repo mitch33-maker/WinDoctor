@@ -1,5 +1,41 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 specialized-diagnostics-lowrisk-autobatch`：
+- 已把自然語言 AI 問題入口接上唯讀專項診斷：
+  - `scripts\Test-SpecializedIssueDiagnostics.ps1`
+  - `gui\broker\services\issuePlanner.js`
+  - `gui\src\components\ProblemSolverPanel.tsx`
+- 支援元件：
+  - `printer`
+  - `windows_update`
+  - `network`
+  - `boot`
+  - `performance`
+  - `hardware`
+  - `system_integrity`
+  - `general`
+- 已新增第一個低風險 auto-batch approved 候選：
+  - `scripts\Repair-WDReportCache.bat`
+  - `knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md`
+- 安全狀態：
+  - `AutoBatchAllowedCount=1`
+  - 只允許 WindowsDoctor 報告快取修復候選。
+  - 不修 Windows OS、不重啟服務、不改網路/驅動/開機。
+  - 實際執行仍需 `RUN` gate。
+- 已驗證：
+  - Resource Safety: `PASS`
+  - offline KB: `PASS`, total rules `65`, auto repair rules `21`
+  - normalized KB: `PASS`, total records `90`
+  - auto repair safety policy: `PASS`
+  - specialized diagnostics printer/windows_update/network: `PASS`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester: `PASS`
+- 後續建議：
+  - 繼續增加唯讀專項診斷覆蓋，不直接升級 OS 修復。
+  - 逐一為低風險、可逆、不中斷服務的 WindowsDoctor 內部狀態修復補 dry-run/rollback/local validation。
+  - 對會影響 Windows Update、網路、印表機、驅動、BCD、DISM/SFC 的修復仍保持 preview/manual/RUN。
+
 最新狀態 `2026-05-17 natural-language-ai-diagnostic-workflow`：
 - 使用者要求朝「只輸入要解決的問題，即可得到修復結果」改進。
 - 已新增自然語言問題入口：

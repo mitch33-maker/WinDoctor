@@ -15,6 +15,7 @@ Describe "WindowsDoctor resource safety scripts" {
             "$script:root\scripts\Test-DocumentationMemorySystem.ps1",
             "$script:root\scripts\Test-RepairCoverageGoal.ps1",
             "$script:root\scripts\Test-AutoRepairSafetyPolicy.ps1",
+            "$script:root\scripts\Test-SpecializedIssueDiagnostics.ps1",
             "$script:root\scripts\Test-PortableUsbReadiness.ps1",
             "$script:root\scripts\Test-SystemErrorScan.ps1",
             "$script:root\scripts\Test-SystemErroeScan.ps1",

@@ -211,6 +211,12 @@ export type IssuePlan = {
     Steps: Array<{ name: string; status: string; destructive: boolean }>;
   };
   RelevantRules: Array<{ id: string; title: string; script: string; details?: string; score: number }>;
+  SpecializedDiagnostics?: {
+    Status: string;
+    Component: string;
+    CheckCount: number;
+    Checks: Array<{ Name: string; Status: string; Detail: string; Data?: unknown }>;
+  };
   AiTriageSummary: AiTriageResult["Summary"];
   RepairPreview: {
     RepairPlanVersion: number;

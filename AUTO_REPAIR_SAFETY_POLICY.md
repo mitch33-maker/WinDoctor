@@ -41,10 +41,11 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 ## Current Baseline
 
 As of `2026-05-17`:
-- allowlisted repair scripts: `6`
-- scripts with safety policy: `6`
-- scripts approved for unattended auto batch: `0`
+- allowlisted repair scripts: `7`
+- scripts with safety policy: `7`
+- scripts approved for unattended auto batch: `1`
 - all scripts still require `RUN` before execution.
+- approved low-risk candidate: `Repair-WDReportCache.bat` only; it modifies WindowsDoctor report cache state, not Windows OS state.
 
 This is intentional. Existing repair scripts can affect network, services, boot, system integrity, update cache, or maintenance state. They need pre-state capture and rollback evidence before any can be promoted to unattended auto batch.
 
@@ -59,4 +60,4 @@ For each repair script:
 6. Change `allowlistReviewStatus` to `APPROVED`.
 7. Change `autoBatchAllowed` to `true` only for low-risk scripts.
 
-The safest next candidates are narrow, non-destructive checks that repair only local application state or reversible configuration. Network reset, printer queue clearing, service restarts, DISM/SFC, boot repair, and update cache reset should stay manual until their rollback evidence is complete.
+The safest candidates remain narrow, non-destructive checks that repair only local application state or reversible configuration. Network reset, printer queue clearing, service restarts, DISM/SFC, boot repair, and update cache reset should stay manual until their rollback evidence is complete.

@@ -46,6 +46,7 @@ $scriptNames = @(
     "Test-DocumentationMemorySystem.ps1",
     "Test-RepairCoverageGoal.ps1",
     "Test-AutoRepairSafetyPolicy.ps1",
+    "Test-SpecializedIssueDiagnostics.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",
@@ -73,6 +74,24 @@ foreach ($scriptDataFile in $scriptDataFiles) {
         throw "Source script data file not found: $source"
     }
     Copy-Item -LiteralPath $source -Destination (Join-Path $targetScripts $scriptDataFile) -Force
+}
+
+$repairScriptFiles = @(
+    "Repair-BCDBoot.bat",
+    "Repair-NetworkStack.bat",
+    "Repair-Services.bat",
+    "Repair-SystemIntegrity.bat",
+    "Repair-SystemMaintenance.bat",
+    "Repair-WDReportCache.bat",
+    "Repair-WUSoftwareDistribution.bat"
+)
+
+foreach ($repairScriptFile in $repairScriptFiles) {
+    $source = Join-Path (Join-Path $resolvedSourceRoot "scripts") $repairScriptFile
+    if (-not (Test-Path -LiteralPath $source)) {
+        throw "Source repair script not found: $source"
+    }
+    Copy-Item -LiteralPath $source -Destination (Join-Path $targetScripts $repairScriptFile) -Force
 }
 
 $relativeFiles = @(
@@ -180,6 +199,23 @@ foreach ($databaseFile in $databaseFiles) {
         }
         Copy-Item -LiteralPath $source -Destination $target -Force
     }
+}
+
+$knowledgeBaseFiles = @(
+    "knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md"
+)
+
+foreach ($knowledgeBaseFile in $knowledgeBaseFiles) {
+    $source = Join-Path $resolvedSourceRoot $knowledgeBaseFile
+    $target = Join-Path $targetWdRoot $knowledgeBaseFile
+    if (-not (Test-Path -LiteralPath $source)) {
+        throw "Source KB file not found: $source"
+    }
+    $targetParent = Split-Path -Parent $target
+    if ($targetParent -and -not (Test-Path -LiteralPath $targetParent)) {
+        New-Item -Path $targetParent -ItemType Directory -Force | Out-Null
+    }
+    Copy-Item -LiteralPath $source -Destination $target -Force
 }
 
 $startLauncher = @'
@@ -299,11 +335,13 @@ $result = [PSCustomObject]@{
     PackageRoot = $resolvedPackageRoot
     UpdatedScripts = $scriptNames
     UpdatedScriptDataFiles = $scriptDataFiles
+    UpdatedRepairScriptFiles = $repairScriptFiles
     UpdatedGuiFiles = $relativeFiles
     UpdatedRootFiles = $rootFiles
     UpdatedSkillFiles = $skillFiles
     UpdatedDocFiles = $docFiles
     UpdatedDatabaseFiles = $databaseFiles
+    UpdatedKnowledgeBaseFiles = $knowledgeBaseFiles
     StartLauncher = $startPath
     StopLauncher = $stopPath
     LowResourceLauncher = $lowResourcePath

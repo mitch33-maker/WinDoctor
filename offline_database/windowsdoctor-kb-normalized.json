@@ -1,6 +1,6 @@
 {
     "schemaVersion":  2,
-    "generatedAt":  "2026-05-17 10:24:02",
+    "generatedAt":  "2026-05-17 10:41:14",
     "root":  "E:\\WindowsDoctor",
     "sourcePack":  "E:\\WindowsDoctor\\offline_database\\known-windows-repair-sources.json",
     "notebookLMPack":  "E:\\WindowsDoctor\\offline_database\\notebooklm-repair-sources.json",
@@ -177,13 +177,13 @@
                     }
                 ],
     "stats":  {
-                  "totalRecords":  90,
-                  "localRecords":  64,
+                  "totalRecords":  91,
+                  "localRecords":  65,
                   "publicReferenceRecords":  25,
                   "notebookLMRecords":  1,
                   "externalDiagnosticRecords":  0,
                   "sourceCount":  24,
-                  "autoRepairRecords":  21,
+                  "autoRepairRecords":  22,
                   "guidedRecords":  56,
                   "manualReviewRecords":  72
               },
@@ -3586,6 +3586,43 @@
                                            "sourceType":  "local_reviewed_kb",
                                            "sourceTrustLevel":  "local_learned",
                                            "sourceFile":  "knowledge_base/reviewed/RULE-SYS-WMI-REPOSITORY.md",
+                                           "sourceIds":  [
+
+                                                         ]
+                                       }
+                    },
+                    {
+                        "id":  "RULE-WD-REPORT-CACHE",
+                        "title":  "WindowsDoctor AI workflow report cache repair",
+                        "component":  "system",
+                        "symptoms":  [
+                                         "WindowsDoctor AI workflow report cache repair"
+                                     ],
+                        "errorCodes":  [
+
+                                       ],
+                        "eventIds":  [
+
+                                     ],
+                        "triggerTerms":  [
+                                             "WD_REPORT_CACHE",
+                                             "gui-work-issue-diagnostic",
+                                             "AI workflow report cache",
+                                             "WindowsDoctor report cache"
+                                         ],
+                        "recommendedActions":  [
+                                                   "WindowsDoctor AI workflow report cache is stale or corrupted"
+                                               ],
+                        "action":  {
+                                       "script":  "Repair-WDReportCache.bat",
+                                       "actionType":  "auto_repair",
+                                       "repairAllowed":  true,
+                                       "riskLevel":  "low"
+                                   },
+                        "provenance":  {
+                                           "sourceType":  "local_reviewed_kb",
+                                           "sourceTrustLevel":  "local_learned",
+                                           "sourceFile":  "knowledge_base/reviewed/RULE-WD-REPORT-CACHE.md",
                                            "sourceIds":  [
 
                                                          ]

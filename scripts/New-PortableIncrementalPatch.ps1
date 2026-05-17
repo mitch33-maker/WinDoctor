@@ -99,6 +99,8 @@ $relativePaths = @(
     "WindowsDoctor\scripts\Invoke-WDSequentialTaskQueue.ps1",
     "WindowsDoctor\scripts\Invoke-RecommendedRepairPlan.ps1",
     "WindowsDoctor\scripts\repair-safety-policy.json",
+    "WindowsDoctor\scripts\repair-allowlist.json",
+    "WindowsDoctor\scripts\Repair-WDReportCache.bat",
     "WindowsDoctor\scripts\Test-PortableUsbPayload.ps1",
     "WindowsDoctor\scripts\Test-PortableRuntimeSelfTest.ps1",
     "WindowsDoctor\scripts\Test-PortableUsbReleaseValidation.ps1",
@@ -112,6 +114,7 @@ $relativePaths = @(
     "WindowsDoctor\scripts\Test-DocumentationMemorySystem.ps1",
     "WindowsDoctor\scripts\Test-RepairCoverageGoal.ps1",
     "WindowsDoctor\scripts\Test-AutoRepairSafetyPolicy.ps1",
+    "WindowsDoctor\scripts\Test-SpecializedIssueDiagnostics.ps1",
     "WindowsDoctor\scripts\Update-MicrosoftOfficialRepairSources.ps1",
     "WindowsDoctor\scripts\Export-NormalizedKBDatabase.ps1",
     "WindowsDoctor\scripts\Test-NormalizedKBDatabase.ps1",
@@ -130,7 +133,8 @@ $relativePaths = @(
     "WindowsDoctor\gui\src\components\ProblemSolverPanel.tsx",
     "WindowsDoctor\gui\src\components\WorkStatusPanel.tsx",
     "WindowsDoctor\gui\src\lib\windowsDoctorApi.ts",
-    "WindowsDoctor\gui\src\types\windows-doctor.ts"
+    "WindowsDoctor\gui\src\types\windows-doctor.ts",
+    "WindowsDoctor\knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md"
 )
 
 $entries = New-Object System.Collections.Generic.List[object]

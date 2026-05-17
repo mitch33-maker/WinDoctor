@@ -629,6 +629,13 @@ Request body:
 
 This workflow classifies the user problem, matches KB rules, builds a repair preview, applies auto-repair safety policy, writes a user-readable report, and does not execute repair actions.
 
+Read-only specialized diagnostics:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-SpecializedIssueDiagnostics.ps1 -Root E:\WindowsDoctor -Component printer -ReportPath E:\WindowsDoctor\logs\specialized-diagnostics.printer.latest.json -Json
+```
+
+Supported components: `printer`, `windows_update`, `network`, `boot`, `performance`, `hardware`, `system_integrity`, `general`. The script is diagnostic-only and does not repair Windows state.
+
 Execution request body:
 ```json
 { "confirmToken": "RUN" }
@@ -662,6 +669,7 @@ One-click repair safety:
 - Preview is the default.
 - Execution requires `-Execute -ConfirmToken RUN`.
 - Auto batch requires `scripts\repair-safety-policy.json` approval.
+- Current approved auto-batch candidate is `Repair-WDReportCache.bat` only; it moves WindowsDoctor report cache data and writes rollback guidance.
 - Existing allowlisted scripts remain preview/manual unless they pass reversibility, dry-run impact, local evidence, no critical interruption, rollback guidance, allowlist review, and RUN gate checks.
 - Safe batch execution stops on the first failed repair.
 - Default batch execution excludes BCD/boot repair, system integrity repair, and maintenance cleanup; those remain manual-review recommendations.

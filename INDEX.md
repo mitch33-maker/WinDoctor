@@ -63,6 +63,7 @@ Last updated: `2026-05-17`
 | `scripts\Test-DocumentationMemorySystem.ps1` | 驗證文件記憶體系、completion log、skill 與操作命令是否已登錄 |
 | `scripts\Test-RepairCoverageGoal.ps1` | 驗證 normalized KB 的元件覆蓋率與官方來源覆蓋率是否達標 |
 | `scripts\Test-AutoRepairSafetyPolicy.ps1` | 驗證自動修復 policy 是否覆蓋 allowlist、rollback、RUN gate 與 auto-batch 安全條件 |
+| `scripts\Test-SpecializedIssueDiagnostics.ps1` | 對印表機、Windows Update、網路、開機、效能、硬體與系統完整性執行唯讀專項診斷 |
 | `scripts\Test-LowResourceStartup.ps1` | 驗證 Broker-only 低資源模式，不啟動 Next dev GUI |
 | `scripts\New-PortableIncrementalPatch.ps1` | 建立小型 USB 增量 patch zip，避免重壓完整 GUI-ready package |
 | `scripts\Test-PortableIncrementalPatch.ps1` | 驗證增量 patch zip、manifest 與 package root 內容一致 |

@@ -1,3 +1,44 @@
+# 2026-05-17 Specialized Diagnostics And Low-Risk Auto-Batch Candidate
+
+- Continued the high-performance, low-resource, AI-assisted repair path.
+- Added:
+  - `scripts\Test-SpecializedIssueDiagnostics.ps1`
+  - `scripts\Repair-WDReportCache.bat`
+  - `knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md`
+- Updated:
+  - `gui\broker\services\issuePlanner.js`
+  - `gui\broker\tests\services.test.js`
+  - `gui\src\components\ProblemSolverPanel.tsx`
+  - `gui\src\types\windows-doctor.ts`
+  - `scripts\repair-allowlist.json`
+  - `scripts\repair-safety-policy.json`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `AUTO_REPAIR_SAFETY_POLICY.md`
+  - `COMMON_WINDOWS_ERRORS.md`
+  - `INDEX.md`
+  - `OPERATIONS.md`
+  - `SUCCESS_EXPERIENCE.md`
+- Behavior:
+  - natural-language issue plans now run a read-only specialized diagnostic step after classification.
+  - supported components include printer, Windows Update, network, boot, performance, hardware, system integrity, and general.
+  - first auto-batch-approved candidate is `Repair-WDReportCache.bat`, which only moves WindowsDoctor report cache data and writes rollback guidance.
+- Safety:
+  - no Windows OS repair was executed.
+  - no GUI/Broker was started.
+  - no production build was run.
+  - execution still requires `RUN`.
+- Evidence:
+  - Resource Safety: `PASS`
+  - offline KB: `PASS`, `65` reviewed KB rules, `21` allowlist auto-repair rules
+  - normalized KB: `PASS`, records `90`
+  - auto repair safety policy: `PASS`, AutoBatchAllowedCount `1`
+  - specialized diagnostics printer/windows_update/network: `PASS`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester: `PASS`
+
 # 2026-05-17 Natural Language AI Diagnostic Workflow
 
 - Built the first user-facing path toward "type the problem and get the result".

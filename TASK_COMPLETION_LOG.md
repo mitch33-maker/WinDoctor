@@ -6,6 +6,31 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-104300] Specialized diagnostics and low-risk auto-batch candidate
+- Time: `2026-05-17 10:43:00 +08:00`
+- Status: `PASS`
+- Summary: Added read-only specialized diagnostics to the natural-language AI issue plan and promoted only Repair-WDReportCache.bat as the first low-risk auto-batch-approved candidate. No OS repair, GUI/Broker launch, or production build was performed.
+- Evidence:
+  - `E:\WindowsDoctor\logs\auto-repair-safety-policy.lowrisk-autorepair-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-kb.lowrisk-autorepair-20260517.json`
+  - `E:\WindowsDoctor\logs\normalized-kb.lowrisk-autorepair-20260517.json`
+  - `E:\WindowsDoctor\logs\specialized-diagnostics.printer-20260517.json`
+  - `E:\WindowsDoctor\logs\specialized-diagnostics.windows-update-20260517.json`
+  - `E:\WindowsDoctor\logs\specialized-diagnostics.network-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.lowrisk-autorepair-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.lowrisk-autorepair-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\Test-SpecializedIssueDiagnostics.ps1`
+  - `E:\WindowsDoctor\scripts\Repair-WDReportCache.bat`
+  - `E:\WindowsDoctor\knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md`
+  - `E:\WindowsDoctor\gui\broker\services\issuePlanner.js`
+  - `E:\WindowsDoctor\gui\src\components\ProblemSolverPanel.tsx`
+  - `E:\WindowsDoctor\scripts\repair-safety-policy.json`
+  - `E:\WindowsDoctor\scripts\repair-allowlist.json`
+- Next actions:
+  - Continue expanding read-only specialized diagnostics before promoting any OS-impacting repair.
+
+
 ## [20260517-102556] Natural Language AI Diagnostic Workflow
 - Time: `2026-05-17 10:25:56 +08:00`
 - Status: `PASS`

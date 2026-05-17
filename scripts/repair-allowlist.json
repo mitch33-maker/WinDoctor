@@ -5,6 +5,7 @@
     "Repair-Services.bat",
     "Repair-SystemMaintenance.bat",
     "Repair-SystemIntegrity.bat",
+    "Repair-WDReportCache.bat",
     "Repair-WUSoftwareDistribution.bat"
   ]
 }

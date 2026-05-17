@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+const path = require('path');
+const { spawn } = require('child_process');
+const config = require('../config');
 const { loadKbRules } = require('./kb');
 const { invokeRecommendedRepairPlan } = require('./repairPlan');
 const { getAiAssistantTriage } = require('./aiAssistant');
@@ -134,6 +137,62 @@ function summarizeRepairOutcome(repairPlan) {
     };
 }
 
+function runSpecializedDiagnostics(component) {
+    return new Promise((resolve) => {
+        const safeComponent = component || 'general';
+        const scriptPath = path.join(config.scriptsDir, 'Test-SpecializedIssueDiagnostics.ps1');
+        const args = [
+            '-NoProfile',
+            '-ExecutionPolicy',
+            'RemoteSigned',
+            '-File',
+            scriptPath,
+            '-Root',
+            config.rootDir,
+            '-Component',
+            safeComponent,
+            '-Json',
+        ];
+        const child = spawn('powershell', args, { cwd: config.rootDir, windowsHide: true });
+        let stdout = '';
+        let stderr = '';
+        const timer = setTimeout(() => child.kill(), 20000);
+        child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
+        child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+        child.on('close', (code) => {
+            clearTimeout(timer);
+            if (code !== 0) {
+                resolve({
+                    Status: 'WARN',
+                    Component: safeComponent,
+                    CheckCount: 0,
+                    Checks: [{ Name: 'specialized-diagnostics', Status: 'WARN', Detail: stderr || `ExitCode=${code}` }],
+                });
+                return;
+            }
+            try {
+                resolve(JSON.parse(stdout));
+            } catch (error) {
+                resolve({
+                    Status: 'WARN',
+                    Component: safeComponent,
+                    CheckCount: 0,
+                    Checks: [{ Name: 'specialized-diagnostics-json', Status: 'WARN', Detail: error.message }],
+                });
+            }
+        });
+        child.on('error', (error) => {
+            clearTimeout(timer);
+            resolve({
+                Status: 'WARN',
+                Component: safeComponent,
+                CheckCount: 0,
+                Checks: [{ Name: 'specialized-diagnostics-spawn', Status: 'WARN', Detail: error.message }],
+            });
+        });
+    });
+}
+
 async function buildIssuePlan(problemText) {
     const userProblem = normalizeText(problemText);
     if (!userProblem) {
@@ -143,9 +202,10 @@ async function buildIssuePlan(problemText) {
     }
 
     const classification = classifyIssue(userProblem);
-    const [triage, repairPlan] = await Promise.all([
+    const [triage, repairPlan, specializedDiagnostics] = await Promise.all([
         getAiAssistantTriage(),
         invokeRecommendedRepairPlan(),
+        runSpecializedDiagnostics(classification.component),
     ]);
     const relevantRules = findRelevantRules(userProblem, classification.component);
     const repairOutcome = summarizeRepairOutcome(repairPlan);
@@ -167,12 +227,14 @@ async function buildIssuePlan(problemText) {
             Steps: [
                 { name: 'resource-safety', status: triage.ResourceSafety?.Status || 'UNKNOWN', destructive: false },
                 { name: 'classify-user-problem', status: 'PASS', destructive: false },
+                { name: 'run-specialized-read-only-diagnostics', status: specializedDiagnostics.Status || 'UNKNOWN', destructive: false },
                 { name: 'match-kb-rules', status: 'PASS', destructive: false },
                 { name: 'build-repair-preview', status: repairPlan.Status || 'UNKNOWN', destructive: false },
                 { name: 'apply-auto-repair-safety-policy', status: 'PASS', destructive: false },
             ],
         },
         RelevantRules: relevantRules,
+        SpecializedDiagnostics: specializedDiagnostics,
         AiTriageSummary: triage.Summary,
         RepairPreview: {
             RepairPlanVersion: repairPlan.RepairPlanVersion,
@@ -197,4 +259,4 @@ async function buildIssuePlan(problemText) {
     };
 }
 
-module.exports = { classifyIssue, buildIssuePlan };
+module.exports = { classifyIssue, buildIssuePlan, runSpecializedDiagnostics };

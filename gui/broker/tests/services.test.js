@@ -132,6 +132,8 @@ async function testIssuePlanner() {
     assert.strictEqual(plan.SafetyPolicy.NoRepairExecuted, true);
     assert.strictEqual(plan.DiagnosticPlan.ExecutionModel, 'sequential');
     assert.ok(Array.isArray(plan.UserReport.NextActions));
+    assert.ok(plan.SpecializedDiagnostics);
+    assert.ok(plan.SpecializedDiagnostics.CheckCount >= 1);
     assert.ok(plan.RepairPreview.RepairPlanVersion >= 4);
 }
 

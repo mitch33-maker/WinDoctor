@@ -81,6 +81,19 @@
       "autoBatchAllowed": false,
       "runGateRequired": true,
       "rollbackGuidance": "Windows Update cache reset renames cache folders and restarts update services. Capture service and folder state before RUN."
+    },
+    {
+      "scriptName": "Repair-WDReportCache.bat",
+      "riskLevel": "low",
+      "reversible": true,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "PASS",
+      "criticalInterruption": false,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "APPROVED",
+      "autoBatchAllowed": true,
+      "runGateRequired": true,
+      "rollbackGuidance": "The script moves only WindowsDoctor's latest AI workflow report cache to .wd-backup\\report-cache and writes a rollback copy command next to the backup."
     }
   ]
 }

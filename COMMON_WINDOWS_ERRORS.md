@@ -5,8 +5,8 @@ Last updated: `2026-04-29`
 本文件摘要 `knowledge_base\reviewed` 中可供單機診斷、引導修復與 allowlist 自動修復的常見 Windows 故障規則。
 
 ## 1. 規則統計
-- Reviewed KB rules: `64`
-- Allowlist 自動修復: `20`
+- Reviewed KB rules: `65`
+- Allowlist 自動修復: `21`
 - 引導修復 / 人工確認: `44`
 
 ## 2. 覆蓋分類
@@ -42,7 +42,7 @@ Broker `/api/analyze` 會將命中結果標記為：
 - `knowledge_base\reviewed` 會被 `scripts\Build-WinPEMedia.ps1` 複製進 WinPE。
 - `scripts\Export-OfflineKBDatabase.ps1` 會產生 `offline_database\windowsdoctor-kb.json`。
 - `scripts\Test-OfflineKBDatabase.ps1` 會驗證離線 JSON schema、統計、規則欄位、來源檔與 allowlist 一致性。
-- `offline_database\windowsdoctor-kb.json` 目前包含 `64` 筆規則、`20` 筆可自動修復規則、`44` 筆引導修復規則。
+- `offline_database\windowsdoctor-kb.json` 目前包含 `65` 筆規則、`21` 筆可自動修復規則、`44` 筆引導修復規則。
 - WinPE 啟動時 Broker 會以 `WD_ROOT_DIR=X:\WindowsDoctor` 讀取離線 KB。
 - WinPE 啟動時會設定 `WD_USE_OFFLINE_DB=1`，Broker 會優先讀取 `offline_database\windowsdoctor-kb.json`。
 - Broker `/api/rules` 與 `/api/analyze` 不需要網路即可使用 reviewed/learned 規則。
@@ -52,4 +52,4 @@ Broker `/api/analyze` 會將命中結果標記為：
 - `scripts\Test-SystemErrorScan.ps1` now joins diagnostic findings with `offline_database\windowsdoctor-kb.json`.
 - Each finding includes `KbMatches` with rule id, title, action type, allowlist status, and repair script.
 - The scan remains diagnostic-only. Repairs still require `Invoke-AllowedRepair.ps1` or menu option 7 plus explicit `RUN`.
-- Current verified scan matching: `64` KB rules available, `11` KB matches from the latest local scan.
+- Current verified scan matching: `65` KB rules available, `11` KB matches from the latest local scan.

@@ -60,3 +60,11 @@ for /f tokens^=5 %a in ('netstat -ano ^| findstr :3001 ^| findstr LISTENING') do
 新增 `gui\broker\services\issuePlanner.js` 與 `ProblemSolverPanel.tsx`，讓使用者輸入一句問題描述即可產生分類、KB 比對、repair preview、安全 gate 結果與可讀報告。`/api/work/diagnose` 會把同一流程放入工作視窗，沿用資源快照與可中斷能力。
 ### 驗證方式
 以 `npm run test:broker --prefix E:\WindowsDoctor\gui` 驗證自然語言分類與 issue plan，以 `npm run lint --prefix E:\WindowsDoctor\gui` 驗證前端與 Broker 程式碼。
+
+## [SUCCESS-20260517-06] 專項診斷與低風險 Auto-Batch 候選
+### 問題描述
+自然語言入口若只做 KB 比對，無法回報印表機、Windows Update、網路等類型的本機即時狀態；auto-batch 也需要先從不影響 Windows OS 的低風險項目開始。
+### 成功解決方案
+新增 `scripts\Test-SpecializedIssueDiagnostics.ps1`，讓 AI issue plan 依分類執行唯讀專項診斷並回傳檢查數與狀態。新增 `Repair-WDReportCache.bat` 與 `RULE-WD-REPORT-CACHE.md`，只處理 WindowsDoctor 本身的報告快取，通過 safety policy 成為第一個 `autoBatchAllowed=true` 候選，但執行仍需 `RUN`。
+### 驗證方式
+使用 `Test-SpecializedIssueDiagnostics.ps1` 驗證 printer/windows_update/network，使用 `Test-AutoRepairSafetyPolicy.ps1` 驗證 `AllowlistedCount=7`、`PolicyScriptCount=7`、`AutoBatchAllowedCount=1`，並以 broker tests/lint 驗證 AI plan 整合。
