@@ -6,6 +6,16 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-140809] Offline diagnostic runner skill
+- Time: `2026-05-17 14:08:09 +08:00`
+- Status: `PASS`
+- Summary: Created reusable WindowsDoctor offline diagnostic runner skill and synced it to USB with memory validation and incremental patch verification.
+- Evidence:
+  - `E:\WindowsDoctor\logs\documentation-memory.offline-diagnostic-runner-skill-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.offline-diagnostic-runner-skill-usb-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.offline-diagnostic-runner-skill-g-20260517.json`
+
+
 ## [20260517-140156] RUN-gated offline diagnostic runner
 - Time: `2026-05-17 14:01:56 +08:00`
 - Status: `PASS`

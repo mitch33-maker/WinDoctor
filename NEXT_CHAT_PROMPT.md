@@ -1,5 +1,31 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-diagnostic-runner-skill`：
+- 已將成功可重複使用程序抽成專用 skill。
+- 新增：
+  - `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+- skill 覆蓋：
+  - Resource Safety 必跑。
+  - 不啟動 GUI/Broker。
+  - 不執行 production build。
+  - 預設 preview-only。
+  - 真正工具執行必須 RUN。
+  - 每項工具序列化執行。
+  - 每項工具前後 Resource Safety。
+  - 工具輸出轉 JSON evidence。
+  - USB sync、incremental patch、completion log。
+- 已更新：
+  - `INDEX.md`
+  - `MEMORY_SYSTEM.md`
+  - `scripts\Test-DocumentationMemorySystem.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+- 安全狀態：
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+  - 未執行修復。
+  - 未執行外部診斷工具。
+
 最新狀態 `2026-05-17 offline-diagnostic-runner`：
 - 已完成離線診斷工具 runner、輸出轉換器、AI 一鍵流程接線與工作視窗接線。
 - 新增：

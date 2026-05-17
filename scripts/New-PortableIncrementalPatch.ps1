@@ -91,6 +91,7 @@ $relativePaths = @(
     "WindowsDoctor\offline_database\windowsdoctor-kb-normalized.json",
     "WindowsDoctor\offline_database\windowsdoctor-kb.json",
     "WindowsDoctor\skills\windowsdoctor-documentation-system\SKILL.md",
+    "WindowsDoctor\skills\windowsdoctor-offline-diagnostic-runner\SKILL.md",
     "WindowsDoctor\docs\WINDOWSDOCTOR_VISUAL_OPERATION_MANUAL.html",
     "WindowsDoctor\docs\WINDOWSDOCTOR_LOW_RESOURCE_CONSOLE.html",
     "WindowsDoctor\scripts\Test-GuiReadyTargetPreflight.ps1",

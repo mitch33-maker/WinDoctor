@@ -1,3 +1,28 @@
+# 2026-05-17 Offline Diagnostic Runner Skill
+
+- User asked whether successful reusable procedures were converted into skills, then requested completing the recommended plan.
+- Added dedicated reusable skill:
+  - `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+- Skill covers:
+  - Resource Safety gate.
+  - minimal read set.
+  - offline Microsoft diagnostic tool auto-selection.
+  - `Invoke-OfflineDiagnosticTools.ps1` preview and RUN-gated execution.
+  - `Convert-OfflineDiagnosticToolOutput.ps1` diagnostic evidence conversion.
+  - work-window integration.
+  - USB sync and incremental patch validation.
+  - completion record and final Resource Safety routine.
+- Updated:
+  - `INDEX.md`
+  - `MEMORY_SYSTEM.md`
+  - `scripts\Test-DocumentationMemorySystem.ps1`
+  - USB sync and incremental patch file lists.
+- Safety:
+  - no GUI/Broker startup.
+  - no production build.
+  - no repair execution.
+  - no external diagnostic tool execution.
+
 # 2026-05-17 RUN-Gated Offline Diagnostic Runner
 
 - Continued the offline tool automation plan after the UI auto-selection layer.

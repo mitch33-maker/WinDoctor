@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-13] 離線診斷 runner 流程 skill 化
+### 問題描述
+離線工具封裝、自動選用、RUN-gated runner、輸出 evidence、USB patch 與完成紀錄已成為可重複流程；若只留在聊天或交接紀錄中，後續仍會重讀文件並可能漏掉安全 gate。
+### 成功解決方案
+新增 `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`，把最小讀取集合、禁止事項、preview/RUN 路徑、輸出轉換、驗證命令、USB sync 與 completion routine 固化成專用 skill。
+### 驗證方式
+更新 `Test-DocumentationMemorySystem.ps1` 驗證新 skill 已登錄、含 Resource Safety 與 RUN gate，並同步 USB 與增量 patch。
+
 ## [SUCCESS-20260517-12] RUN-gated 離線診斷 runner
 ### 問題描述
 離線介面能自動選工具後，還需要安全地把工具使用接到工作視窗；若直接由 UI 執行工具，容易造成資源暴衝、工具並行、無法中斷或誤把診斷變成修復。

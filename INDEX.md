@@ -51,6 +51,7 @@ Last updated: `2026-05-17`
 | [TASK_COMPLETION_LOG.md](TASK_COMPLETION_LOG.md) | 每件完成任務的短紀錄、證據與後續項目 | Medium |
 | [THIRD_PARTY_REPAIR_REFERENCE.md](THIRD_PARTY_REPAIR_REFERENCE.md) | GitHub/第三方成熟工具隔離參考，不直接進正式修復 | Medium |
 | [skills/windowsdoctor-documentation-system/SKILL.md](skills/windowsdoctor-documentation-system/SKILL.md) | 文件體系、交接、記憶與完成紀錄的可重用 skill | Medium |
+| [skills/windowsdoctor-offline-diagnostic-runner/SKILL.md](skills/windowsdoctor-offline-diagnostic-runner/SKILL.md) | 離線工具自動選用、RUN-gated runner、輸出 evidence、USB 驗證的可重用 skill | Medium |
 
 ## 5. 標準化工具
 | 工具 | 描述 |

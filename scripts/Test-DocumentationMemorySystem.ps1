@@ -36,6 +36,7 @@ $memoryPath = Join-Path $resolvedRoot "MEMORY_SYSTEM.md"
 $completionLogPath = Join-Path $resolvedRoot "TASK_COMPLETION_LOG.md"
 $operationsPath = Join-Path $resolvedRoot "OPERATIONS.md"
 $skillPath = Join-Path $resolvedRoot "skills\windowsdoctor-documentation-system\SKILL.md"
+$offlineSkillPath = Join-Path $resolvedRoot "skills\windowsdoctor-offline-diagnostic-runner\SKILL.md"
 $addRecordPath = Join-Path $resolvedRoot "scripts\Add-TaskCompletionRecord.ps1"
 
 $index = Read-Text -Path $indexPath
@@ -44,16 +45,19 @@ $memory = Read-Text -Path $memoryPath
 $completionLog = Read-Text -Path $completionLogPath
 $operations = Read-Text -Path $operationsPath
 $skill = Read-Text -Path $skillPath
+$offlineSkill = Read-Text -Path $offlineSkillPath
 
 Add-Check -Name "memory-system-indexed" -Passed ($index -match "MEMORY_SYSTEM\.md") -Detail $indexPath
 Add-Check -Name "completion-log-indexed" -Passed ($index -match "TASK_COMPLETION_LOG\.md") -Detail $indexPath
 Add-Check -Name "skill-indexed" -Passed ($index -match "windowsdoctor-documentation-system") -Detail $indexPath
+Add-Check -Name "offline-diagnostic-skill-indexed" -Passed ($index -match "windowsdoctor-offline-diagnostic-runner") -Detail $indexPath
 Add-Check -Name "architecture-load-order-memory" -Passed ($architecture -match "MEMORY_SYSTEM\.md") -Detail $architecturePath
 Add-Check -Name "memory-defines-completion-log" -Passed ($memory -match "TASK_COMPLETION_LOG\.md") -Detail $memoryPath
 Add-Check -Name "memory-defines-skill-rule" -Passed ($memory -match "Skill") -Detail $memoryPath
 Add-Check -Name "completion-log-marker" -Passed ($completionLog -match "New records are inserted below") -Detail $completionLogPath
 Add-Check -Name "operations-add-record-command" -Passed ($operations -match "Add-TaskCompletionRecord\.ps1") -Detail $operationsPath
 Add-Check -Name "skill-has-safety-gate" -Passed ($skill -match "Test-ResourceSafety\.ps1") -Detail $skillPath
+Add-Check -Name "offline-skill-has-run-gate" -Passed ($offlineSkill -match "ConfirmToken RUN" -and $offlineSkill -match "Test-ResourceSafety\.ps1") -Detail $offlineSkillPath
 Add-Check -Name "add-record-script-exists" -Passed (Test-Path -LiteralPath $addRecordPath) -Detail $addRecordPath
 
 $status = if (@($checks | Where-Object { $_.Status -ne "PASS" }).Count -eq 0) { "PASS" } else { "FAIL" }

@@ -171,7 +171,8 @@ foreach ($rootFile in $rootFiles) {
 }
 
 $skillFiles = @(
-    "skills\windowsdoctor-documentation-system\SKILL.md"
+    "skills\windowsdoctor-documentation-system\SKILL.md",
+    "skills\windowsdoctor-offline-diagnostic-runner\SKILL.md"
 )
 
 foreach ($skillFile in $skillFiles) {

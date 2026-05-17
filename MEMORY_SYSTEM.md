@@ -12,7 +12,7 @@ Last updated: `2026-05-17`
 | Completion log | `TASK_COMPLETION_LOG.md` | 每件完成任務的短紀錄、證據、後續項目 | 每件任務完成後 |
 | Error memory | `SYSTEM_ERROR_HISTORY.md` | 阻斷錯誤、根因、防範方式 | 發生 crash、資源失控、驗證阻斷後 |
 | Success memory | `SUCCESS_EXPERIENCE.md` | 成功解決的可重複模式 | 解決困難問題或建立可重用流程後 |
-| Reusable skill | `skills\windowsdoctor-documentation-system\SKILL.md` | 下一輪可直接套用的工作流程 | 成功模式穩定後 |
+| Reusable skill | `skills\windowsdoctor-documentation-system\SKILL.md`, `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md` | 下一輪可直接套用的工作流程 | 成功模式穩定後 |
 | Machine evidence | `logs\*.json` | 驗證結果的機器可讀來源 | 驗證腳本產生，不手寫 |
 
 ## 2. 最小讀取路徑
