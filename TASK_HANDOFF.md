@@ -1,3 +1,23 @@
+# 2026-05-17 Offline Diagnostic Parser And Manual Evidence Gate
+
+- Continued the unattended next-step plan without RUN.
+- Completed:
+  - strengthened `Convert-OfflineDiagnosticToolOutput.ps1` parser for SetupDiag, Sigcheck, and TCPView evidence.
+  - added optional external diagnostic evidence pack output via `-ExternalPackPath`.
+  - added `scripts\Test-OfflineDiagnosticRunnerSkill.ps1`.
+  - updated `docs\WINDOWSDOCTOR_VISUAL_OPERATION_MANUAL.html` with offline tool auto-diagnosis flow.
+  - updated `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md` with external pack conversion and dedicated validation command.
+- Evidence gate:
+  - generated a sample offline diagnostic evidence pack.
+  - validated it with `Test-ExternalDiagnosticsPack.ps1`.
+  - imported it to a log-only output path with `Import-ExternalDiagnosticsPack.ps1`.
+  - imported findings remain `repairAllowed=false`, `script=N/A`, `actionType=manual_review`.
+- Safety:
+  - no external diagnostic tool was executed.
+  - no repair was executed.
+  - no GUI/Broker startup.
+  - no production build.
+
 # 2026-05-17 Offline Diagnostic Runner Skill
 
 - User asked whether successful reusable procedures were converted into skills, then requested completing the recommended plan.

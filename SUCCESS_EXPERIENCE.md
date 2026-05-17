@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-14] 離線診斷輸出 evidence gate
+### 問題描述
+離線工具 runner 若只留下原始輸出，後續仍需人工判讀；但若直接把工具結果轉成修復，會破壞 reviewed KB、allowlist 與 RUN gate。
+### 成功解決方案
+擴充 `Convert-OfflineDiagnosticToolOutput.ps1`，解析 SetupDiag、Sigcheck、TCPView 的關鍵 evidence，並可輸出 external diagnostics pack。匯入 gate 仍強制 `repairAllowed=false`、`script=N/A`、`actionType=manual_review`。
+### 驗證方式
+使用樣本輸出產生 evidence pack，經 `Test-ExternalDiagnosticsPack.ps1` 與 `Import-ExternalDiagnosticsPack.ps1` 驗證 PASS；未執行任何外部工具或修復。
+
 ## [SUCCESS-20260517-13] 離線診斷 runner 流程 skill 化
 ### 問題描述
 離線工具封裝、自動選用、RUN-gated runner、輸出 evidence、USB patch 與完成紀錄已成為可重複流程；若只留在聊天或交接紀錄中，後續仍會重讀文件並可能漏掉安全 gate。

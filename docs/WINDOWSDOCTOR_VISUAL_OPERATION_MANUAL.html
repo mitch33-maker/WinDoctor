@@ -187,7 +187,40 @@
   </section>
 
   <section>
-    <h2>4. 真實資料匯入圖解</h2>
+    <h2>4. 離線工具自動診斷圖解</h2>
+    <svg class="diagram" viewBox="0 0 1120 300" role="img" aria-label="離線工具自動診斷流程">
+      <defs><marker id="arrow6" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
+      <rect class="stepbox blue" x="40" y="70" width="190" height="76"></rect>
+      <text class="label" x="135" y="101" text-anchor="middle">輸入問題</text>
+      <text class="small" x="135" y="126" text-anchor="middle">印表機 / 更新 / 網路 / 效能</text>
+      <path class="arrow" marker-end="url(#arrow6)" d="M230 108 H300"></path>
+      <rect class="stepbox" x="300" y="70" width="210" height="76"></rect>
+      <text class="label" x="405" y="101" text-anchor="middle">自動選工具</text>
+      <text class="small" x="405" y="126" text-anchor="middle">SetupDiag / RAMMap / TCPView</text>
+      <path class="arrow" marker-end="url(#arrow6)" d="M510 108 H580"></path>
+      <rect class="stepbox orange" x="580" y="70" width="210" height="76"></rect>
+      <text class="label" x="685" y="101" text-anchor="middle">佇列預覽</text>
+      <text class="small" x="685" y="126" text-anchor="middle">一次一項、顯示資源</text>
+      <path class="arrow" marker-end="url(#arrow6)" d="M790 108 H860"></path>
+      <rect class="stepbox red" x="860" y="70" width="210" height="76"></rect>
+      <text class="label" x="965" y="101" text-anchor="middle">RUN 才執行</text>
+      <text class="small" x="965" y="126" text-anchor="middle">仍只做 diagnostic-only</text>
+
+      <rect class="stepbox green" x="250" y="205" width="255" height="58"></rect>
+      <text class="label" x="378" y="238" text-anchor="middle">輸出轉 JSON evidence</text>
+      <path class="arrow" marker-end="url(#arrow6)" d="M505 234 H585"></path>
+      <rect class="stepbox" x="585" y="205" width="285" height="58"></rect>
+      <text class="label" x="728" y="238" text-anchor="middle">修復建議仍需 allowlist + RUN</text>
+    </svg>
+    <div class="grid three">
+      <div class="card"><h3>自動選用</h3><p>使用者只輸入問題，系統依分類選出已封裝的 Microsoft 官方診斷工具。</p></div>
+      <div class="card"><h3>資源控制</h3><p>工具佇列一次只處理一項；工作視窗顯示 CPU、RAM、程序數與可中斷狀態。</p></div>
+      <div class="card"><h3>不自動修復</h3><p>工具輸出會轉成修復報告與 evidence；高風險或未審核項目不會自動修復。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. 真實資料匯入圖解</h2>
     <svg class="diagram" viewBox="0 0 1120 260" role="img" aria-label="真實資料匯入流程">
       <defs><marker id="arrow5" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
       <rect class="stepbox orange" x="40" y="60" width="210" height="76"></rect>
@@ -214,7 +247,7 @@
   </section>
 
   <section>
-    <h2>5. 應用場景範例</h2>
+    <h2>6. 應用場景範例</h2>
     <div class="grid two">
       <div class="card">
         <h3>場景 A：一般 Windows 還能開機</h3>
@@ -256,7 +289,7 @@
   </section>
 
   <section>
-    <h2>6. 常用驗收命令</h2>
+    <h2>7. 常用驗收命令</h2>
     <div class="card">
       <p>USB self-acceptance：</p>
       <p><code>powershell -NoProfile -ExecutionPolicy RemoteSigned -File G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\scripts\Invoke-PortableUsbAcceptance.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3 -ZipPath G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip -UsbRoot G:\ -ReportPath E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-before-field-test.json -Json</code></p>

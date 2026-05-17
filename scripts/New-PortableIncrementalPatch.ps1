@@ -128,6 +128,7 @@ $relativePaths = @(
     "WindowsDoctor\scripts\New-RepairToolPackage.ps1",
     "WindowsDoctor\scripts\Save-OfflineRepairTools.ps1",
     "WindowsDoctor\scripts\Test-OfflineToolAutomation.ps1",
+    "WindowsDoctor\scripts\Test-OfflineDiagnosticRunnerSkill.ps1",
     "WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1",
     "WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1",
     "WindowsDoctor\scripts\Update-MicrosoftOfficialRepairSources.ps1",

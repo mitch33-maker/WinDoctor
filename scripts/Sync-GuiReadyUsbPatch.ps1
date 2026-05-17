@@ -54,6 +54,7 @@ $scriptNames = @(
     "New-RepairToolPackage.ps1",
     "Save-OfflineRepairTools.ps1",
     "Test-OfflineToolAutomation.ps1",
+    "Test-OfflineDiagnosticRunnerSkill.ps1",
     "Invoke-OfflineDiagnosticTools.ps1",
     "Convert-OfflineDiagnosticToolOutput.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",

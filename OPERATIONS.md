@@ -186,6 +186,16 @@ Convert offline diagnostic outputs into WindowsDoctor evidence:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1 -Root E:\WindowsDoctor -InputRoot "$env:LOCALAPPDATA\WindowsDoctor\OfflineDiagnostics" -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -Json
 ```
 
+Convert offline diagnostic outputs into an external diagnostic evidence pack:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1 -Root E:\WindowsDoctor -InputRoot "$env:LOCALAPPDATA\WindowsDoctor\OfflineDiagnostics" -ExternalPackPath E:\WindowsDoctor\incoming\external-diagnostics\offline-diagnostic-evidence.latest.json -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -Json
+```
+
+Validate the offline diagnostic runner skill:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-OfflineDiagnosticRunnerSkill.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-runner-skill.latest.json -Json
+```
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json

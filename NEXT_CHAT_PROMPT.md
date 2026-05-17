@@ -1,5 +1,34 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-diagnostic-parser-evidence-gate`：
+- 已完成下一步計畫中不需要 RUN 的項目。
+- 新增/更新：
+  - `scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `scripts\Test-OfflineDiagnosticRunnerSkill.ps1`
+  - `docs\WINDOWSDOCTOR_VISUAL_OPERATION_MANUAL.html`
+  - `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+- Parser 能力：
+  - SetupDiag：error code、failure data、profile/recommendation evidence。
+  - Sigcheck：unsigned / invalid / publisher summary。
+  - TCPView：established / listening summary。
+  - RAMMap / Process Explorer / Process Monitor / Autoruns / Handle：manual review evidence directory summary。
+- Evidence gate：
+  - `Convert-OfflineDiagnosticToolOutput.ps1 -ExternalPackPath ...` 可產生 external diagnostics pack。
+  - `Test-ExternalDiagnosticsPack.ps1` 驗證 PASS。
+  - `Import-ExternalDiagnosticsPack.ps1` 匯入到 log-only sample output PASS。
+  - 匯入結果維持 `repairAllowed=false`, `script=N/A`, `actionType=manual_review`。
+- 圖像操作手冊已加入：
+  - 輸入問題後自動選工具。
+  - 離線工具佇列預覽。
+  - RUN 後才會執行 diagnostic-only 工具。
+  - 結果會轉成 evidence/report，但不自動修復高風險問題。
+- 安全狀態：
+  - 未執行外部診斷工具。
+  - 未執行修復。
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+- 仍需使用者明確提供 RUN 後，才能做第一個真實 diagnostic-only 工具執行驗收。
+
 最新狀態 `2026-05-17 offline-diagnostic-runner-skill`：
 - 已將成功可重複使用程序抽成專用 skill。
 - 新增：

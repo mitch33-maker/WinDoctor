@@ -6,6 +6,26 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-142552] Offline diagnostic parser and evidence gate
+- Time: `2026-05-17 14:25:52 +08:00`
+- Status: `PASS`
+- Summary: 強化離線診斷輸出解析、建立 external diagnostics pack gate、補上 skill 驗證、同步 USB 與增量 patch；全程未執行外部工具、修復、GUI/Broker 或 production build。
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-output-conversion-sample-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-evidence-pack-validate-sample-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-final-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-usb-final-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-validate-usb-offline-diagnostic-parser-final-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `E:\WindowsDoctor\scripts\Test-OfflineDiagnosticRunnerSkill.ps1`
+  - `E:\WindowsDoctor\skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+  - `E:\WindowsDoctor\docs\WINDOWSDOCTOR_VISUAL_OPERATION_MANUAL.html`
+  - `E:\WindowsDoctor\REPAIR_TOOL_PACKAGING_POLICY.md`
+- Next actions:
+  - 等待使用者單獨提供 RUN 後，才可執行第一個真實 RUN 診斷驗收案例。
+
+
 ## [20260517-140809] Offline diagnostic runner skill
 - Time: `2026-05-17 14:08:09 +08:00`
 - Status: `PASS`

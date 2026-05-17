@@ -92,3 +92,13 @@ This selection is not execution approval. The interface may display tool purpose
 - package SHA-256 is rechecked before use.
 - output conversion is diagnostic evidence only.
 - no repair script is executed and no repair allowlist is changed.
+
+## Evidence Import Gate
+Offline diagnostic output may be converted into an external diagnostics pack with `Convert-OfflineDiagnosticToolOutput.ps1 -ExternalPackPath`.
+
+Imported evidence must remain:
+- `repairAllowed=false`
+- `script=N/A`
+- `actionType=manual_review`
+
+Evidence can inform KB matching and future review, but it cannot promote a repair into reviewed auto-repair without the full safety policy.

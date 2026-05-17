@@ -76,11 +76,20 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 Converted output is diagnostic evidence only. It may suggest KB matching or manual review, but must not become automatic repair without reviewed KB, dry-run impact, rollback guidance, local validation, allowlist review, and RUN gate.
 
+To create an external diagnostic evidence pack for the existing import gate:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1 -Root E:\WindowsDoctor -InputRoot "$env:LOCALAPPDATA\WindowsDoctor\OfflineDiagnostics" -ExternalPackPath E:\WindowsDoctor\incoming\external-diagnostics\offline-diagnostic-evidence.latest.json -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -Json
+```
+
+The converter may parse SetupDiag, Sigcheck, and TCPView evidence. Non-core tool evidence must use `manual-external` adapter flow when imported into normalized diagnostics.
+
 ## Validation Checklist
 Use the smallest safe set that covers the change:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-OfflineToolAutomation.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-tool-automation.latest.json -Json
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-OfflineDiagnosticRunnerSkill.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-runner-skill.latest.json -Json
 npm run test:broker --prefix E:\WindowsDoctor\gui
 npm run lint --prefix E:\WindowsDoctor\gui
 powershell -NoProfile -ExecutionPolicy RemoteSigned -Command "Invoke-Pester -Path 'E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1' -FullName '*parses safety scripts*'"
