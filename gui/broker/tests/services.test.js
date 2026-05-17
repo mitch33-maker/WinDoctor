@@ -6,6 +6,7 @@ const { normalizeRepairScript, parseKbRule, loadKbRules, loadOfflineKbRules } = 
 const { getAllowedRepairScripts, isAllowedRepairScript } = require('../services/repair');
 const { invokeRecommendedRepairPlan } = require('../services/repairPlan');
 const { getAiAssistantTriage } = require('../services/aiAssistant');
+const { classifyIssue, buildIssuePlan } = require('../services/issuePlanner');
 const { analyzeVision, getVisionStatus } = require('../services/vision');
 const config = require('../config');
 
@@ -120,6 +121,20 @@ async function testAiAssistantTriage() {
     assert.strictEqual(result.SafetyPolicy.ExternalAi, 'not used');
 }
 
+async function testIssuePlanner() {
+    const classification = classifyIssue('Windows Update 失敗 0x8024');
+    assert.strictEqual(classification.component, 'windows_update');
+    assert.ok(classification.confidence > 0);
+
+    const plan = await buildIssuePlan('印表機不能列印，佇列卡住');
+    assert.strictEqual(plan.Status, 'PASS');
+    assert.strictEqual(plan.Mode, 'natural-language-diagnostic-preview');
+    assert.strictEqual(plan.SafetyPolicy.NoRepairExecuted, true);
+    assert.strictEqual(plan.DiagnosticPlan.ExecutionModel, 'sequential');
+    assert.ok(Array.isArray(plan.UserReport.NextActions));
+    assert.ok(plan.RepairPreview.RepairPlanVersion >= 4);
+}
+
 (async () => {
     testNormalizeRepairScript();
     testParseKbRule();
@@ -132,5 +147,6 @@ async function testAiAssistantTriage() {
     await testVisionFallback();
     await testRecommendedRepairPlanPreview();
     await testAiAssistantTriage();
+    await testIssuePlanner();
     console.log('broker service tests passed');
 })();

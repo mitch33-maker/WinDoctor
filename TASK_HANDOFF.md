@@ -1,3 +1,37 @@
+# 2026-05-17 Natural Language AI Diagnostic Workflow
+
+- Built the first user-facing path toward "type the problem and get the result".
+- Added:
+  - `gui\broker\services\issuePlanner.js`
+  - `gui\src\components\ProblemSolverPanel.tsx`
+- Updated:
+  - `gui\broker\routes.js`
+  - `gui\broker\services\work.js`
+  - `gui\broker\tests\services.test.js`
+  - `gui\src\app\page.tsx`
+  - `gui\src\lib\windowsDoctorApi.ts`
+  - `gui\src\types\windows-doctor.ts`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+  - `OPERATIONS.md`
+- New APIs:
+  - `POST /api/ai/plan`
+  - `POST /api/work/diagnose`
+- Behavior:
+  - accepts a plain-language problem such as "印表機不能列印" or "Windows Update 失敗".
+  - classifies the issue component.
+  - matches KB rules.
+  - runs repair preview through the v4 safety policy.
+  - returns a user-readable report with fixed/not-fixed/next-action fields.
+  - can run through the existing work window with resource snapshots and cancel support.
+- Safety:
+  - no repair is executed by this workflow.
+  - execution still requires the separate RUN-gated repair path.
+- Evidence:
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - `E:\WindowsDoctor\logs\auto-repair-safety-policy.ai-workflow-20260517.json`
+
 # 2026-05-17 Auto Repair Safety Gate Framework
 
 - Built the promotion framework for the final one-click detect-and-repair target.

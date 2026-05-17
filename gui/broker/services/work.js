@@ -2,6 +2,7 @@
 const path = require('path');
 const { spawn } = require('child_process');
 const config = require('../config');
+const { buildIssuePlan } = require('./issuePlanner');
 
 let activeWork = null;
 let lastWork = null;
@@ -199,6 +200,97 @@ function startRepairPlanWork({ execute = false, confirmToken = '' } = {}) {
     return getWorkStatus();
 }
 
+function startIssueDiagnosticWork({ problemText = '' } = {}) {
+    if (activeWork && activeWork.status === 'running') {
+        const err = new Error('Another WindowsDoctor work item is already running');
+        err.status = 409;
+        throw err;
+    }
+    if (!String(problemText || '').trim()) {
+        const err = new Error('Problem text is required');
+        err.status = 400;
+        throw err;
+    }
+
+    const id = `work-${Date.now()}`;
+    const reportPath = path.join(config.rootDir, 'logs', 'gui-work-issue-diagnostic.latest.json');
+    const work = {
+        id,
+        type: 'issue-diagnostic',
+        status: 'running',
+        startedAt: nowIso(),
+        updatedAt: nowIso(),
+        currentStep: 'Reading problem description',
+        canCancel: true,
+        reportPath,
+        resourceSamples: [],
+        result: null,
+        error: null,
+        child: null,
+        poller: null,
+        stdout: '',
+        stderr: '',
+    };
+
+    activeWork = work;
+    lastWork = work;
+
+    const sample = async () => {
+        if (!activeWork || activeWork.id !== id) return;
+        const snapshot = await readResourceSnapshot(config.rootDir);
+        work.resourceSamples.push(snapshot);
+        if (work.resourceSamples.length > 30) work.resourceSamples.shift();
+        work.updatedAt = nowIso();
+        if (snapshot.status === 'FAIL') {
+            work.status = 'failed';
+            work.error = 'Resource budget exceeded before repair execution';
+            work.currentStep = 'Resource budget exceeded';
+            clearInterval(work.poller);
+            activeWork = null;
+        }
+    };
+
+    work.poller = setInterval(() => { void sample(); }, 2000);
+    void sample();
+
+    void (async () => {
+        try {
+            work.currentStep = 'Classifying problem and collecting evidence';
+            work.updatedAt = nowIso();
+            const plan = await buildIssuePlan(problemText);
+            if (work.status === 'cancelling') {
+                work.status = 'cancelled';
+                work.currentStep = 'Cancelled by operator';
+                return;
+            }
+            work.currentStep = 'Writing diagnostic report';
+            work.updatedAt = nowIso();
+            const json = JSON.stringify(plan, null, 2);
+            require('fs').writeFileSync(reportPath, json, 'utf8');
+            work.result = {
+                issuePlan: plan,
+                summary: {
+                    repaired: plan.UserReport.Fixed,
+                    notRepaired: plan.UserReport.NotFixed,
+                    nextSteps: plan.UserReport.NextActions,
+                },
+            };
+            work.status = 'completed';
+            work.currentStep = 'Completed';
+        } catch (err) {
+            work.status = 'failed';
+            work.error = err.message;
+            work.currentStep = 'Failed';
+        } finally {
+            clearInterval(work.poller);
+            work.updatedAt = nowIso();
+            if (activeWork && activeWork.id === id) activeWork = null;
+        }
+    })();
+
+    return getWorkStatus();
+}
+
 function cancelActiveWork() {
     if (!activeWork || activeWork.status !== 'running') {
         return getWorkStatus();
@@ -207,6 +299,12 @@ function cancelActiveWork() {
     activeWork.currentStep = 'Cancelling';
     activeWork.updatedAt = nowIso();
     if (activeWork.child) activeWork.child.kill();
+    if (!activeWork.child) {
+        activeWork.status = 'cancelled';
+        activeWork.currentStep = 'Cancelled by operator';
+        activeWork.updatedAt = nowIso();
+        activeWork = null;
+    }
     return getWorkStatus();
 }
 
@@ -235,4 +333,4 @@ function getWorkStatus() {
     };
 }
 
-module.exports = { startRepairPlanWork, cancelActiveWork, getWorkStatus };
+module.exports = { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus };

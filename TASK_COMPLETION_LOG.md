@@ -6,6 +6,31 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-102556] Natural Language AI Diagnostic Workflow
+- Time: `2026-05-17 10:25:56 +08:00`
+- Status: `PASS`
+- Summary: Added a plain-language problem entrypoint that classifies user issues, matches KB rules, builds v4 repair previews, applies auto-repair safety policy, and can run through the work window with resource snapshots and cancellation.
+- Evidence:
+  - `E:\WindowsDoctor\logs\auto-repair-safety-policy.ai-workflow-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.ai-workflow-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.ai-workflow-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\gui\broker\services\issuePlanner.js`
+  - `E:\WindowsDoctor\gui\src\components\ProblemSolverPanel.tsx`
+  - `E:\WindowsDoctor\gui\broker\routes.js`
+  - `E:\WindowsDoctor\gui\broker\services\work.js`
+  - `E:\WindowsDoctor\gui\broker\tests\services.test.js`
+  - `E:\WindowsDoctor\gui\src\app\page.tsx`
+  - `E:\WindowsDoctor\gui\src\lib\windowsDoctorApi.ts`
+  - `E:\WindowsDoctor\gui\src\types\windows-doctor.ts`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SUCCESS_EXPERIENCE.md`
+- Next actions:
+  - Map natural-language issue plans to deeper printer, Windows Update, and network specialty checks; then promote one low-risk reversible repair candidate with pre-state and rollback evidence.
+
+
 ## [20260517-100420] Auto Repair Safety Gate Framework
 - Time: `2026-05-17 10:04:20 +08:00`
 - Status: `PASS`

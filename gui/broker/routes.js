@@ -4,8 +4,9 @@ const { getHealth, getRecentSystemEvents, testAdmin } = require('./services/syst
 const { getKbPath, setKbPath, loadKbRules } = require('./services/kb');
 const { getAllowedRepairScripts, isAllowedRepairScript, runRepairScript } = require('./services/repair');
 const { invokeRecommendedRepairPlan } = require('./services/repairPlan');
-const { startRepairPlanWork, cancelActiveWork, getWorkStatus } = require('./services/work');
+const { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus } = require('./services/work');
 const { getAiAssistantTriage } = require('./services/aiAssistant');
+const { buildIssuePlan } = require('./services/issuePlanner');
 const { analyzeVision, getVisionStatus } = require('./services/vision');
 const { learnIssue } = require('./services/learn');
 const { importNotebookLmSourcePack } = require('./services/notebooklm');
@@ -103,9 +104,19 @@ function registerRoutes(app) {
         catch (err) { fail(res, err.status || 500, err.status === 409 ? 'WORK_ALREADY_RUNNING' : 'WORK_START_FAILED', err.message); }
     });
 
+    app.post('/api/work/diagnose', (req, res) => {
+        try { ok(res, startIssueDiagnosticWork({ problemText: req.body.problemText || req.body.problem || '' })); }
+        catch (err) { fail(res, err.status || 500, err.status === 409 ? 'WORK_ALREADY_RUNNING' : err.status === 400 ? 'PROBLEM_TEXT_REQUIRED' : 'WORK_START_FAILED', err.message); }
+    });
+
     app.get('/api/ai/triage', async (req, res) => {
         try { ok(res, await getAiAssistantTriage()); }
         catch (err) { fail(res, err.status || 500, 'AI_TRIAGE_FAILED', err.message); }
+    });
+
+    app.post('/api/ai/plan', async (req, res) => {
+        try { ok(res, await buildIssuePlan(req.body.problemText || req.body.problem || '')); }
+        catch (err) { fail(res, err.status || 500, err.status === 400 ? 'PROBLEM_TEXT_REQUIRED' : 'AI_PLAN_FAILED', err.message); }
     });
 
     app.post('/api/vision-analyze', async (req, res) => ok(res, await analyzeVision()));

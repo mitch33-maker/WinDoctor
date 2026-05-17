@@ -616,6 +616,19 @@ GET  http://localhost:3001/api/ai/triage
 
 The local AI triage uses WindowsDoctor reviewed KB rules, recent system events, repair decision engine output, and resource safety. It does not call external AI services and does not execute repairs.
 
+Natural-language issue plan API:
+```text
+POST http://localhost:3001/api/ai/plan
+POST http://localhost:3001/api/work/diagnose
+```
+
+Request body:
+```json
+{ "problemText": "印表機不能列印，佇列卡住" }
+```
+
+This workflow classifies the user problem, matches KB rules, builds a repair preview, applies auto-repair safety policy, writes a user-readable report, and does not execute repair actions.
+
 Execution request body:
 ```json
 { "confirmToken": "RUN" }
@@ -623,6 +636,7 @@ Execution request body:
 
 GUI one-click repair panel:
 - The GUI calls `/api/repair-plan` for preview.
+- The AI problem solver panel calls `/api/ai/plan` for immediate preview and `/api/work/diagnose` for sequenced work-window execution.
 - Execution stays disabled unless the operator enters `RUN`.
 - Broker delegates to `Invoke-RecommendedRepairPlan.ps1`, so SafeBatch v4 policy is enforced server-side.
 

@@ -72,6 +72,19 @@ export type RepairRecommendation = {
   RepairDecisionState: string;
   AutoBatchEligible: boolean;
   ExecutionGate: string;
+  AutoRepairSafety?: {
+    RiskLevel?: string;
+    Reversible?: boolean;
+    DryRunImpactAvailable?: boolean;
+    LocalValidationStatus?: string;
+    CriticalInterruption?: boolean;
+    RollbackGuidanceAvailable?: boolean;
+    AllowlistReviewStatus?: string;
+    AutoBatchPolicyApproved?: boolean;
+    RunGateRequired?: boolean;
+    BlockReasons?: string[];
+    RollbackGuidance?: string;
+  };
 };
 
 export type RepairPlan = {
@@ -133,6 +146,7 @@ export type WorkItem = {
   resourceSamples: WorkResourceSample[];
   result?: {
     repairPlan?: RepairPlan;
+    issuePlan?: IssuePlan;
     summary?: WorkRepairSummary;
   } | null;
   error?: string | null;
@@ -178,5 +192,47 @@ export type AiTriageResult = {
     RepairExecution: string;
     ExternalAi: string;
     AutoAllowlistPromotion: boolean;
+  };
+};
+
+export type IssuePlan = {
+  Status: string;
+  Mode: string;
+  ProblemText: string;
+  Classification: {
+    component: string;
+    label: string;
+    confidence: number;
+    matchedTerms: string[];
+    checks: string[];
+  };
+  DiagnosticPlan: {
+    ExecutionModel: string;
+    Steps: Array<{ name: string; status: string; destructive: boolean }>;
+  };
+  RelevantRules: Array<{ id: string; title: string; script: string; details?: string; score: number }>;
+  AiTriageSummary: AiTriageResult["Summary"];
+  RepairPreview: {
+    RepairPlanVersion: number;
+    DecisionEngineVersion: number;
+    SafeBatchScriptCount: number;
+    Executed: boolean;
+    Outcome: {
+      autoRepairReady: Array<{ id: string; title: string; script: string; confidence?: number; gate?: string }>;
+      blockedOrManual: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string }>;
+    };
+  };
+  UserReport: {
+    Summary: string;
+    Fixed: Array<{ id: string; title: string; script: string }>;
+    NotFixed: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string }>;
+    NextActions: string[];
+    RequiresRun: boolean;
+  };
+  SafetyPolicy: {
+    NoRepairExecuted: boolean;
+    RunGateRequired: boolean;
+    AutoBatchRequiresPolicyApproval: boolean;
+    ExternalAi: string;
   };
 };

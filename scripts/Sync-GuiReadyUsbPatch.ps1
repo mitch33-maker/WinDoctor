@@ -78,12 +78,14 @@ foreach ($scriptDataFile in $scriptDataFiles) {
 $relativeFiles = @(
     "gui\broker\routes.js",
     "gui\broker\services\aiAssistant.js",
+    "gui\broker\services\issuePlanner.js",
     "gui\broker\services\repairPlan.js",
     "gui\broker\services\work.js",
     "gui\broker\tests\services.test.js",
     "gui\src\app\page.tsx",
     "gui\src\components\AiAssistantPanel.tsx",
     "gui\src\components\OneClickRepairPanel.tsx",
+    "gui\src\components\ProblemSolverPanel.tsx",
     "gui\src\components\WorkStatusPanel.tsx",
     "gui\src\lib\windowsDoctorApi.ts",
     "gui\src\types\windows-doctor.ts"

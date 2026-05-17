@@ -12,8 +12,9 @@ import { WinPEBootMediaPanel } from "@/components/WinPEBootMediaPanel";
 import { OneClickRepairPanel } from "@/components/OneClickRepairPanel";
 import { WorkStatusPanel } from "@/components/WorkStatusPanel";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
+import { ProblemSolverPanel } from "@/components/ProblemSolverPanel";
 import { windowsDoctorApi } from "@/lib/windowsDoctorApi";
-import type { AiTriageResult, AppStatus, Finding, HealthData, LockStatus, RepairPlan, ReportResult, RuleIndexItem, ScanError, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
+import type { AiTriageResult, AppStatus, Finding, HealthData, IssuePlan, LockStatus, RepairPlan, ReportResult, RuleIndexItem, ScanError, VisionResult, VisionStatus, WorkStatus } from "@/types/windows-doctor";
 
 export default function Home() {
   const [health, setHealth] = useState<HealthData | null>(null);
@@ -40,6 +41,9 @@ export default function Home() {
   const [workLoading, setWorkLoading] = useState(false);
   const [aiTriage, setAiTriage] = useState<AiTriageResult | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [problemText, setProblemText] = useState("");
+  const [issuePlan, setIssuePlan] = useState<IssuePlan | null>(null);
+  const [issueLoading, setIssueLoading] = useState(false);
 
   const checkEnvironment = async () => {
     try {
@@ -73,6 +77,8 @@ export default function Home() {
       setWorkStatus(statusData);
       const completedPlan = statusData.last?.result?.repairPlan;
       if (completedPlan) setRepairPlan(completedPlan);
+      const completedIssuePlan = statusData.last?.result?.issuePlan;
+      if (completedIssuePlan) setIssuePlan(completedIssuePlan);
     } catch {
       console.error("Work status refresh failed");
     }
@@ -232,6 +238,32 @@ export default function Home() {
     setAiLoading(false);
   };
 
+  const previewIssuePlan = async () => {
+    if (!problemText.trim()) return;
+    setIssueLoading(true);
+    try {
+      const plan = await windowsDoctorApi.buildIssuePlan(problemText);
+      setIssuePlan(plan);
+      setStatus({ tone: "info", message: `已建立 ${plan.Classification.label} 診斷預覽，未執行修復。` });
+    } catch {
+      setStatus({ tone: "error", message: "無法建立問題診斷預覽，請確認 Broker 服務運行中。" });
+    }
+    setIssueLoading(false);
+  };
+
+  const startIssueWork = async () => {
+    if (!problemText.trim()) return;
+    setIssueLoading(true);
+    try {
+      const statusData = await windowsDoctorApi.startIssueDiagnosticWork(problemText);
+      setWorkStatus(statusData);
+      setStatus({ tone: "info", message: "已放入即時工作視窗，將序列化執行診斷預覽。" });
+    } catch {
+      setStatus({ tone: "error", message: "無法啟動問題診斷工作，請確認沒有其他工作正在執行。" });
+    }
+    setIssueLoading(false);
+  };
+
   const requestElevation = async () => {
     try {
       const data = await windowsDoctorApi.requestElevation();
@@ -291,6 +323,16 @@ export default function Home() {
         onTextChange={setReportText}
         onImageChange={setReportImg}
         onSubmit={submitReport}
+      />
+
+      <ProblemSolverPanel
+        problemText={problemText}
+        loading={issueLoading}
+        plan={issuePlan}
+        workStatus={workStatus}
+        onTextChange={setProblemText}
+        onPreview={previewIssuePlan}
+        onStartWork={startIssueWork}
       />
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">

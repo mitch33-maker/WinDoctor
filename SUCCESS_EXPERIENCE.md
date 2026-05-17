@@ -52,3 +52,11 @@ for /f tokens^=5 %a in ('netstat -ano ^| findstr :3001 ^| findstr LISTENING') do
 新增 `scripts\repair-safety-policy.json`，把可逆性、dry-run impact、本機驗證、關鍵中斷、rollback guidance、allowlist review 與 RUN gate 改成機器可驗證條件。`Invoke-RecommendedRepairPlan.ps1` v4 只允許 policy-approved 項目進入 auto batch，並在 preview 內輸出 `AutoRepairSafety.BlockReasons`。
 ### 驗證方式
 使用 `scripts\Test-AutoRepairSafetyPolicy.ps1` 驗證 policy 覆蓋所有 allowlist 腳本，並用 `Invoke-RecommendedRepairPlan.ps1` 確認未達標腳本停留在 preview/manual。
+
+## [SUCCESS-20260517-05] 自然語言問題入口產品化
+### 問題描述
+使用者不應需要知道 Event ID、DISM、SFC、KB rule 或 allowlist，才能取得診斷與修復建議。
+### 成功解決方案
+新增 `gui\broker\services\issuePlanner.js` 與 `ProblemSolverPanel.tsx`，讓使用者輸入一句問題描述即可產生分類、KB 比對、repair preview、安全 gate 結果與可讀報告。`/api/work/diagnose` 會把同一流程放入工作視窗，沿用資源快照與可中斷能力。
+### 驗證方式
+以 `npm run test:broker --prefix E:\WindowsDoctor\gui` 驗證自然語言分類與 issue plan，以 `npm run lint --prefix E:\WindowsDoctor\gui` 驗證前端與 Broker 程式碼。

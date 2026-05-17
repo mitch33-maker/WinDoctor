@@ -1,5 +1,33 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 natural-language-ai-diagnostic-workflow`：
+- 使用者要求朝「只輸入要解決的問題，即可得到修復結果」改進。
+- 已新增自然語言問題入口：
+  - `gui\broker\services\issuePlanner.js`
+  - `gui\src\components\ProblemSolverPanel.tsx`
+- 新 API：
+  - `POST /api/ai/plan`
+  - `POST /api/work/diagnose`
+- 新流程：
+  - 問題文字分類
+  - KB rule match
+  - AI triage summary
+  - one-click repair preview v4
+  - auto-repair safety policy gate
+  - 使用者報告：summary / fixed / not fixed / next actions
+  - 可放入 work window，顯示資源快照並可中斷
+- 安全：
+  - 此流程只做診斷與修復預覽。
+  - 不執行 OS 修復。
+  - 真正修復仍需 RUN gate。
+- 驗證：
+  - `npm run test:broker --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - auto repair safety policy: `PASS`
+- 後續建議：
+  - 將 `ProblemSolverPanel` 的結果更細緻映射到印表機/Windows Update/網路專項檢查。
+  - 選一個低風險可逆修復候選，補 pre-state/rollback/local validation，讓 auto-batch approved 從 `0` 提升到 `1`。
+
 最新狀態 `2026-05-17 auto-repair-safety-gate-framework`：
 - 使用者要求建置一鍵檢測並自動修復的升級條件：
   - 可逆
