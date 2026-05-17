@@ -1,5 +1,34 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-diagnostic-user-report-work-window`：
+- 已新增 safe CLI 診斷報告產生器：
+  - `scripts\New-OfflineDiagnosticUserReport.ps1`
+- Runner execute 模式會附帶：
+  - `DiagnosticReport`
+- 工作視窗已接入：
+  - findings 數量
+  - manual review 數量
+  - preview-only 數量
+  - top findings
+  - finding state、使用者訊息與 evidence 摘要
+- 分級狀態：
+  - `no_issue_detected`
+  - `evidence_found`
+  - `manual_review_required`
+  - `repair_candidate_preview_only`
+  - `blocked_by_policy`
+- 驗證：
+  - user report generation PASS
+  - Pester parse PASS
+  - offline runner skill PASS
+  - broker service tests PASS
+  - lint PASS
+- 安全狀態：
+  - 未執行修復。
+  - 未執行清理。
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+
 最新狀態 `2026-05-17 safe-cli-offline-diagnostic-runner`：
 - 已在使用者 RUN 授權範圍內完成真實 diagnostic-only 批次。
 - 新增/強化：

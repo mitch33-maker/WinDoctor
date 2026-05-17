@@ -57,6 +57,7 @@ $scriptNames = @(
     "Test-OfflineDiagnosticRunnerSkill.ps1",
     "Invoke-OfflineDiagnosticTools.ps1",
     "Convert-OfflineDiagnosticToolOutput.ps1",
+    "New-OfflineDiagnosticUserReport.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",

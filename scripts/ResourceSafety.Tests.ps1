@@ -28,6 +28,7 @@ Describe "WindowsDoctor resource safety scripts" {
             "$script:root\scripts\Test-OfflineDiagnosticRunnerSkill.ps1",
             "$script:root\scripts\Invoke-OfflineDiagnosticTools.ps1",
             "$script:root\scripts\Convert-OfflineDiagnosticToolOutput.ps1",
+            "$script:root\scripts\New-OfflineDiagnosticUserReport.ps1",
             "$script:root\scripts\Test-SystemErroeScan.ps1",
             "$script:root\scripts\Test-SystemErrorsScan.ps1",
             "$script:root\scripts\Test-PortableRuntimeSelfTest.ps1",

@@ -79,6 +79,7 @@ Last updated: `2026-05-17`
 | `scripts\Test-OfflineDiagnosticRunnerSkill.ps1` | 驗證離線診斷 runner skill、parser、RUN gate、USB 同步清單與安全限制 |
 | `scripts\Invoke-OfflineDiagnosticTools.ps1` | RUN-gated 離線診斷工具序列化 runner；預設只產生 preview |
 | `scripts\Convert-OfflineDiagnosticToolOutput.ps1` | 將離線診斷工具輸出轉成 WindowsDoctor JSON 證據，不執行修復 |
+| `scripts\New-OfflineDiagnosticUserReport.ps1` | 將離線診斷 evidence 轉成使用者/MIS 可讀的分級報告 |
 | `scripts\Test-LowResourceStartup.ps1` | 驗證 Broker-only 低資源模式，不啟動 Next dev GUI |
 | `scripts\New-PortableIncrementalPatch.ps1` | 建立小型 USB 增量 patch zip，避免重壓完整 GUI-ready package |
 | `scripts\Test-PortableIncrementalPatch.ps1` | 驗證增量 patch zip、manifest 與 package root 內容一致 |

@@ -38,6 +38,16 @@ function summarizeRepairPlan(plan) {
 }
 
 function summarizeOfflineDiagnostics(result) {
+    const diagnosticReport = result.DiagnosticReport || null;
+    if (diagnosticReport && diagnosticReport.UserReport) {
+        return {
+            repaired: diagnosticReport.UserReport.Fixed || [],
+            notRepaired: diagnosticReport.UserReport.NotFixed || [],
+            nextSteps: diagnosticReport.UserReport.NextSteps || [
+                'Diagnostic report completed. Review evidence before any repair preview.',
+            ],
+        };
+    }
     const report = result.UserReport || {};
     return {
         repaired: report.Fixed || [],
@@ -410,6 +420,7 @@ function startOfflineDiagnosticWork({ component = 'general', execute = false, co
             work.status = 'completed';
             work.result = {
                 offlineDiagnostics: result,
+                diagnosticReport: result.DiagnosticReport || null,
                 summary: summarizeOfflineDiagnostics(result),
             };
             work.currentStep = 'Completed';

@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-16] 離線診斷使用者報告分級
+### 問題描述
+safe CLI runner 已能產生 JSON evidence，但一般使用者與 MIS 不應直接讀 raw JSON；工作視窗需要清楚顯示目前找到的是問題、證據、需人工判讀，或只是沒有找到相關記錄。
+### 成功解決方案
+新增 `New-OfflineDiagnosticUserReport.ps1`，將 conversion findings 分級為 `no_issue_detected`、`evidence_found`、`manual_review_required`、`repair_candidate_preview_only`、`blocked_by_policy`。Runner execute 結果附帶 `DiagnosticReport`，工作視窗顯示 state counts 與 top findings。
+### 驗證方式
+使用真實 safe CLI 診斷輸出產生 user report，Pester parse、runner skill validation、broker service tests 與 lint 均 PASS；報告維持 diagnostic-only，不修復、不清理、不改 allowlist。
+
 ## [SUCCESS-20260517-15] Safe CLI 離線真實診斷批次
 ### 問題描述
 離線工具已能 RUN-gated 執行，但 zip 內多數工具是 GUI 或混合工具；若直接啟動可能造成使用者互動、資源失控或誤判輸出。實測也發現 Sysinternals 輸出可能是 UTF-16，若用 UTF-8 解析會產生錯誤摘要。

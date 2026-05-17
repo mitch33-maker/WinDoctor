@@ -32,6 +32,7 @@ $checks = [System.Collections.Generic.List[object]]::new()
 $skillPath = Join-Path $resolvedRoot "skills\windowsdoctor-offline-diagnostic-runner\SKILL.md"
 $runnerPath = Join-Path $resolvedRoot "scripts\Invoke-OfflineDiagnosticTools.ps1"
 $converterPath = Join-Path $resolvedRoot "scripts\Convert-OfflineDiagnosticToolOutput.ps1"
+$userReportPath = Join-Path $resolvedRoot "scripts\New-OfflineDiagnosticUserReport.ps1"
 $syncPath = Join-Path $resolvedRoot "scripts\Sync-GuiReadyUsbPatch.ps1"
 $patchPath = Join-Path $resolvedRoot "scripts\New-PortableIncrementalPatch.ps1"
 $indexPath = Join-Path $resolvedRoot "INDEX.md"
@@ -40,6 +41,7 @@ $memoryPath = Join-Path $resolvedRoot "MEMORY_SYSTEM.md"
 $skill = Read-Text -Path $skillPath
 $runner = Read-Text -Path $runnerPath
 $converter = Read-Text -Path $converterPath
+$userReport = Read-Text -Path $userReportPath
 $sync = Read-Text -Path $syncPath
 $patch = Read-Text -Path $patchPath
 $index = Read-Text -Path $indexPath
@@ -57,8 +59,10 @@ Add-Check -Checks $checks -Name "runner-output-limits" -Passed ($runner -match '
 Add-Check -Checks $checks -Name "runner-batch-toolid" -Passed ($runner -match 'Expand-ToolIdArgument' -and $runner -match '\$item -split ","') -Detail $runnerPath
 Add-Check -Checks $checks -Name "converter-external-pack" -Passed ($converter -match 'ExternalPackPath' -and $converter -match 'repairAllowed = \$false' -and $converter -match 'actionType = "manual_review"') -Detail $converterPath
 Add-Check -Checks $checks -Name "converter-tool-parsers" -Passed ($converter -match 'setupdiag' -and $converter -match 'sigcheck' -and $converter -match 'tcpview' -and $converter -match 'handle' -and $converter -match 'autoruns') -Detail $converterPath
+Add-Check -Checks $checks -Name "user-report-classification" -Passed ($runner -match 'New-OfflineDiagnosticUserReport\.ps1' -and $userReport -match 'manual_review_required' -and $userReport -match 'repair_candidate_preview_only' -and $userReport -match 'no_issue_detected') -Detail $userReportPath
 Add-Check -Checks $checks -Name "sync-includes-skill" -Passed ($sync -match 'windowsdoctor-offline-diagnostic-runner\\SKILL\.md') -Detail $syncPath
 Add-Check -Checks $checks -Name "patch-includes-skill" -Passed ($patch -match 'windowsdoctor-offline-diagnostic-runner\\SKILL\.md') -Detail $patchPath
+Add-Check -Checks $checks -Name "sync-includes-user-report" -Passed ($sync -match 'New-OfflineDiagnosticUserReport\.ps1' -and $patch -match 'New-OfflineDiagnosticUserReport\.ps1') -Detail $syncPath
 Add-Check -Checks $checks -Name "index-includes-skill" -Passed ($index -match 'windowsdoctor-offline-diagnostic-runner') -Detail $indexPath
 Add-Check -Checks $checks -Name "memory-includes-skill" -Passed ($memory -match 'windowsdoctor-offline-diagnostic-runner') -Detail $memoryPath
 

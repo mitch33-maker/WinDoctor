@@ -314,10 +314,14 @@ if ($Execute) {
 }
 
 $conversion = $null
+$diagnosticReport = $null
 if ($Execute) {
     $convertReport = Join-Path $resolvedRoot "logs\offline-diagnostic-output-conversion.latest.json"
     $convertRaw = & powershell -NoProfile -ExecutionPolicy RemoteSigned -File (Join-Path $resolvedRoot "scripts\Convert-OfflineDiagnosticToolOutput.ps1") -Root $resolvedRoot -InputRoot $resolvedOutputRoot -ReportPath $convertReport -Json
     $conversion = $convertRaw | ConvertFrom-Json
+    $userReportPath = Join-Path $resolvedRoot "logs\offline-diagnostic-user-report.latest.json"
+    $userReportRaw = & powershell -NoProfile -ExecutionPolicy RemoteSigned -File (Join-Path $resolvedRoot "scripts\New-OfflineDiagnosticUserReport.ps1") -Root $resolvedRoot -ConversionReportPath $convertReport -ReportPath $userReportPath -Json
+    $diagnosticReport = $userReportRaw | ConvertFrom-Json
 }
 
 $afterSafety = Invoke-ResourceSafety -RootPath $resolvedRoot
@@ -345,6 +349,7 @@ $resultObject = [PSCustomObject]@{
     PlannedTools = $planned.ToArray()
     ExecutedTools = $executed.ToArray()
     OutputConversion = $conversion
+    DiagnosticReport = $diagnosticReport
     BeforeResourceSafety = $beforeSafety
     AfterResourceSafety = $afterSafety
     UserReport = [PSCustomObject]@{

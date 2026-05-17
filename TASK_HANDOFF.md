@@ -1,3 +1,30 @@
+# 2026-05-17 Offline Diagnostic User Report And Work Window
+
+- Continued the post-safe-CLI plan without new repair authorization.
+- Added:
+  - `scripts\New-OfflineDiagnosticUserReport.ps1`
+  - `DiagnosticReport` output from `Invoke-OfflineDiagnosticTools.ps1`
+  - work window display for diagnostic report state counts and top findings.
+  - Type definitions for `OfflineDiagnosticUserReport`.
+- Report classification states:
+  - `no_issue_detected`
+  - `evidence_found`
+  - `manual_review_required`
+  - `repair_candidate_preview_only`
+  - `blocked_by_policy`
+- Safety:
+  - report generation is diagnostic-only.
+  - no repair executed.
+  - no cleanup executed.
+  - no GUI/Broker startup.
+  - no production build.
+  - no new external diagnostic tool execution was required for this task.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-user-report-safe-cli-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-user-report-final-20260517.json`
+  - broker service tests PASS.
+  - lint PASS.
+
 # 2026-05-17 Safe CLI Offline Diagnostic Runner
 
 - Continued the RUN-approved diagnostic-only plan.

@@ -199,6 +199,7 @@ export type OfflineDiagnosticRun = {
   PlannedTools: Array<{ Id: string; Name: string; Status: string; PackagePath: string; CommandPreview: string }>;
   ExecutedTools: Array<{ Id: string; Status: string; ExitCode?: number | null; OutputPath?: string; PreResourceStatus?: string; PostResourceStatus?: string }>;
   OutputConversion?: unknown;
+  DiagnosticReport?: OfflineDiagnosticUserReport | null;
   UserReport?: {
     Fixed: Array<{ id: string; title: string; script: string }>;
     NotFixed: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string }>;
@@ -210,6 +211,36 @@ export type OfflineDiagnosticRun = {
     NoRepairAllowlistChange: boolean;
     SequentialExecution: boolean;
     RunGateRequired: boolean;
+  };
+};
+
+export type OfflineDiagnosticUserReport = {
+  Status: string;
+  Phase: string;
+  FindingCount: number;
+  StateCounts: {
+    no_issue_detected?: number;
+    evidence_found?: number;
+    manual_review_required?: number;
+    repair_candidate_preview_only?: number;
+    blocked_by_policy?: number;
+  };
+  Findings: Array<{
+    id: string;
+    title: string;
+    component: string;
+    state: string;
+    evidence: string;
+    errorCode?: string;
+    userMessage: string;
+    recommendation: string;
+    repairAllowed: boolean;
+    script: string;
+  }>;
+  UserReport: {
+    Fixed: Array<{ id: string; title: string; script: string }>;
+    NotFixed: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string; state?: string }>;
+    NextSteps: string[];
   };
 };
 
@@ -228,6 +259,7 @@ export type WorkItem = {
     repairPlan?: RepairPlan;
     issuePlan?: IssuePlan;
     offlineDiagnostics?: OfflineDiagnosticRun;
+    diagnosticReport?: OfflineDiagnosticUserReport | null;
     summary?: WorkRepairSummary;
   } | null;
   error?: string | null;

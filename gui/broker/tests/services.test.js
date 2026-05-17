@@ -179,6 +179,13 @@ function testOfflineTools() {
     assert.ok(selected.SelectedTools.some((item) => item.id === 'rammap'));
 }
 
+function testOfflineDiagnosticWorkReportIntegration() {
+    const source = fs.readFileSync(path.join(__dirname, '..', 'services', 'work.js'), 'utf8');
+    assert.ok(source.includes('DiagnosticReport'));
+    assert.ok(source.includes('diagnosticReport'));
+    assert.ok(source.includes('summarizeOfflineDiagnostics'));
+}
+
 (async () => {
     testNormalizeRepairScript();
     testParseKbRule();
@@ -194,6 +201,7 @@ function testOfflineTools() {
     await testRecommendedRepairPlanPreview();
     await testAiAssistantTriage();
     testOfflineTools();
+    testOfflineDiagnosticWorkReportIntegration();
     await testIssuePlanner();
     console.log('broker service tests passed');
 })();

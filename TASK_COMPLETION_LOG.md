@@ -6,6 +6,25 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-160239] Offline diagnostic user report and work window integration
+- Time: `2026-05-17 16:02:39 +08:00`
+- Status: `PASS`
+- Summary: 新增離線診斷使用者/MIS 分級報告產生器，runner execute 結果附帶 DiagnosticReport，工作視窗顯示 findings/state counts/top findings；全程未修復、未清理、未啟動 GUI/Broker、未 production build。
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-user-report-safe-cli-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-user-report-docs-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.offline-diagnostic-user-report-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.offline-diagnostic-user-report-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\New-OfflineDiagnosticUserReport.ps1`
+  - `E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `E:\WindowsDoctor\gui\broker\services\work.js`
+  - `E:\WindowsDoctor\gui\src\components\WorkStatusPanel.tsx`
+  - `E:\WindowsDoctor\gui\src\types\windows-doctor.ts`
+- Next actions:
+  - 下一階段可把自然語言問題分類直接映射到 safe CLI tool batch，但仍保持 preview-first 與 RUN gate。
+
+
 ## [20260517-155032] Safe CLI offline diagnostic batch runner
 - Time: `2026-05-17 15:50:32 +08:00`
 - Status: `PASS`

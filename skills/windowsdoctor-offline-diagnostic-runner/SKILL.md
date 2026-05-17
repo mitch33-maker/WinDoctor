@@ -10,6 +10,7 @@ Use this skill in `E:\WindowsDoctor` when the task involves:
 - automatic tool selection from a user problem category.
 - `Invoke-OfflineDiagnosticTools.ps1`.
 - `Convert-OfflineDiagnosticToolOutput.ps1`.
+- `New-OfflineDiagnosticUserReport.ps1`.
 - work-window integration for offline diagnostics.
 - USB GUI-ready sync or incremental patch for offline diagnostic features.
 
@@ -32,6 +33,7 @@ Read only what is needed, in this order:
    - `gui\broker\services\offlineTools.js`
    - `scripts\Invoke-OfflineDiagnosticTools.ps1`
    - `scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+   - `scripts\New-OfflineDiagnosticUserReport.ps1`
    - `gui\broker\services\work.js`
    - `gui\src\components\ProblemSolverPanel.tsx`
    - `gui\src\components\WorkStatusPanel.tsx`
@@ -93,6 +95,16 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 ```
 
 The converter may parse SetupDiag, Sigcheck, TCPView, Handle, and Autoruns evidence. Non-core tool evidence must use `manual-external` adapter flow when imported into normalized diagnostics.
+
+## User Report Pattern
+
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\New-OfflineDiagnosticUserReport.ps1 -Root E:\WindowsDoctor -ConversionReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-user-report.latest.json -Json
+```
+
+The report classifies findings into `no_issue_detected`, `evidence_found`, `manual_review_required`, `repair_candidate_preview_only`, and `blocked_by_policy`.
+
+The report is diagnostic-only and must keep `repairAllowed=false`, `script=N/A`, and no cleanup or repair actions.
 
 ## Validation Checklist
 Use the smallest safe set that covers the change:

@@ -12,6 +12,7 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
   const latest = item?.latestResource;
   const summary = item?.result?.summary;
   const offlineDiagnostics = item?.result?.offlineDiagnostics;
+  const diagnosticReport = item?.result?.diagnosticReport || offlineDiagnostics?.DiagnosticReport || null;
 
   return (
     <section className="max-w-6xl mx-auto mt-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
@@ -91,6 +92,29 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
                 <code className="mt-2 block break-all rounded border border-white/10 bg-black/40 p-2 text-xs text-slate-200">
                   {tool.CommandPreview || "No command preview"}
                 </code>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {diagnosticReport && (
+        <div className="mt-5 rounded-lg border border-cyan-500/20 bg-cyan-950/10 p-4 text-sm">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <div className="font-bold text-cyan-200">診斷報告</div>
+            <div className="font-mono text-xs text-cyan-100">
+              findings={diagnosticReport.FindingCount} · manual={diagnosticReport.StateCounts.manual_review_required ?? 0} · preview={diagnosticReport.StateCounts.repair_candidate_preview_only ?? 0}
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
+            {diagnosticReport.Findings.slice(0, 6).map((finding) => (
+              <div key={`${finding.id}-${finding.state}`} className="rounded-md border border-white/10 bg-black/30 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="font-semibold text-white">{finding.title}</div>
+                  <div className="text-xs text-cyan-100">{finding.state}</div>
+                </div>
+                <p className="mt-2 text-xs text-slate-200">{finding.userMessage}</p>
+                <p className="mt-2 text-xs text-slate-400">{finding.evidence}</p>
               </div>
             ))}
           </div>
