@@ -52,6 +52,7 @@ $scriptNames = @(
     "Analyze-WindowsEventLogs.ps1",
     "Test-RepairToolPackageManifest.ps1",
     "New-RepairToolPackage.ps1",
+    "Save-OfflineRepairTools.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",

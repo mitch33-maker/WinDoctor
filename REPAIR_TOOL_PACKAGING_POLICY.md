@@ -58,6 +58,13 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\New-RepairToolPackage.ps1 -ManifestPath E:\WindowsDoctor\incoming\repair-tools\manifest.json -OutputRoot E:\WindowsDoctor\releases\repair-tools -Json
 ```
 
+Microsoft official offline diagnostic acquisition:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Save-OfflineRepairTools.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-repair-tools-acquisition.latest.json -Json
+```
+
+The built-in acquisition list includes only SetupDiag and selected Microsoft Sysinternals diagnostic tools. High-risk Sysinternals utilities such as PsExec, PsKill, SDelete, and PsShutdown are intentionally excluded.
+
 ## Promotion Boundary
 Packaging a tool does not add it to:
 - `scripts\repair-allowlist.json`

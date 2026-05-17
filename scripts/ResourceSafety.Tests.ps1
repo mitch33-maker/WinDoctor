@@ -23,6 +23,7 @@ Describe "WindowsDoctor resource safety scripts" {
             "$script:root\scripts\Analyze-WindowsEventLogs.ps1",
             "$script:root\scripts\Test-RepairToolPackageManifest.ps1",
             "$script:root\scripts\New-RepairToolPackage.ps1",
+            "$script:root\scripts\Save-OfflineRepairTools.ps1",
             "$script:root\scripts\Test-SystemErroeScan.ps1",
             "$script:root\scripts\Test-SystemErrorsScan.ps1",
             "$script:root\scripts\Test-PortableRuntimeSelfTest.ps1",

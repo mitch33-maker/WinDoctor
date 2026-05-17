@@ -38,6 +38,7 @@ Last updated: `2026-05-09`
 - Event-log repair hints remain preview-first and must still pass allowlist, dry-run impact, rollback guidance, local validation, and RUN gate before execution.
 - Optional repair/diagnostic tool packaging must validate manifest metadata, HTTPS source URL, source trust level, SHA-256 hash, license note, execution policy, and `autoRunAllowed=false`.
 - Tool packaging must not install, execute, register services, change PATH, add scheduled tasks, or update `scripts\repair-allowlist.json`.
+- Microsoft offline diagnostic acquisition must verify SHA-256 and Authenticode signatures where executable files are present, and must exclude high-risk remote execution or destructive tools from default packaging.
 
 ## 4. Antivirus And EDR Compatibility
 - Standard operations use `ExecutionPolicy RemoteSigned`; `ExecutionPolicy Bypass`, encoded commands, and `Invoke-Expression` are prohibited in repository scripts.

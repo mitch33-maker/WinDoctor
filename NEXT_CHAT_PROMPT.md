@@ -1,5 +1,39 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-microsoft-diagnostic-tools`：
+- 已下載並封裝離線 Microsoft 官方診斷工具。
+- 工具清單：
+  - SetupDiag
+  - Process Explorer
+  - Process Monitor
+  - Autoruns
+  - Handle
+  - TCPView
+  - RAMMap
+  - Sigcheck
+- 已排除高風險工具：
+  - PsExec
+  - PsKill
+  - SDelete
+  - PsShutdown
+- 安全政策：
+  - 未安裝。
+  - 未執行。
+  - 未變更 PATH、服務、排程、登錄。
+  - 未更新 repair allowlist。
+  - 所有工具 `autoRunAllowed=false`。
+  - SHA-256 已記錄與驗證。
+  - 可執行檔 Authenticode 簽章已檢查且有效。
+- 套件位置：
+  - `E:\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700`
+  - `E:\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700.zip`
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700`
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700.zip`
+- 證據：
+  - `E:\WindowsDoctor\logs\offline-repair-tools-acquisition-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-manifest-verify-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-usb-hash-verify-20260517.json`: `PASS`
+
 最新狀態 `2026-05-17 repair-tool-packaging`：
 - 已新增安全修復/診斷工具包裝流程。
 - 新增：

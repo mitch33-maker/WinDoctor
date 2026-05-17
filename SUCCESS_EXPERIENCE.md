@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-10] Microsoft 官方離線診斷工具包
+### 問題描述
+離線維修現場需要可攜診斷工具，但直接下載整包或第三方工具會引入遠端執行、破壞性清除與供應鏈風險。
+### 成功解決方案
+新增 `Save-OfflineRepairTools.ps1`，只下載 SetupDiag 與低風險 Microsoft Sysinternals 診斷工具，排除 PsExec、PsKill、SDelete、PsShutdown。流程會計算 SHA-256、檢查 Authenticode 簽章、產生 manifest，再用既有 repair-tool packaging 流程封裝到本機與 USB。
+### 驗證方式
+確認 `offline-repair-tools-acquisition-20260517.json`、本機 manifest verify、USB hash verify 均為 PASS；套件不安裝、不執行、不更新 allowlist。
+
 ## [SUCCESS-20260517-09] 修復工具安全包裝而非直接安裝
 ### 問題描述
 使用者希望系統能自動包裝修復所需軟體，但外部工具若未驗證來源、雜湊、授權與用途，會形成供應鏈與誤執行風險。

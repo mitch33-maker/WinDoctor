@@ -1,3 +1,39 @@
+# 2026-05-17 Offline Microsoft Diagnostic Tool Package
+
+- User requested downloading and packaging offline tools/software required for repair.
+- Downloaded and packaged Microsoft official diagnostic tools only:
+  - SetupDiag
+  - Process Explorer
+  - Process Monitor
+  - Autoruns
+  - Handle
+  - TCPView
+  - RAMMap
+  - Sigcheck
+- Security boundaries:
+  - no install
+  - no execution
+  - no service/path/task/registry changes
+  - no repair allowlist update
+  - `autoRunAllowed=false`
+  - Microsoft official HTTPS sources only
+  - SHA-256 recorded and verified
+  - Authenticode signatures checked for executable files
+  - high-risk Sysinternals tools excluded: PsExec, PsKill, SDelete, PsShutdown
+- Package locations:
+  - `E:\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700`
+  - `E:\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700.zip`
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700`
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\releases\repair-tools\windowsdoctor-offline-microsoft-diagnostics-20260517-132700.zip`
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-repair-tools-acquisition-20260517.json`: `PASS`, `ToolCount=8`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-acquisition-20260517.json.package.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-manifest-verify-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-usb-hash-verify-20260517.json`: `PASS`
+- Sources were verified from Microsoft Learn before download:
+  - Sysinternals Suite page documents Microsoft Sysinternals download source.
+  - SetupDiag page documents Microsoft Download Center latest download and offline log parsing use.
+
 # 2026-05-17 Safe Repair Tool Packaging
 
 - User requested automatic packaging of repair-required software while checking software safety and security risk.

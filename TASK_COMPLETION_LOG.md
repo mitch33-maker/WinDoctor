@@ -6,6 +6,39 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-133052] Offline Microsoft diagnostic tools package
+- Time: `2026-05-17 13:30:52 +08:00`
+- Status: `PASS`
+- Summary: Downloaded and packaged Microsoft official offline diagnostic tools: SetupDiag, Process Explorer, Process Monitor, Autoruns, Handle, TCPView, RAMMap, and Sigcheck. SHA-256 and Authenticode signatures were verified where executable files are present. High-risk Sysinternals utilities PsExec, PsKill, SDelete, and PsShutdown were excluded. No install, execution, service change, PATH change, scheduled task, repair, or allowlist update was performed.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-repair-tools-acquisition-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-acquisition-20260517.json.package.json`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-manifest-verify-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-repair-tools-usb-hash-verify-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.offline-tools-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.offline-tools-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-offline-tools-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-offline-tools-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch.offline-tools-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.offline-tools-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.offline-tools-g-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\Save-OfflineRepairTools.ps1`
+  - `E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1`
+  - `E:\WindowsDoctor\scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `E:\WindowsDoctor\scripts\New-PortableIncrementalPatch.ps1`
+  - `E:\WindowsDoctor\REPAIR_TOOL_PACKAGING_POLICY.md`
+  - `E:\WindowsDoctor\INDEX.md`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\SECURITY_POLICY.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SUCCESS_EXPERIENCE.md`
+  - `E:\WindowsDoctor\TASK_COMPLETION_LOG.md`
+- Next actions:
+  - Keep offline tools manual/diagnostic only until a separate reviewed workflow grants explicit execution policy.; Refresh the offline tools package periodically from Microsoft official sources and compare hashes/signatures.
+
+
 ## [20260517-131747] Safe repair tool packaging
 - Time: `2026-05-17 13:17:47 +08:00`
 - Status: `PASS`

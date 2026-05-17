@@ -155,6 +155,13 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 Tool packaging validates source trust, HTTPS source URL, SHA-256, license metadata, and no-autorun policy. It does not install, execute, or add tools to the repair allowlist.
 
+Download and package Microsoft official offline diagnostic tools:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Save-OfflineRepairTools.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-repair-tools-acquisition.latest.json -Json
+```
+
+This downloads SetupDiag and a restricted set of Microsoft Sysinternals diagnostic tools, checks SHA-256 and Authenticode signatures, excludes high-risk tools such as PsExec/PsKill/SDelete/PsShutdown, and keeps all tools non-autorun.
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json
