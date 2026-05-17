@@ -7,6 +7,7 @@ const { invokeRecommendedRepairPlan } = require('./services/repairPlan');
 const { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus } = require('./services/work');
 const { getAiAssistantTriage } = require('./services/aiAssistant');
 const { buildIssuePlan } = require('./services/issuePlanner');
+const { getToolPackageStatus, selectToolsForComponent } = require('./services/offlineTools');
 const { analyzeEventLogs } = require('./services/eventLogAnalyzer');
 const { analyzeVision, getVisionStatus } = require('./services/vision');
 const { learnIssue } = require('./services/learn');
@@ -119,6 +120,16 @@ function registerRoutes(app) {
     app.post('/api/event-logs/analyze', async (req, res) => {
         try { ok(res, await analyzeEventLogs(req.body || {})); }
         catch (err) { fail(res, err.status || 500, 'EVENT_LOG_ANALYSIS_FAILED', err.message); }
+    });
+
+    app.get('/api/offline-tools', (req, res) => {
+        try { ok(res, getToolPackageStatus()); }
+        catch (err) { fail(res, err.status || 500, 'OFFLINE_TOOLS_FAILED', err.message); }
+    });
+
+    app.post('/api/offline-tools/select', (req, res) => {
+        try { ok(res, selectToolsForComponent(req.body.component || 'general')); }
+        catch (err) { fail(res, err.status || 500, 'OFFLINE_TOOL_SELECTION_FAILED', err.message); }
     });
 
     app.post('/api/ai/plan', async (req, res) => {

@@ -5,6 +5,7 @@ const config = require('../config');
 const { loadKbRules } = require('./kb');
 const { invokeRecommendedRepairPlan } = require('./repairPlan');
 const { getAiAssistantTriage } = require('./aiAssistant');
+const { selectToolsForComponent } = require('./offlineTools');
 
 const COMPONENTS = [
     {
@@ -209,10 +210,12 @@ async function buildIssuePlan(problemText) {
     ]);
     const relevantRules = findRelevantRules(userProblem, classification.component);
     const repairOutcome = summarizeRepairOutcome(repairPlan);
+    const offlineToolPlan = selectToolsForComponent(classification.component);
     const canAutoExecute = repairOutcome.autoRepairReady.length > 0;
 
     const nextActions = [
         '已完成問題理解、資源檢查、KB 比對與修復預覽。',
+        offlineToolPlan.SelectedTools.length > 0 ? '已依問題類型自動選出離線診斷工具；目前只顯示用途與命令預覽，未執行工具。' : '尚未找到可用的離線診斷工具包。',
         canAutoExecute ? '已有通過 safety policy 的候選修復；真正執行仍需 RUN。' : '目前沒有通過 unattended auto-batch gate 的修復項目，先提供安全建議與需補證據項目。',
         '高風險或會中斷裝置/服務的修復會停在 manual review。',
     ];
@@ -235,6 +238,7 @@ async function buildIssuePlan(problemText) {
         },
         RelevantRules: relevantRules,
         SpecializedDiagnostics: specializedDiagnostics,
+        OfflineToolPlan: offlineToolPlan,
         AiTriageSummary: triage.Summary,
         RepairPreview: {
             RepairPlanVersion: repairPlan.RepairPlanVersion,
@@ -254,6 +258,8 @@ async function buildIssuePlan(problemText) {
             NoRepairExecuted: true,
             RunGateRequired: true,
             AutoBatchRequiresPolicyApproval: true,
+            OfflineToolAutoSelection: true,
+            OfflineToolExecution: 'preview-only',
             ExternalAi: 'not used',
         },
     };

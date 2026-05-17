@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-11] 離線工具自動選用介面
+### 問題描述
+離線工具已被安全封裝，但一般使用者不知道何時應使用 SetupDiag、RAMMap、TCPView、Process Monitor 等工具；若只把工具放進 USB，仍無法達成高度智能自動化。
+### 成功解決方案
+新增 `offlineTools.js`，由自然語言問題分類自動映射到封裝工具，並在 `ProblemSolverPanel` 顯示工具用途、可用狀態與 sequential command preview。此層只做自動選用與預覽，不執行、不解壓縮、不安裝、不改 allowlist。
+### 驗證方式
+`Test-OfflineToolAutomation.ps1` 確認 service 不含 spawn/exec、工具 manifest 全部 `autoRunAllowed=false`、來源為 `microsoft_official`，並以 broker service tests、lint、targeted Pester parse 驗證。
+
 ## [SUCCESS-20260517-10] Microsoft 官方離線診斷工具包
 ### 問題描述
 離線維修現場需要可攜診斷工具，但直接下載整包或第三方工具會引入遠端執行、破壞性清除與供應鏈風險。

@@ -7,6 +7,7 @@ const { getAllowedRepairScripts, isAllowedRepairScript } = require('../services/
 const { invokeRecommendedRepairPlan } = require('../services/repairPlan');
 const { getAiAssistantTriage } = require('../services/aiAssistant');
 const { classifyIssue, buildIssuePlan } = require('../services/issuePlanner');
+const { getToolPackageStatus, selectToolsForComponent } = require('../services/offlineTools');
 const { analyzeVision, getVisionStatus } = require('../services/vision');
 const { hashToken, verifyTokenHash, roleAllows, getManagementStatus } = require('../services/admin');
 const config = require('../config');
@@ -155,7 +156,27 @@ async function testIssuePlanner() {
     assert.ok(Array.isArray(plan.UserReport.NextActions));
     assert.ok(plan.SpecializedDiagnostics);
     assert.ok(plan.SpecializedDiagnostics.CheckCount >= 1);
+    assert.ok(plan.OfflineToolPlan);
+    assert.strictEqual(plan.OfflineToolPlan.SafetyPolicy.NoToolExecuted, true);
+    assert.ok(plan.OfflineToolPlan.SelectedTools.length >= 1);
     assert.ok(plan.RepairPreview.RepairPlanVersion >= 4);
+}
+
+function testOfflineTools() {
+    const status = getToolPackageStatus();
+    assert.ok(['PASS', 'WARN', 'WAITING'].includes(status.Status));
+    assert.strictEqual(status.SafetyPolicy.NoToolExecuted, true);
+    assert.strictEqual(status.SafetyPolicy.AutoRunAllowed, false);
+    if (status.Status === 'PASS') {
+        assert.ok(status.ToolCount >= 1);
+        assert.ok(status.Tools.every((tool) => tool.autoRunAllowed === false));
+        assert.ok(status.Tools.every((tool) => tool.commandPreview));
+    }
+
+    const selected = selectToolsForComponent('performance');
+    assert.strictEqual(selected.Mode, 'offline-tool-auto-selection-preview');
+    assert.strictEqual(selected.SafetyPolicy.NoToolExecuted, true);
+    assert.ok(selected.SelectedTools.some((item) => item.id === 'rammap'));
 }
 
 (async () => {
@@ -172,6 +193,7 @@ async function testIssuePlanner() {
     await testVisionFallback();
     await testRecommendedRepairPlanPreview();
     await testAiAssistantTriage();
+    testOfflineTools();
     await testIssuePlanner();
     console.log('broker service tests passed');
 })();

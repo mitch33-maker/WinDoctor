@@ -53,6 +53,7 @@ $scriptNames = @(
     "Test-RepairToolPackageManifest.ps1",
     "New-RepairToolPackage.ps1",
     "Save-OfflineRepairTools.ps1",
+    "Test-OfflineToolAutomation.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",
@@ -106,6 +107,7 @@ $relativeFiles = @(
     "gui\broker\services\aiAssistant.js",
     "gui\broker\services\eventLogAnalyzer.js",
     "gui\broker\services\issuePlanner.js",
+    "gui\broker\services\offlineTools.js",
     "gui\broker\services\repairPlan.js",
     "gui\broker\services\work.js",
     "gui\broker\tests\services.test.js",
@@ -153,6 +155,7 @@ $rootFiles = @(
     "TASK_HANDOFF.md",
     "NEXT_CHAT_PROMPT.md",
     "COMMON_WINDOWS_ERRORS.md",
+    "SUCCESS_EXPERIENCE.md",
     "SYSTEM_ERROR_HISTORY.md",
     "EXTERNAL_REPAIR_TOOLS_STRATEGY.md"
 )

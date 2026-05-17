@@ -1,3 +1,30 @@
+# 2026-05-17 Offline Tool Auto-Selection UI
+
+- User clarified that the offline interface must gain the ability to automatically use/select tools because normal users cannot manually choose the correct diagnostic utility.
+- Added preview-first offline tool auto-selection:
+  - `gui\broker\services\offlineTools.js`
+  - `GET /api/offline-tools`
+  - `POST /api/offline-tools/select`
+  - `IssuePlan.OfflineToolPlan`
+  - `ProblemSolverPanel` offline tool selection display
+  - `scripts\Test-OfflineToolAutomation.ps1`
+- Behavior:
+  - maps user problem categories to packaged offline Microsoft diagnostic tools.
+  - displays selected tools, purpose, readiness, package path, and sequential command preview.
+  - integrates with the natural-language issue plan so the user only types the problem.
+- Safety:
+  - no external tool was executed.
+  - no tool was extracted or installed.
+  - no repair allowlist update.
+  - no GUI/Broker startup.
+  - no production build.
+  - actual tool execution still requires a separate reviewed diagnostic runner and RUN gate.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-tool-automation-20260517.json`: `PASS`, `ToolCount=8`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester parse: `PASS`
+
 # 2026-05-17 Offline Microsoft Diagnostic Tool Package
 
 - User requested downloading and packaging offline tools/software required for repair.

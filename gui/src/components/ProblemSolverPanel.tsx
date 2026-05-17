@@ -75,6 +75,31 @@ export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onT
             <div className="mt-1 text-2xl font-semibold text-white">{displayPlan.SpecializedDiagnostics?.CheckCount ?? 0}</div>
             <div className="text-sm text-slate-300">{displayPlan.SpecializedDiagnostics?.Status ?? "UNKNOWN"}</div>
           </div>
+          <div className="rounded-md border border-white/10 bg-black/30 p-3">
+            <div className="text-xs uppercase text-slate-400">離線工具</div>
+            <div className="mt-1 text-2xl font-semibold text-white">{displayPlan.OfflineToolPlan?.SelectedTools.length ?? 0}</div>
+            <div className="text-sm text-slate-300">{displayPlan.OfflineToolPlan?.Status ?? "UNKNOWN"}</div>
+          </div>
+          {displayPlan.OfflineToolPlan && (
+            <div className="md:col-span-3 rounded-md border border-emerald-500/20 bg-emerald-950/10 p-3">
+              <div className="text-sm font-medium text-white">離線工具自動選用</div>
+              <div className="mt-1 text-xs text-emerald-100">{displayPlan.OfflineToolPlan.NextAction}</div>
+              <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
+                {displayPlan.OfflineToolPlan.SelectedTools.map((item) => (
+                  <div key={item.id} className="rounded-md border border-white/10 bg-black/30 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-sm font-medium text-white">{item.tool?.name ?? item.id}</div>
+                      <div className="text-xs text-slate-300">{item.status}</div>
+                    </div>
+                    <div className="mt-1 text-xs text-slate-300">{item.reason}</div>
+                    <code className="mt-2 block break-all rounded border border-white/10 bg-black/40 p-2 text-xs text-slate-200">
+                      {item.tool?.commandPreview || "工具尚未封裝到離線套件"}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="md:col-span-3 rounded-md border border-white/10 bg-black/30 p-3">
             <div className="text-sm font-medium text-white">{displayPlan.UserReport.Summary}</div>
             <ul className="mt-2 list-disc pl-5 text-sm text-slate-300">

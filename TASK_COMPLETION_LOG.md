@@ -6,6 +6,14 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-134411] Offline tool auto-selection UI
+- Time: `2026-05-17 13:44:11 +08:00`
+- Status: `PASS`
+- Summary: Added preview-first offline diagnostic tool auto-selection for natural-language issue plans; no tools executed, installed, extracted, or promoted to allowlist.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-tool-automation-20260517.json`
+
+
 ## [20260517-133052] Offline Microsoft diagnostic tools package
 - Time: `2026-05-17 13:30:52 +08:00`
 - Status: `PASS`

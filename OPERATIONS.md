@@ -162,6 +162,13 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 This downloads SetupDiag and a restricted set of Microsoft Sysinternals diagnostic tools, checks SHA-256 and Authenticode signatures, excludes high-risk tools such as PsExec/PsKill/SDelete/PsShutdown, and keeps all tools non-autorun.
 
+Validate offline tool auto-selection for the offline UI:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-OfflineToolAutomation.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\offline-tool-automation.latest.json -Json
+```
+
+The offline UI can automatically select the most relevant packaged diagnostic tools for the user's problem and show a sequential command preview. This is preview-only: it does not install tools, execute tools, update the repair allowlist, or perform repair actions without a separate RUN-gated execution path.
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json

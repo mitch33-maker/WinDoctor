@@ -72,3 +72,13 @@ Packaging a tool does not add it to:
 - one-click repair execution
 
 Any execution path still requires reviewed KB, preview, dry-run impact, rollback guidance, local validation, allowlist review, and RUN gate.
+
+## Offline UI Auto-Selection
+The offline interface may automatically select packaged diagnostic tools based on the user's problem category:
+- Windows Update: SetupDiag and trace tools.
+- Performance: RAMMap and Process Explorer.
+- Network: TCPView and Process Explorer.
+- Printer: Process Monitor and Handle.
+- Boot, hardware, and system integrity: Sigcheck, Autoruns, or trace tools as diagnostic evidence.
+
+This selection is not execution approval. The interface may display tool purpose, availability, package path, and a sequential command preview. It must not execute, extract, install, or add any selected tool to the repair allowlist unless a separate reviewed diagnostic runner is created and explicitly RUN-gated.

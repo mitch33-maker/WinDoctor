@@ -287,6 +287,40 @@ export type EventLogAnalysis = {
   CsvPath?: string;
 };
 
+export type OfflineToolPlan = {
+  Status: string;
+  Mode: string;
+  Component: string;
+  PackageRoot?: string | null;
+  SelectedTools: Array<{
+    id: string;
+    reason: string;
+    status: "ready" | "missing";
+    tool: {
+      id: string;
+      name: string;
+      publisher: string;
+      allowedUse: string;
+      executionPolicy: string;
+      autoRunAllowed: boolean;
+      sourceTrustLevel: string;
+      expectedSha256: string;
+      packageRelativePath: string;
+      available: boolean;
+      commandPreview: string;
+    } | null;
+  }>;
+  ExecutionModel: string;
+  NextAction: string;
+  SafetyPolicy: {
+    NoToolExecuted: boolean;
+    NoInstall: boolean;
+    NoRepairAllowlistChange: boolean;
+    AutoRunAllowed: boolean;
+    RunGateRequired: boolean;
+  };
+};
+
 export type IssuePlan = {
   Status: string;
   Mode: string;
@@ -309,6 +343,7 @@ export type IssuePlan = {
     CheckCount: number;
     Checks: Array<{ Name: string; Status: string; Detail: string; Data?: unknown }>;
   };
+  OfflineToolPlan?: OfflineToolPlan;
   AiTriageSummary: AiTriageResult["Summary"];
   RepairPreview: {
     RepairPlanVersion: number;
@@ -331,6 +366,8 @@ export type IssuePlan = {
     NoRepairExecuted: boolean;
     RunGateRequired: boolean;
     AutoBatchRequiresPolicyApproval: boolean;
+    OfflineToolAutoSelection?: boolean;
+    OfflineToolExecution?: string;
     ExternalAi: string;
   };
 };

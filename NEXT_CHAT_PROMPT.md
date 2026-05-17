@@ -1,5 +1,31 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-tool-auto-selection-ui`：
+- 已把離線工具封裝結果接入自然語言問題介面。
+- 新增：
+  - `gui\broker\services\offlineTools.js`
+  - `GET /api/offline-tools`
+  - `POST /api/offline-tools/select`
+  - `IssuePlan.OfflineToolPlan`
+  - `scripts\Test-OfflineToolAutomation.ps1`
+- 使用者輸入問題後，系統會依分類自動選出可用離線診斷工具並顯示：
+  - 工具名稱
+  - 用途
+  - 是否已封裝可用
+  - sequential command preview
+- 安全狀態：
+  - 未執行工具。
+  - 未解壓縮或安裝工具。
+  - 未更新 repair allowlist。
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+  - 任何真實工具執行仍需另外建立 reviewed diagnostic runner 並受 RUN gate 控制。
+- 驗證：
+  - `E:\WindowsDoctor\logs\offline-tool-automation-20260517.json`: `PASS`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester parse: `PASS`
+
 最新狀態 `2026-05-17 offline-microsoft-diagnostic-tools`：
 - 已下載並封裝離線 Microsoft 官方診斷工具。
 - 工具清單：

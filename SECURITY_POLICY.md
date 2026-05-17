@@ -39,6 +39,7 @@ Last updated: `2026-05-09`
 - Optional repair/diagnostic tool packaging must validate manifest metadata, HTTPS source URL, source trust level, SHA-256 hash, license note, execution policy, and `autoRunAllowed=false`.
 - Tool packaging must not install, execute, register services, change PATH, add scheduled tasks, or update `scripts\repair-allowlist.json`.
 - Microsoft offline diagnostic acquisition must verify SHA-256 and Authenticode signatures where executable files are present, and must exclude high-risk remote execution or destructive tools from default packaging.
+- Offline UI automatic tool selection may recommend packaged diagnostic tools and show sequential command previews, but must not execute, extract, install, or promote any tool into repair allowlist without a separate reviewed RUN-gated diagnostic runner.
 
 ## 4. Antivirus And EDR Compatibility
 - Standard operations use `ExecutionPolicy RemoteSigned`; `ExecutionPolicy Bypass`, encoded commands, and `Invoke-Expression` are prohibited in repository scripts.
