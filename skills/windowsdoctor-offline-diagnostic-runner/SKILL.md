@@ -62,11 +62,21 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 The runner must:
 - select tools by component.
+- accept comma-separated `-ToolId` batches.
 - validate package SHA-256 before use.
 - run tools sequentially.
 - run Resource Safety before and after each tool.
+- run only reviewed console tools automatically: `setupdiag`, `sigcheck64`, `tcpvcon64`, `handle64`, `autorunsc64`.
+- keep GUI tools extract-only unless a future reviewed console mode is added.
+- enforce `MaxToolSeconds` and `MaxOutputKB` limits.
 - write JSON evidence.
 - keep `NoRepairExecuted=true`.
+
+Safe low-risk batch diagnostic example:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1 -Root E:\WindowsDoctor -ToolId setupdiag,sigcheck,tcpview,handle,autoruns -OutputRoot E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-YYYYMMDD -MaxToolSeconds 60 -MaxOutputKB 512 -Execute -ConfirmToken RUN -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-YYYYMMDD.json -Json
+```
 
 ## Output Conversion Pattern
 
@@ -82,7 +92,7 @@ To create an external diagnostic evidence pack for the existing import gate:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1 -Root E:\WindowsDoctor -InputRoot "$env:LOCALAPPDATA\WindowsDoctor\OfflineDiagnostics" -ExternalPackPath E:\WindowsDoctor\incoming\external-diagnostics\offline-diagnostic-evidence.latest.json -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -Json
 ```
 
-The converter may parse SetupDiag, Sigcheck, and TCPView evidence. Non-core tool evidence must use `manual-external` adapter flow when imported into normalized diagnostics.
+The converter may parse SetupDiag, Sigcheck, TCPView, Handle, and Autoruns evidence. Non-core tool evidence must use `manual-external` adapter flow when imported into normalized diagnostics.
 
 ## Validation Checklist
 Use the smallest safe set that covers the change:

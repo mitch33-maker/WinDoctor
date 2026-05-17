@@ -6,6 +6,26 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-155032] Safe CLI offline diagnostic batch runner
+- Time: `2026-05-17 15:50:32 +08:00`
+- Status: `PASS`
+- Summary: 完成 SetupDiag、Sigcheck、TCPVCon、Handle、Autorunsc 的 RUN-gated 真實 diagnostic-only 批次；新增逗號 ToolId、timeout、輸出大小限制、UTF-16 解析與 Handle/Autoruns evidence 摘要。未修復、未清理、未啟動 GUI/Broker、未 production build。
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-conversion-final2-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-evidence-pack-validate-final2-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-safe-cli-docs-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.safe-cli-offline-diagnostic-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `E:\WindowsDoctor\scripts\Test-OfflineDiagnosticRunnerSkill.ps1`
+  - `E:\WindowsDoctor\skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+  - `E:\WindowsDoctor\REPAIR_TOOL_PACKAGING_POLICY.md`
+- Next actions:
+  - 下一階段可把 safe CLI 診斷摘要接入使用者報告 UI，但仍不得自動修復或清理。
+
+
 ## [20260517-153329] Real SetupDiag diagnostic RUN evidence capture
 - Time: `2026-05-17 15:33:29 +08:00`
 - Status: `PASS`

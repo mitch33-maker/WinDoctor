@@ -1,3 +1,31 @@
+# 2026-05-17 Safe CLI Offline Diagnostic Runner
+
+- Continued the RUN-approved diagnostic-only plan.
+- Added safe console execution mode for Microsoft/Sysinternals offline tools:
+  - `setupdiag`
+  - `sigcheck64`
+  - `tcpvcon64`
+  - `handle64`
+  - `autorunsc64`
+- Added:
+  - comma-separated `-ToolId` batch support.
+  - `-MaxOutputKB` output truncation guard.
+  - UTF-16 aware diagnostic output parsing.
+  - Handle and Autoruns evidence summaries.
+- Real diagnostic batch result:
+  - SetupDiag completed; no relevant Windows Setup log found.
+  - Sigcheck completed with driver signature evidence.
+  - TCPVCon completed with network snapshot evidence.
+  - Handle completed with diagnostic evidence.
+  - Autorunsc completed with startup evidence.
+  - External diagnostics pack validation PASS with 5 findings.
+- Safety:
+  - no repair executed.
+  - no cleanup executed.
+  - no GUI/Broker startup.
+  - no production build.
+  - tools ran sequentially with Resource Safety before and after each tool.
+
 # 2026-05-17 Offline Diagnostic Parser And Manual Evidence Gate
 
 - Continued the unattended next-step plan without RUN.

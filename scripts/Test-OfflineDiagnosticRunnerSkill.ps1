@@ -52,8 +52,11 @@ Add-Check -Checks $checks -Name "skill-preview-default" -Passed ($skill -match '
 Add-Check -Checks $checks -Name "skill-usb-sync" -Passed ($skill -match 'Sync-GuiReadyUsbPatch\.ps1' -and $skill -match 'Test-PortableIncrementalPatch\.ps1') -Detail $skillPath
 Add-Check -Checks $checks -Name "runner-requires-run" -Passed ($runner -match 'ConfirmToken -ne "RUN"' -and $runner -match 'RunGateRequired') -Detail $runnerPath
 Add-Check -Checks $checks -Name "runner-resource-gated" -Passed ($runner -match 'Invoke-ResourceSafety' -and $runner -match 'Sequential') -Detail $runnerPath
+Add-Check -Checks $checks -Name "runner-safe-cli-tools" -Passed ($runner -match 'Get-SafeCliSpec' -and $runner -match 'sigcheck64\.exe' -and $runner -match 'tcpvcon64\.exe' -and $runner -match 'autorunsc64\.exe' -and $runner -match 'handle64\.exe') -Detail $runnerPath
+Add-Check -Checks $checks -Name "runner-output-limits" -Passed ($runner -match 'MaxOutputKB' -and $runner -match 'Limit-TextFile') -Detail $runnerPath
+Add-Check -Checks $checks -Name "runner-batch-toolid" -Passed ($runner -match 'Expand-ToolIdArgument' -and $runner -match '\$item -split ","') -Detail $runnerPath
 Add-Check -Checks $checks -Name "converter-external-pack" -Passed ($converter -match 'ExternalPackPath' -and $converter -match 'repairAllowed = \$false' -and $converter -match 'actionType = "manual_review"') -Detail $converterPath
-Add-Check -Checks $checks -Name "converter-tool-parsers" -Passed ($converter -match 'setupdiag' -and $converter -match 'sigcheck' -and $converter -match 'tcpview') -Detail $converterPath
+Add-Check -Checks $checks -Name "converter-tool-parsers" -Passed ($converter -match 'setupdiag' -and $converter -match 'sigcheck' -and $converter -match 'tcpview' -and $converter -match 'handle' -and $converter -match 'autoruns') -Detail $converterPath
 Add-Check -Checks $checks -Name "sync-includes-skill" -Passed ($sync -match 'windowsdoctor-offline-diagnostic-runner\\SKILL\.md') -Detail $syncPath
 Add-Check -Checks $checks -Name "patch-includes-skill" -Passed ($patch -match 'windowsdoctor-offline-diagnostic-runner\\SKILL\.md') -Detail $patchPath
 Add-Check -Checks $checks -Name "index-includes-skill" -Passed ($index -match 'windowsdoctor-offline-diagnostic-runner') -Detail $indexPath

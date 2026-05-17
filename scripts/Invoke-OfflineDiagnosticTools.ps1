@@ -4,6 +4,7 @@ param(
     [string[]]$ToolId = @(),
     [string]$OutputRoot = "",
     [int]$MaxToolSeconds = 120,
+    [int]$MaxOutputKB = 1024,
     [switch]$Execute,
     [string]$ConfirmToken = "",
     [string]$ReportPath = "",
@@ -45,6 +46,22 @@ function Get-ComponentToolIds {
     }
 }
 
+function Expand-ToolIdArgument {
+    param([string[]]$Value)
+    $items = New-Object System.Collections.Generic.List[string]
+    foreach ($item in $Value) {
+        if ($item -and $item.Contains(",")) {
+            foreach ($part in ($item -split ",")) {
+                if ($part.Trim()) { $items.Add($part.Trim()) | Out-Null }
+            }
+        }
+        elseif ($item) {
+            $items.Add($item) | Out-Null
+        }
+    }
+    return @($items)
+}
+
 function New-CommandPreview {
     param(
         [string]$ToolId,
@@ -55,17 +72,113 @@ function New-CommandPreview {
     if ($ToolId -eq "setupdiag") {
         return "`"$PackagePath`" /Output:`"$(Join-Path $toolOut "SetupDiagResults.log")`""
     }
+    $safeCli = Get-SafeCliSpec -ToolId $ToolId -ToolOut $toolOut
+    if ($safeCli) {
+        return "Expand-Archive -LiteralPath `"$PackagePath`" -DestinationPath `"$toolOut`" -Force; `"$($safeCli.ExecutablePath)`" $($safeCli.ArgumentList -join ' ')"
+    }
     if ($PackagePath.ToLowerInvariant().EndsWith(".zip")) {
         return "Expand-Archive -LiteralPath `"$PackagePath`" -DestinationPath `"$toolOut`" -Force"
     }
     return "`"$PackagePath`""
 }
 
+function Get-SafeCliSpec {
+    param(
+        [string]$ToolId,
+        [string]$ToolOut
+    )
+    $systemRoot = if ($env:SystemRoot) { $env:SystemRoot } else { "C:\Windows" }
+    switch ($ToolId) {
+        "sigcheck" {
+            return [PSCustomObject]@{
+                ExecutableName = "sigcheck64.exe"
+                ExecutablePath = Join-Path $ToolOut "sigcheck64.exe"
+                ArgumentList = @("-accepteula", "-nobanner", "-q", "-e", (Join-Path $systemRoot "System32\drivers"))
+                OutputName = "sigcheck.txt"
+            }
+        }
+        "tcpview" {
+            return [PSCustomObject]@{
+                ExecutableName = "tcpvcon64.exe"
+                ExecutablePath = Join-Path $ToolOut "tcpvcon64.exe"
+                ArgumentList = @("-accepteula", "-nobanner", "-a")
+                OutputName = "tcpview.txt"
+            }
+        }
+        "handle" {
+            return [PSCustomObject]@{
+                ExecutableName = "handle64.exe"
+                ExecutablePath = Join-Path $ToolOut "handle64.exe"
+                ArgumentList = @("-accepteula", "-nobanner", "System")
+                OutputName = "handle.txt"
+            }
+        }
+        "autoruns" {
+            return [PSCustomObject]@{
+                ExecutableName = "autorunsc64.exe"
+                ExecutablePath = Join-Path $ToolOut "autorunsc64.exe"
+                ArgumentList = @("-accepteula", "-nobanner", "-a", "e", "-c")
+                OutputName = "autoruns.csv"
+            }
+        }
+        default {
+            return $null
+        }
+    }
+}
+
+function Limit-TextFile {
+    param(
+        [string]$Path,
+        [int]$MaxKB
+    )
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    $maxBytes = [Math]::Max(1, $MaxKB) * 1024
+    $item = Get-Item -LiteralPath $Path
+    if ($item.Length -le $maxBytes) { return }
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $prefix = [System.Text.Encoding]::UTF8.GetBytes("[WindowsDoctor truncated diagnostic output to $MaxKB KB]`r`n")
+    $take = [Math]::Max(0, $maxBytes - $prefix.Length)
+    $limited = New-Object byte[] ($prefix.Length + $take)
+    [Array]::Copy($prefix, 0, $limited, 0, $prefix.Length)
+    [Array]::Copy($bytes, 0, $limited, $prefix.Length, $take)
+    [System.IO.File]::WriteAllBytes($Path, $limited)
+}
+
+function Invoke-SafeCliTool {
+    param(
+        [object]$Tool,
+        [string]$OutRoot,
+        [int]$TimeoutSeconds,
+        [int]$MaxOutputKB
+    )
+    $toolOut = Join-Path $OutRoot $Tool.Id
+    Expand-Archive -LiteralPath $Tool.PackagePath -DestinationPath $toolOut -Force
+    $safeCli = Get-SafeCliSpec -ToolId $Tool.Id -ToolOut $toolOut
+    if (-not $safeCli -or -not (Test-Path -LiteralPath $safeCli.ExecutablePath)) {
+        return [PSCustomObject]@{ Status = "EXTRACTED_ONLY"; ExitCode = 0; OutputPath = $toolOut }
+    }
+    $stdoutLog = Join-Path $toolOut $safeCli.OutputName
+    $stderrLog = Join-Path $toolOut "$($Tool.Id).stderr.log"
+    $process = Start-Process -FilePath $safeCli.ExecutablePath -ArgumentList $safeCli.ArgumentList -WorkingDirectory $toolOut -NoNewWindow -PassThru -Wait:$false -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog
+    if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
+        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+        Limit-TextFile -Path $stdoutLog -MaxKB $MaxOutputKB
+        Limit-TextFile -Path $stderrLog -MaxKB 128
+        return [PSCustomObject]@{ Status = "TIMEOUT"; ExitCode = $null; OutputPath = $stdoutLog }
+    }
+    $process.Refresh()
+    Limit-TextFile -Path $stdoutLog -MaxKB $MaxOutputKB
+    Limit-TextFile -Path $stderrLog -MaxKB 128
+    return [PSCustomObject]@{ Status = "COMPLETED"; ExitCode = $process.ExitCode; OutputPath = $stdoutLog }
+}
+
 function Invoke-OneTool {
     param(
         [object]$Tool,
         [string]$OutRoot,
-        [int]$TimeoutSeconds
+        [int]$TimeoutSeconds,
+        [int]$MaxOutputKB
     )
     $toolOut = Join-Path $OutRoot $Tool.Id
     if (-not (Test-Path -LiteralPath $toolOut)) {
@@ -92,8 +205,7 @@ function Invoke-OneTool {
     }
 
     if ($Tool.PackagePath.ToLowerInvariant().EndsWith(".zip")) {
-        Expand-Archive -LiteralPath $Tool.PackagePath -DestinationPath $toolOut -Force
-        return [PSCustomObject]@{ Status = "EXTRACTED_ONLY"; ExitCode = 0; OutputPath = $toolOut }
+        return Invoke-SafeCliTool -Tool $Tool -OutRoot $OutRoot -TimeoutSeconds $TimeoutSeconds -MaxOutputKB $MaxOutputKB
     }
 
     return [PSCustomObject]@{ Status = "SKIPPED"; ExitCode = $null; OutputPath = $toolOut }
@@ -120,7 +232,8 @@ if (-not (Test-Path -LiteralPath $manifestPath)) {
 }
 
 $manifest = Get-Content -Raw -Encoding UTF8 -LiteralPath $manifestPath | ConvertFrom-Json
-$selectedIds = if ($ToolId.Count -gt 0) { $ToolId } else { Get-ComponentToolIds -Name $Component }
+$expandedToolIds = Expand-ToolIdArgument -Value $ToolId
+$selectedIds = if ($expandedToolIds.Count -gt 0) { $expandedToolIds } else { Get-ComponentToolIds -Name $Component }
 $toolFileById = @{
     "setupdiag" = "SetupDiag.exe"
     "process-explorer" = "ProcessExplorer.zip"
@@ -186,7 +299,7 @@ if ($Execute) {
             $executed.Add([PSCustomObject]@{ Id = $item.Id; Status = "SKIPPED_RESOURCE_SAFETY"; Detail = "Pre-tool resource safety failed" }) | Out-Null
             break
         }
-        $result = Invoke-OneTool -Tool $item -OutRoot $resolvedOutputRoot -TimeoutSeconds $MaxToolSeconds
+        $result = Invoke-OneTool -Tool $item -OutRoot $resolvedOutputRoot -TimeoutSeconds $MaxToolSeconds -MaxOutputKB $MaxOutputKB
         $post = Invoke-ResourceSafety -RootPath $resolvedRoot
         $executed.Add([PSCustomObject]@{
             Id = $item.Id
@@ -253,6 +366,8 @@ $resultObject = [PSCustomObject]@{
         NoRepairAllowlistChange = $true
         SequentialExecution = $true
         RunGateRequired = $true
+        MaxToolSeconds = $MaxToolSeconds
+        MaxOutputKB = $MaxOutputKB
     }
     ReportPath = $ReportPath
 }

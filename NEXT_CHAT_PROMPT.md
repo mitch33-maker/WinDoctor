@@ -1,5 +1,34 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 safe-cli-offline-diagnostic-runner`：
+- 已在使用者 RUN 授權範圍內完成真實 diagnostic-only 批次。
+- 新增/強化：
+  - `scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `scripts\Test-OfflineDiagnosticRunnerSkill.ps1`
+  - `skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+- Runner 能力：
+  - comma-separated `-ToolId` 批次。
+  - 逐項執行。
+  - 每項前後 Resource Safety。
+  - `MaxToolSeconds` timeout。
+  - `MaxOutputKB` 輸出截斷。
+  - safe CLI 工具：SetupDiag、Sigcheck、TCPVCon、Handle、Autorunsc。
+  - GUI 類工具維持 extract-only。
+- Parser 能力：
+  - UTF-16 aware text decoding。
+  - SetupDiag / Sigcheck / TCPView / Handle / Autoruns evidence summary。
+  - external diagnostics pack gate PASS。
+- 真實批次 evidence：
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-conversion-final2-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-safe-cli-real-run-evidence-pack-validate-final2-20260517.json`
+- 安全狀態：
+  - 未執行修復。
+  - 未執行清理。
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+
 最新狀態 `2026-05-17 offline-diagnostic-parser-evidence-gate`：
 - 已完成下一步計畫中不需要 RUN 的項目。
 - 新增/更新：

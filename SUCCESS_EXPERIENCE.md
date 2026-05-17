@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-15] Safe CLI 離線真實診斷批次
+### 問題描述
+離線工具已能 RUN-gated 執行，但 zip 內多數工具是 GUI 或混合工具；若直接啟動可能造成使用者互動、資源失控或誤判輸出。實測也發現 Sysinternals 輸出可能是 UTF-16，若用 UTF-8 解析會產生錯誤摘要。
+### 成功解決方案
+在 `Invoke-OfflineDiagnosticTools.ps1` 中只允許 reviewed console 工具自動執行：SetupDiag、Sigcheck、TCPVCon、Handle、Autorunsc；加入 comma-separated `-ToolId`、`MaxToolSeconds`、`MaxOutputKB`。GUI 類工具維持 extract-only。`Convert-OfflineDiagnosticToolOutput.ps1` 改為 UTF-16 aware，並只讀實際輸出檔。
+### 驗證方式
+以真實 RUN diagnostic-only 批次執行 5 項工具，逐項 Resource Safety PASS；輸出轉 external diagnostics pack 後，`Test-ExternalDiagnosticsPack.ps1` 驗證 PASS，5 findings 全部維持 manual review / diagnostic-only。
+
 ## [SUCCESS-20260517-14] 離線診斷輸出 evidence gate
 ### 問題描述
 離線工具 runner 若只留下原始輸出，後續仍需人工判讀；但若直接把工具結果轉成修復，會破壞 reviewed KB、allowlist 與 RUN gate。

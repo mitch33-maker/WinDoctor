@@ -90,6 +90,9 @@ This selection is not execution approval. The interface may display tool purpose
 - tools run one at a time.
 - Resource Safety runs before and after each tool.
 - package SHA-256 is rechecked before use.
+- reviewed console execution is limited to SetupDiag, Sigcheck, TCPVCon, Handle, and Autorunsc.
+- GUI-oriented Sysinternals tools remain extract-only unless a reviewed console-safe mode is added.
+- diagnostic execution must enforce per-tool timeout and output-size limits.
 - output conversion is diagnostic evidence only.
 - no repair script is executed and no repair allowlist is changed.
 

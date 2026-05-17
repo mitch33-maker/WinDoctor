@@ -12,7 +12,17 @@ $ErrorActionPreference = "Stop"
 function Read-TextIfExists {
     param([string]$Path)
     if (-not (Test-Path -LiteralPath $Path)) { return "" }
-    return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    if ($bytes.Length -eq 0) { return "" }
+    $sampleLength = [Math]::Min($bytes.Length, 200)
+    $zeroCount = 0
+    for ($i = 0; $i -lt $sampleLength; $i++) {
+        if ($bytes[$i] -eq 0) { $zeroCount++ }
+    }
+    if ($zeroCount -gt [Math]::Max(4, [int]($sampleLength / 4))) {
+        return [System.Text.Encoding]::Unicode.GetString($bytes)
+    }
+    return [System.Text.Encoding]::UTF8.GetString($bytes)
 }
 
 function Get-FirstRegexValue {
@@ -84,7 +94,7 @@ if ($setupDiagText) {
 
 $sigcheckDir = Join-Path $resolvedInputRoot "sigcheck"
 if (Test-Path -LiteralPath $sigcheckDir) {
-    $sigcheckFiles = @(Get-ChildItem -LiteralPath $sigcheckDir -Recurse -File -Include *.txt,*.csv -ErrorAction SilentlyContinue)
+    $sigcheckFiles = @(Get-ChildItem -LiteralPath $sigcheckDir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -in @("sigcheck.txt", "sigcheck.csv") })
     $sigcheckText = ($sigcheckFiles | Select-Object -First 5 | ForEach-Object { Read-TextIfExists -Path $_.FullName }) -join "`n"
     $unsignedCount = ([regex]::Matches($sigcheckText, "(?im)\b(unsigned|not signed)\b")).Count
     $invalidCount = ([regex]::Matches($sigcheckText, "(?im)\b(invalid|revoked|untrusted)\b")).Count
@@ -94,14 +104,31 @@ if (Test-Path -LiteralPath $sigcheckDir) {
 
 $tcpViewDir = Join-Path $resolvedInputRoot "tcpview"
 if (Test-Path -LiteralPath $tcpViewDir) {
-    $tcpFiles = @(Get-ChildItem -LiteralPath $tcpViewDir -Recurse -File -Include *.txt,*.csv -ErrorAction SilentlyContinue)
+    $tcpFiles = @(Get-ChildItem -LiteralPath $tcpViewDir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -in @("tcpview.txt", "tcpview.csv") })
     $tcpText = ($tcpFiles | Select-Object -First 5 | ForEach-Object { Read-TextIfExists -Path $_.FullName }) -join "`n"
     $establishedCount = ([regex]::Matches($tcpText, "(?im)\bESTABLISHED\b")).Count
     $listeningCount = ([regex]::Matches($tcpText, "(?im)\bLISTENING\b")).Count
     Add-Finding -List $findings -ToolId "tcpview" -SourcePath $tcpViewDir -Component "network" -Evidence "tcpview files=$($tcpFiles.Count); established=$establishedCount; listening=$listeningCount" -RepairState "manual_review" -Recommendation "Use connection summary as network evidence only. Do not close connections automatically." -TriggerTerms @("tcpview", "network", "connection")
 }
 
-$knownToolDirs = @("process-explorer", "process-monitor", "autoruns", "handle", "rammap")
+$handleDir = Join-Path $resolvedInputRoot "handle"
+if (Test-Path -LiteralPath $handleDir) {
+    $handleFiles = @(Get-ChildItem -LiteralPath $handleDir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "handle.txt" })
+    $handleText = ($handleFiles | Select-Object -First 3 | ForEach-Object { Read-TextIfExists -Path $_.FullName }) -join "`n"
+    $matchCount = ([regex]::Matches($handleText, "(?im)^\s*[A-Za-z0-9_.-]+(?:\.exe)?\s+pid:")).Count
+    Add-Finding -List $findings -ToolId "handle" -SourcePath $handleDir -Component "performance" -Evidence "handle files=$($handleFiles.Count); processSections=$matchCount" -RepairState "manual_review" -Recommendation "Review handle evidence manually. Do not close handles or terminate processes automatically." -TriggerTerms @("handle", "locked file", "process")
+}
+
+$autorunsDir = Join-Path $resolvedInputRoot "autoruns"
+if (Test-Path -LiteralPath $autorunsDir) {
+    $autorunsFiles = @(Get-ChildItem -LiteralPath $autorunsDir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -in @("autoruns.csv", "autoruns.txt") })
+    $autorunsText = ($autorunsFiles | Select-Object -First 3 | ForEach-Object { Read-TextIfExists -Path $_.FullName }) -join "`n"
+    $disabledCount = ([regex]::Matches($autorunsText, "(?im)\bdisabled\b")).Count
+    $unsignedCount = ([regex]::Matches($autorunsText, "(?im)\b(unsigned|not verified|not signed)\b")).Count
+    Add-Finding -List $findings -ToolId "autoruns" -SourcePath $autorunsDir -Component "startup" -Evidence "autoruns files=$($autorunsFiles.Count); disabled=$disabledCount; unsignedOrUnverified=$unsignedCount" -RepairState "manual_review" -Recommendation "Review startup evidence manually. Do not disable startup entries automatically." -TriggerTerms @("autoruns", "startup", "logon", "unsigned")
+}
+
+$knownToolDirs = @("process-explorer", "process-monitor", "rammap")
 foreach ($toolId in $knownToolDirs) {
     $toolDir = Join-Path $resolvedInputRoot $toolId
     if (Test-Path -LiteralPath $toolDir) {
