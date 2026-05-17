@@ -1,5 +1,29 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 windows-resource-organizer-capability`：
+- 使用者要求確認/擴充 Windows 資源整理功能：
+  - 網域或多使用者狀態下登出未使用帳號
+  - 釋放記憶體
+  - 釋放系統硬碟、暫存檔、Windows Update 暫存與垃圾檔
+  - 強制移除程式與殘留目錄/檔案
+  - 同質性清理軟體功能
+  - WindowsDoctor 建議功能
+- 已新增：
+  - `WINDOWS_RESOURCE_ORGANIZER_PLAN.md`
+  - `scripts\Test-WindowsResourceOrganizerCapability.ps1`
+- 目前狀態：
+  - disconnected session logoff：已有 preview/RUN-gated 執行入口。
+  - memory release：已有資源 gate、低資源啟動與 WindowsDoctor worker cleanup；不任意 kill 其他程式。
+  - disk cleanup：已有 TEMP/Windows TEMP/Recycle Bin preview/RUN-gated 清理；Windows Update cache/component cleanup 仍需獨立 dry-run/rollback。
+  - forced uninstall：尚未正式執行化，只能先做 inventory/preview。
+  - 同質軟體功能：先列入 reference-only，不接入正式自動修復。
+- 驗證：
+  - `Test-WindowsResourceOrganizerCapability.ps1`: `PASS`
+  - targeted Pester parse: `PASS`
+- 安全：
+  - 未執行清理、登出、強制移除、第三方流程匯入。
+  - GitHub/community code 只可作 reference/quarantine，不能直接套入正式系統。
+
 最新狀態 `2026-05-17 specialized-diagnostics-lowrisk-autobatch`：
 - 已把自然語言 AI 問題入口接上唯讀專項診斷：
   - `scripts\Test-SpecializedIssueDiagnostics.ps1`

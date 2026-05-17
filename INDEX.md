@@ -11,6 +11,7 @@ Last updated: `2026-05-17`
 | [DOCUMENTATION_ARCHITECTURE.md](DOCUMENTATION_ARCHITECTURE.md) | 文件讀取順序、安全 gate、角色分層與可持續性規則 | High |
 | [MEMORY_SYSTEM.md](MEMORY_SYSTEM.md) | 長期記憶分層、任務完成紀錄、skill 化規則與最小讀取路徑 | High |
 | [PERFORMANCE_POLICY.md](PERFORMANCE_POLICY.md) | 高效能、低資源消耗的預設執行策略與資源預算 | High |
+| [WINDOWS_RESOURCE_ORGANIZER_PLAN.md](WINDOWS_RESOURCE_ORGANIZER_PLAN.md) | Windows 資源整理、登出、清理、強制移除與同質軟體功能的安全分級計畫 | High |
 | [AUTO_REPAIR_SAFETY_POLICY.md](AUTO_REPAIR_SAFETY_POLICY.md) | 一鍵自動修復升級 gate、可逆性、dry-run、rollback、allowlist review 與 RUN gate | High |
 | [REPAIR_COVERAGE_ROADMAP.md](REPAIR_COVERAGE_ROADMAP.md) | 80%/100% 診斷與修復覆蓋率目標、官方來源優先與第三方隔離策略 | High |
 | [EXTERNAL_REPAIR_TOOLS_STRATEGY.md](EXTERNAL_REPAIR_TOOLS_STRATEGY.md) | 外部維修工具、官方診斷來源與 WindowsDoctor 架構定位 | High |
@@ -64,6 +65,7 @@ Last updated: `2026-05-17`
 | `scripts\Test-RepairCoverageGoal.ps1` | 驗證 normalized KB 的元件覆蓋率與官方來源覆蓋率是否達標 |
 | `scripts\Test-AutoRepairSafetyPolicy.ps1` | 驗證自動修復 policy 是否覆蓋 allowlist、rollback、RUN gate 與 auto-batch 安全條件 |
 | `scripts\Test-SpecializedIssueDiagnostics.ps1` | 對印表機、Windows Update、網路、開機、效能、硬體與系統完整性執行唯讀專項診斷 |
+| `scripts\Test-WindowsResourceOrganizerCapability.ps1` | 驗證 Windows 資源整理需求覆蓋狀態、風險分級與下一步，不執行清理或移除 |
 | `scripts\Test-LowResourceStartup.ps1` | 驗證 Broker-only 低資源模式，不啟動 Next dev GUI |
 | `scripts\New-PortableIncrementalPatch.ps1` | 建立小型 USB 增量 patch zip，避免重壓完整 GUI-ready package |
 | `scripts\Test-PortableIncrementalPatch.ps1` | 驗證增量 patch zip、manifest 與 package root 內容一致 |

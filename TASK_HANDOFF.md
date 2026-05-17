@@ -1,3 +1,28 @@
+# 2026-05-17 Windows Resource Organizer Capability Matrix
+
+- User asked whether WindowsDoctor includes Windows resource organizer functions:
+  - domain/multi-user disconnected account logoff
+  - memory release
+  - system drive/temp/update cleanup
+  - forced uninstall with leftover cleanup
+  - parity with common cleaner tools
+  - additional recommended controls
+- Added:
+  - `WINDOWS_RESOURCE_ORGANIZER_PLAN.md`
+  - `scripts\Test-WindowsResourceOrganizerCapability.ps1`
+- Current status:
+  - disconnected session logoff: partial, preview/RUN-gated through `Invoke-WindowsMaintenance.ps1`
+  - memory release: partial, resource guards and scoped WindowsDoctor worker cleanup exist
+  - disk cleanup: partial, TEMP/Windows TEMP/Recycle Bin only; Windows Update/component cleanup still manual/RUN-gated
+  - forced uninstall: not formalized for execution; inventory/preview first only
+  - market parity cleaner features: reference-only until reviewed and allowlisted
+- Safety:
+  - no cleanup, logoff, uninstall, or third-party workflow import was executed.
+  - GitHub/community cleaner logic remains reference-only until reviewed KB, dry-run evidence, rollback guidance, and allowlist review exist.
+- Evidence:
+  - `E:\WindowsDoctor\logs\windows-resource-organizer-capability-20260517.json`: `PASS`
+  - targeted Pester parse: `PASS`
+
 # 2026-05-17 Specialized Diagnostics And Low-Risk Auto-Batch Candidate
 
 - Continued the high-performance, low-resource, AI-assisted repair path.

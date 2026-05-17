@@ -762,6 +762,16 @@ Windows maintenance safety:
 - `-SystemMaintenance` runs `DISM /ScanHealth`, `sfc /verifyonly`, and `chkdsk C: /scan` only in execute mode.
 - `Repair-SystemMaintenance.bat` is an allowlisted preview entry; direct execution of destructive maintenance still requires `Invoke-WindowsMaintenance.ps1 -Execute -ConfirmToken RUN`.
 
+Validate Windows resource organizer capability without executing cleanup:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-WindowsResourceOrganizerCapability.ps1 -Root E:\WindowsDoctor -ReportPath E:\WindowsDoctor\logs\windows-resource-organizer-capability.latest.json -Json
+```
+
+Resource organizer policy:
+- Domain/session logoff, disk cleanup, Windows Update cache cleanup, forced uninstall, leftover directory removal, browser cache cleanup, and registry cleanup are state-changing maintenance actions.
+- These actions must stay preview-first and RUN-gated.
+- GitHub/community cleaner logic may be recorded as reference only; it must not be copied into formal execution until reviewed, locally validated, rollback documented, and allowlisted.
+
 Execute an allowlisted repair script only after explicit confirmation:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Invoke-AllowedRepair.ps1 -ScriptName Repair-NetworkStack.bat -Execute -ConfirmToken RUN

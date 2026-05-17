@@ -6,6 +6,30 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-105207] Windows resource organizer capability matrix
+- Time: `2026-05-17 10:52:07 +08:00`
+- Status: `PASS`
+- Summary: Added a safe capability matrix for Windows resource organizer requirements covering disconnected-session logoff, memory release, disk cleanup, forced uninstall, market-parity cleaner features, and WindowsDoctor recommended controls. No cleanup, logoff, uninstall, or third-party workflow import was executed.
+- Evidence:
+  - `E:\WindowsDoctor\logs\windows-resource-organizer-capability-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.resource-organizer-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-resource-organizer-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-resource-organizer-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.resource-organizer-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.resource-organizer-g-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\WINDOWS_RESOURCE_ORGANIZER_PLAN.md`
+  - `E:\WindowsDoctor\scripts\Test-WindowsResourceOrganizerCapability.ps1`
+  - `E:\WindowsDoctor\INDEX.md`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `E:\WindowsDoctor\scripts\New-PortableIncrementalPatch.ps1`
+- Next actions:
+  - Implement read-only resource organizer preview for installed apps, large files, cleanup candidates, and startup items before adding any RUN-gated execution.
+
+
 ## [20260517-104300] Specialized diagnostics and low-risk auto-batch candidate
 - Time: `2026-05-17 10:43:00 +08:00`
 - Status: `PASS`
