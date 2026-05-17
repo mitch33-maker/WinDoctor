@@ -74,10 +74,19 @@ function Invoke-OneTool {
 
     if ($Tool.Id -eq "setupdiag") {
         $outputLog = Join-Path $toolOut "SetupDiagResults.log"
-        $process = Start-Process -FilePath $Tool.PackagePath -ArgumentList @("/Output:$outputLog") -NoNewWindow -PassThru -Wait:$false
+        $stdoutLog = Join-Path $toolOut "SetupDiag.stdout.log"
+        $stderrLog = Join-Path $toolOut "SetupDiag.stderr.log"
+        $process = Start-Process -FilePath $Tool.PackagePath -ArgumentList @("/Output:$outputLog") -NoNewWindow -PassThru -Wait:$false -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
             Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
             return [PSCustomObject]@{ Status = "TIMEOUT"; ExitCode = $null; OutputPath = $outputLog }
+        }
+        $process.Refresh()
+        if (-not (Test-Path -LiteralPath $outputLog)) {
+            $captured = @()
+            if (Test-Path -LiteralPath $stdoutLog) { $captured += [System.IO.File]::ReadAllText($stdoutLog, [System.Text.Encoding]::UTF8) }
+            if (Test-Path -LiteralPath $stderrLog) { $captured += [System.IO.File]::ReadAllText($stderrLog, [System.Text.Encoding]::UTF8) }
+            [System.IO.File]::WriteAllText($outputLog, (($captured | Where-Object { $_ }) -join [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
         }
         return [PSCustomObject]@{ Status = "COMPLETED"; ExitCode = $process.ExitCode; OutputPath = $outputLog }
     }

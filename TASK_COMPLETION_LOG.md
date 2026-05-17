@@ -6,6 +6,22 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-153329] Real SetupDiag diagnostic RUN evidence capture
+- Time: `2026-05-17 15:33:29 +08:00`
+- Status: `PASS`
+- Summary: 在使用者授權 RUN 範圍內執行真實 SetupDiag 診斷；未修復、未清理、未 build、未啟動 GUI/Broker。修正 runner 捕捉 stdout/stderr，讓無 setup log 的結果也可轉為 diagnostic evidence 並通過 external diagnostics gate。
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-tools-real-run-setupdiag-captured-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-real-run-setupdiag-captured-conversion-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-real-run-setupdiag-captured-evidence-pack-validate-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-after-real-run-fix-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+- Next actions:
+  - 若要擴大真實診斷，下一步應新增 command-line Sysinternals 安全執行模式，避免啟動 GUI 型工具並維持逐項資源 gate。
+
+
 ## [20260517-142552] Offline diagnostic parser and evidence gate
 - Time: `2026-05-17 14:25:52 +08:00`
 - Status: `PASS`

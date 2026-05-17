@@ -67,6 +67,7 @@ $setupDiagText = Read-TextIfExists -Path $setupDiagPath
 if ($setupDiagText) {
     $errorCode = Get-FirstRegexValue -Text $setupDiagText -Patterns @("(?i)(0x[0-9a-f]{8})")
     $failureData = Get-FirstRegexValue -Text $setupDiagText -Patterns @(
+        "(?im)(SetupDiag was unable to find a relevant log file\.)",
         "(?im)^\s*FailureData\s*[:=]\s*(.+)$",
         "(?im)^\s*Error\s*[:=]\s*(.+)$",
         "(?im)^\s*Result\s*[:=]\s*(.+)$"
