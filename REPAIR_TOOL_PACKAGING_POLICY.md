@@ -82,3 +82,13 @@ The offline interface may automatically select packaged diagnostic tools based o
 - Boot, hardware, and system integrity: Sigcheck, Autoruns, or trace tools as diagnostic evidence.
 
 This selection is not execution approval. The interface may display tool purpose, availability, package path, and a sequential command preview. It must not execute, extract, install, or add any selected tool to the repair allowlist unless a separate reviewed diagnostic runner is created and explicitly RUN-gated.
+
+## RUN-Gated Diagnostic Runner
+`scripts\Invoke-OfflineDiagnosticTools.ps1` is the reviewed diagnostic runner boundary:
+- default mode is preview only.
+- execution requires `-Execute -ConfirmToken RUN`.
+- tools run one at a time.
+- Resource Safety runs before and after each tool.
+- package SHA-256 is rechecked before use.
+- output conversion is diagnostic evidence only.
+- no repair script is executed and no repair allowlist is changed.

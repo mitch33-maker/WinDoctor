@@ -1,5 +1,35 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 offline-diagnostic-runner`：
+- 已完成離線診斷工具 runner、輸出轉換器、AI 一鍵流程接線與工作視窗接線。
+- 新增：
+  - `scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `POST /api/work/offline-diagnostics`
+  - `startOfflineDiagnosticWork`
+  - work window offline diagnostic display
+- runner 行為：
+  - 預設 preview-only。
+  - 實際工具使用必須 `-Execute -ConfirmToken RUN`。
+  - 一次只處理一個工具。
+  - 每項工具前後都執行 Resource Safety。
+  - 使用前重驗 package SHA-256。
+  - 輸出轉成診斷 evidence，不直接轉為修復。
+- 安全狀態：
+  - 本輪未執行外部診斷工具。
+  - 未執行修復。
+  - 未安裝、未解壓縮工具。
+  - 未更新 repair allowlist。
+  - 未啟動 GUI/Broker。
+  - 未執行 production build。
+- 驗證：
+  - `E:\WindowsDoctor\logs\offline-diagnostic-tools-preview-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-output-conversion-preview-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-tool-automation-runner-20260517.json`: `PASS`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester parse: `PASS`
+
 最新狀態 `2026-05-17 offline-tool-auto-selection-ui`：
 - 已把離線工具封裝結果接入自然語言問題介面。
 - 新增：

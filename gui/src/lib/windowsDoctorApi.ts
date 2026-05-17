@@ -66,6 +66,7 @@ export const windowsDoctorApi = {
   getWorkStatus: () => apiGet<WorkStatus>("/api/work/status"),
   cancelWork: () => apiPost<WorkStatus>("/api/work/cancel"),
   startRepairPlanWork: (body: { execute: boolean; confirmToken?: string }) => apiPost<WorkStatus>("/api/work/repair-plan", body),
+  startOfflineDiagnosticWork: (body: { component: string; execute: boolean; confirmToken?: string }) => apiPost<WorkStatus>("/api/work/offline-diagnostics", body),
   getAiTriage: () => apiGet<AiTriageResult>("/api/ai/triage"),
   analyzeEventLogs: (body?: { recentHours?: number; maxEvents?: number; top?: number; logName?: string[] }) => apiPost<EventLogAnalysis>("/api/event-logs/analyze", body || {}),
   getOfflineTools: () => apiGet<{ Status: string; ToolCount: number; Tools: unknown[] }>("/api/offline-tools"),

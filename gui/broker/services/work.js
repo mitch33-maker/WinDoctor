@@ -37,6 +37,17 @@ function summarizeRepairPlan(plan) {
     };
 }
 
+function summarizeOfflineDiagnostics(result) {
+    const report = result.UserReport || {};
+    return {
+        repaired: report.Fixed || [],
+        notRepaired: report.NotFixed || [],
+        nextSteps: report.NextSteps || [
+            result.Executed ? 'Review diagnostic evidence and continue with the repair preview gate.' : 'Preview completed only. Enter RUN before executing diagnostic tools.',
+        ],
+    };
+}
+
 function readResourceSnapshot(rootDir) {
     return new Promise((resolve) => {
         const child = spawn('powershell', [
@@ -68,6 +79,7 @@ function readResourceSnapshot(rootDir) {
                     time: nowIso(),
                     status: parsed.Status,
                     freeMemoryGB: parsed.FreeMemoryGB,
+                    overallCpuPercent: parsed.OverallCpuPercent,
                     postCssWorkerCount: parsed.PostCssWorkerCount,
                     windowsDoctorNodeProcessCount: parsed.WindowsDoctorNodeProcessCount,
                     windowsDoctorTotalWorkingSetMB: parsed.WindowsDoctorTotalWorkingSetMB,
@@ -291,6 +303,127 @@ function startIssueDiagnosticWork({ problemText = '' } = {}) {
     return getWorkStatus();
 }
 
+function startOfflineDiagnosticWork({ component = 'general', execute = false, confirmToken = '' } = {}) {
+    if (activeWork && activeWork.status === 'running') {
+        const err = new Error('Another WindowsDoctor work item is already running');
+        err.status = 409;
+        throw err;
+    }
+    if (execute && confirmToken !== 'RUN') {
+        const err = new Error('RUN confirmation is required before offline diagnostic execution');
+        err.status = 400;
+        throw err;
+    }
+
+    const id = `work-${Date.now()}`;
+    const scriptPath = path.join(config.scriptsDir, 'Invoke-OfflineDiagnosticTools.ps1');
+    const reportPath = path.join(config.rootDir, 'logs', execute ? 'gui-work-offline-diagnostics-execute.latest.json' : 'gui-work-offline-diagnostics-preview.latest.json');
+    const args = [
+        '-NoProfile',
+        '-ExecutionPolicy',
+        'RemoteSigned',
+        '-File',
+        scriptPath,
+        '-Root',
+        config.rootDir,
+        '-Component',
+        component || 'general',
+        '-ReportPath',
+        reportPath,
+        '-Json',
+    ];
+    if (execute) args.push('-Execute', '-ConfirmToken', confirmToken);
+
+    const work = {
+        id,
+        type: 'offline-diagnostic',
+        status: 'running',
+        startedAt: nowIso(),
+        updatedAt: nowIso(),
+        currentStep: execute ? 'Running offline diagnostic tools sequentially' : 'Building offline diagnostic tool preview',
+        canCancel: true,
+        reportPath,
+        resourceSamples: [],
+        result: null,
+        error: null,
+        child: null,
+        poller: null,
+        stdout: '',
+        stderr: '',
+    };
+
+    const child = spawn('powershell', args, {
+        cwd: config.rootDir,
+        windowsHide: true,
+        shell: false,
+        env: {
+            ...process.env,
+            NODE_OPTIONS: '--max-old-space-size=384',
+            NEXT_TELEMETRY_DISABLED: '1',
+        },
+    });
+    work.child = child;
+    activeWork = work;
+    lastWork = work;
+
+    const sample = async () => {
+        if (!activeWork || activeWork.id !== id) return;
+        const snapshot = await readResourceSnapshot(config.rootDir);
+        work.resourceSamples.push(snapshot);
+        if (work.resourceSamples.length > 30) work.resourceSamples.shift();
+        work.updatedAt = nowIso();
+        if (snapshot.status === 'FAIL') {
+            work.currentStep = 'Resource budget exceeded; cancelling offline diagnostics';
+            child.kill();
+        }
+    };
+    work.poller = setInterval(() => { void sample(); }, 2000);
+    void sample();
+
+    child.stdout.on('data', (chunk) => { work.stdout += chunk.toString('utf8'); });
+    child.stderr.on('data', (chunk) => { work.stderr += chunk.toString('utf8'); });
+    child.on('error', (err) => {
+        clearInterval(work.poller);
+        work.status = 'failed';
+        work.error = err.message;
+        work.updatedAt = nowIso();
+        activeWork = null;
+    });
+    child.on('close', (code) => {
+        clearInterval(work.poller);
+        work.updatedAt = nowIso();
+        if (work.status === 'cancelling') {
+            work.status = 'cancelled';
+            work.currentStep = 'Cancelled by operator';
+            activeWork = null;
+            return;
+        }
+        if (code !== 0) {
+            work.status = 'failed';
+            work.error = work.stderr || work.stdout || `Work exited with code ${code}`;
+            work.currentStep = 'Failed';
+            activeWork = null;
+            return;
+        }
+        try {
+            const result = JSON.parse(work.stdout);
+            work.status = 'completed';
+            work.result = {
+                offlineDiagnostics: result,
+                summary: summarizeOfflineDiagnostics(result),
+            };
+            work.currentStep = 'Completed';
+        } catch (err) {
+            work.status = 'failed';
+            work.error = `Failed to parse work result JSON: ${err.message}`;
+            work.currentStep = 'Failed';
+        }
+        activeWork = null;
+    });
+
+    return getWorkStatus();
+}
+
 function cancelActiveWork() {
     if (!activeWork || activeWork.status !== 'running') {
         return getWorkStatus();
@@ -333,4 +466,4 @@ function getWorkStatus() {
     };
 }
 
-module.exports = { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus };
+module.exports = { startRepairPlanWork, startIssueDiagnosticWork, startOfflineDiagnosticWork, cancelActiveWork, getWorkStatus };

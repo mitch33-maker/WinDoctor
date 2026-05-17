@@ -169,6 +169,23 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 The offline UI can automatically select the most relevant packaged diagnostic tools for the user's problem and show a sequential command preview. This is preview-only: it does not install tools, execute tools, update the repair allowlist, or perform repair actions without a separate RUN-gated execution path.
 
+Offline diagnostic tool runner preview:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1 -Root E:\WindowsDoctor -Component performance -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-tools-preview.latest.json -Json
+```
+
+RUN-gated diagnostic execution path:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1 -Root E:\WindowsDoctor -Component performance -Execute -ConfirmToken RUN -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-tools-execute.latest.json -Json
+```
+
+The runner executes tools sequentially only after `RUN`, checks Resource Safety before and after each tool, applies SHA-256 validation against the package manifest, and writes a JSON report. It remains diagnostic-only and does not execute repair scripts.
+
+Convert offline diagnostic outputs into WindowsDoctor evidence:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Convert-OfflineDiagnosticToolOutput.ps1 -Root E:\WindowsDoctor -InputRoot "$env:LOCALAPPDATA\WindowsDoctor\OfflineDiagnostics" -ReportPath E:\WindowsDoctor\logs\offline-diagnostic-output-conversion.latest.json -Json
+```
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json

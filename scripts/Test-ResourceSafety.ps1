@@ -18,6 +18,13 @@ $rootPattern = "$escapedRoot\\"
 
 $os = Get-CimInstance Win32_OperatingSystem
 $freeGb = [math]::Round($os.FreePhysicalMemory / 1MB, 2)
+$cpuLoad = 0
+try {
+    $cpuLoad = [math]::Round((Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average, 2)
+}
+catch {
+    $cpuLoad = 0
+}
 
 $wdNodeProcesses = @(Get-CimInstance Win32_Process |
     Where-Object {
@@ -67,6 +74,7 @@ $result = [PSCustomObject]@{
     Status = if ($checks.Status -contains "FAIL") { "FAIL" } else { "PASS" }
     Root = $normalizedRoot
     FreeMemoryGB = $freeGb
+    OverallCpuPercent = $cpuLoad
     PostCssWorkerCount = $postCssWorkers.Count
     WindowsDoctorNodeProcessCount = $wdNodeProcesses.Count
     WindowsDoctorTotalWorkingSetMB = $wdWorkingSetTotalMb

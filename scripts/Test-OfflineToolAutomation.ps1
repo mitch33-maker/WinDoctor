@@ -23,7 +23,10 @@ function Add-Check {
 $resolvedRoot = [System.IO.Path]::GetFullPath($Root).TrimEnd("\")
 $servicePath = Join-Path $resolvedRoot "gui\broker\services\offlineTools.js"
 $issuePlannerPath = Join-Path $resolvedRoot "gui\broker\services\issuePlanner.js"
+$workServicePath = Join-Path $resolvedRoot "gui\broker\services\work.js"
 $componentPath = Join-Path $resolvedRoot "gui\src\components\ProblemSolverPanel.tsx"
+$runnerPath = Join-Path $resolvedRoot "scripts\Invoke-OfflineDiagnosticTools.ps1"
+$converterPath = Join-Path $resolvedRoot "scripts\Convert-OfflineDiagnosticToolOutput.ps1"
 $repairToolsRoot = Join-Path $resolvedRoot "releases\repair-tools"
 $checks = [System.Collections.Generic.List[object]]::new()
 
@@ -52,6 +55,30 @@ if (Test-Path -LiteralPath $componentPath) {
 }
 else {
     Add-Check -Checks $checks -Name "ui-integration" -Status "FAIL" -Detail "Missing ProblemSolverPanel"
+}
+
+if (Test-Path -LiteralPath $runnerPath) {
+    $runnerSource = Get-Content -Raw -Encoding UTF8 -LiteralPath $runnerPath
+    Add-Check -Checks $checks -Name "diagnostic-runner" -Status ($(if ($runnerSource -match "ConfirmToken -ne `"RUN`"" -and $runnerSource -match "Invoke-ResourceSafety" -and $runnerSource -match "Sequential") { "PASS" } else { "FAIL" })) -Detail "Runner requires RUN, resource gates, and sequential execution"
+}
+else {
+    Add-Check -Checks $checks -Name "diagnostic-runner" -Status "FAIL" -Detail "Missing Invoke-OfflineDiagnosticTools.ps1"
+}
+
+if (Test-Path -LiteralPath $converterPath) {
+    $converterSource = Get-Content -Raw -Encoding UTF8 -LiteralPath $converterPath
+    Add-Check -Checks $checks -Name "diagnostic-output-converter" -Status ($(if ($converterSource -match "SetupDiagResults.log" -and $converterSource -match "NoRepairExecuted") { "PASS" } else { "FAIL" })) -Detail "Output converter parses diagnostic evidence without repair"
+}
+else {
+    Add-Check -Checks $checks -Name "diagnostic-output-converter" -Status "FAIL" -Detail "Missing Convert-OfflineDiagnosticToolOutput.ps1"
+}
+
+if (Test-Path -LiteralPath $workServicePath) {
+    $workSource = Get-Content -Raw -Encoding UTF8 -LiteralPath $workServicePath
+    Add-Check -Checks $checks -Name "work-window-integration" -Status ($(if ($workSource -match "startOfflineDiagnosticWork" -and $workSource -match "offline-diagnostic") { "PASS" } else { "FAIL" })) -Detail "Work window can run offline diagnostic preview jobs"
+}
+else {
+    Add-Check -Checks $checks -Name "work-window-integration" -Status "FAIL" -Detail "Missing work service"
 }
 
 $latestPackage = $null

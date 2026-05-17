@@ -173,6 +173,7 @@ export type WorkResourceSample = {
   time: string;
   status: string;
   freeMemoryGB?: number;
+  overallCpuPercent?: number;
   postCssWorkerCount?: number;
   windowsDoctorNodeProcessCount?: number;
   windowsDoctorTotalWorkingSetMB?: number;
@@ -183,6 +184,33 @@ export type WorkRepairSummary = {
   repaired: Array<{ id: string; title: string; script: string; confidence?: number }>;
   notRepaired: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string }>;
   nextSteps: string[];
+};
+
+export type OfflineDiagnosticRun = {
+  Status: string;
+  Phase: string;
+  Mode: "preview" | "execute";
+  Component: string;
+  PackageRoot: string;
+  OutputRoot: string;
+  Sequential: boolean;
+  Executed: boolean;
+  ToolCount: number;
+  PlannedTools: Array<{ Id: string; Name: string; Status: string; PackagePath: string; CommandPreview: string }>;
+  ExecutedTools: Array<{ Id: string; Status: string; ExitCode?: number | null; OutputPath?: string; PreResourceStatus?: string; PostResourceStatus?: string }>;
+  OutputConversion?: unknown;
+  UserReport?: {
+    Fixed: Array<{ id: string; title: string; script: string }>;
+    NotFixed: Array<{ id: string; title: string; script: string; reason: string; riskLevel?: string }>;
+    NextSteps: string[];
+  };
+  SafetyPolicy: {
+    NoRepairExecuted: boolean;
+    NoInstall: boolean;
+    NoRepairAllowlistChange: boolean;
+    SequentialExecution: boolean;
+    RunGateRequired: boolean;
+  };
 };
 
 export type WorkItem = {
@@ -199,6 +227,7 @@ export type WorkItem = {
   result?: {
     repairPlan?: RepairPlan;
     issuePlan?: IssuePlan;
+    offlineDiagnostics?: OfflineDiagnosticRun;
     summary?: WorkRepairSummary;
   } | null;
   error?: string | null;

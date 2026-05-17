@@ -279,6 +279,19 @@ export default function Home() {
     setIssueLoading(false);
   };
 
+  const startOfflineDiagnosticPreview = async () => {
+    const component = issuePlan?.Classification.component || "general";
+    setIssueLoading(true);
+    try {
+      const statusData = await windowsDoctorApi.startOfflineDiagnosticWork({ component, execute: false });
+      setWorkStatus(statusData);
+      setStatus({ tone: "info", message: "已建立離線工具序列化診斷預覽；未執行工具。" });
+    } catch {
+      setStatus({ tone: "error", message: "無法建立離線工具診斷預覽，請確認沒有其他工作正在執行。" });
+    }
+    setIssueLoading(false);
+  };
+
   const requestElevation = async () => {
     try {
       const data = await windowsDoctorApi.requestElevation();
@@ -348,6 +361,7 @@ export default function Home() {
         onTextChange={setProblemText}
         onPreview={previewIssuePlan}
         onStartWork={startIssueWork}
+        onStartOfflineDiagnostics={startOfflineDiagnosticPreview}
       />
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">

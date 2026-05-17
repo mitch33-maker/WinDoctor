@@ -4,7 +4,7 @@ const { getHealth, getRecentSystemEvents, testAdmin } = require('./services/syst
 const { getKbPath, setKbPath, loadKbRules } = require('./services/kb');
 const { getAllowedRepairScripts, isAllowedRepairScript, runRepairScript } = require('./services/repair');
 const { invokeRecommendedRepairPlan } = require('./services/repairPlan');
-const { startRepairPlanWork, startIssueDiagnosticWork, cancelActiveWork, getWorkStatus } = require('./services/work');
+const { startRepairPlanWork, startIssueDiagnosticWork, startOfflineDiagnosticWork, cancelActiveWork, getWorkStatus } = require('./services/work');
 const { getAiAssistantTriage } = require('./services/aiAssistant');
 const { buildIssuePlan } = require('./services/issuePlanner');
 const { getToolPackageStatus, selectToolsForComponent } = require('./services/offlineTools');
@@ -110,6 +110,11 @@ function registerRoutes(app) {
     app.post('/api/work/diagnose', (req, res) => {
         try { ok(res, startIssueDiagnosticWork({ problemText: req.body.problemText || req.body.problem || '' })); }
         catch (err) { fail(res, err.status || 500, err.status === 409 ? 'WORK_ALREADY_RUNNING' : err.status === 400 ? 'PROBLEM_TEXT_REQUIRED' : 'WORK_START_FAILED', err.message); }
+    });
+
+    app.post('/api/work/offline-diagnostics', (req, res) => {
+        try { ok(res, startOfflineDiagnosticWork({ component: req.body.component || 'general', execute: !!req.body.execute, confirmToken: req.body.confirmToken || '' })); }
+        catch (err) { fail(res, err.status || 500, err.status === 409 ? 'WORK_ALREADY_RUNNING' : err.status === 400 ? 'RUN_CONFIRMATION_REQUIRED' : 'OFFLINE_DIAGNOSTIC_WORK_FAILED', err.message); }
     });
 
     app.get('/api/ai/triage', async (req, res) => {

@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-12] RUN-gated 離線診斷 runner
+### 問題描述
+離線介面能自動選工具後，還需要安全地把工具使用接到工作視窗；若直接由 UI 執行工具，容易造成資源暴衝、工具並行、無法中斷或誤把診斷變成修復。
+### 成功解決方案
+新增 `Invoke-OfflineDiagnosticTools.ps1` 作為唯一 runner 邊界，預設 preview-only，實際執行必須 `RUN`。runner 依元件選工具、驗 SHA-256、序列化處理、每項工具前後跑 Resource Safety，並將結果交給 `Convert-OfflineDiagnosticToolOutput.ps1` 轉成診斷 evidence。Broker 工作視窗只接這個 runner。
+### 驗證方式
+以 preview 模式驗證 runner，不執行外部工具；再用 broker service tests、lint、Pester parse 與 `Test-OfflineToolAutomation.ps1` 確認接線與安全邊界。
+
 ## [SUCCESS-20260517-11] 離線工具自動選用介面
 ### 問題描述
 離線工具已被安全封裝，但一般使用者不知道何時應使用 SetupDiag、RAMMap、TCPView、Process Monitor 等工具；若只把工具放進 USB，仍無法達成高度智能自動化。

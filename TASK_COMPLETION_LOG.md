@@ -6,6 +6,16 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-140156] RUN-gated offline diagnostic runner
+- Time: `2026-05-17 14:01:56 +08:00`
+- Status: `PASS`
+- Summary: Added preview-first RUN-gated offline diagnostic runner, output converter, work-window integration, CPU resource display, USB sync, and verified no tool execution or repair occurred.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-tools-preview-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-tool-automation-runner-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-tools-preview-usb-g-20260517.json`
+
+
 ## [20260517-134411] Offline tool auto-selection UI
 - Time: `2026-05-17 13:44:11 +08:00`
 - Status: `PASS`

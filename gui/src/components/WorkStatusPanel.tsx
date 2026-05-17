@@ -11,6 +11,7 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
   const item = workStatus?.active || workStatus?.last || null;
   const latest = item?.latestResource;
   const summary = item?.result?.summary;
+  const offlineDiagnostics = item?.result?.offlineDiagnostics;
 
   return (
     <section className="max-w-6xl mx-auto mt-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
@@ -40,10 +41,14 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
       </div>
 
       {item && (
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-3 text-sm">
           <div className="p-3 rounded-lg bg-black/20 border border-white/10">
             <div className="text-gray-500">狀態</div>
             <div className="font-mono">{item.status}</div>
+          </div>
+          <div className="p-3 rounded-lg bg-black/20 border border-white/10">
+            <div className="text-gray-500">CPU</div>
+            <div className="font-mono">{latest?.overallCpuPercent ?? "-"} %</div>
           </div>
           <div className="p-3 rounded-lg bg-black/20 border border-white/10">
             <div className="text-gray-500">Free RAM</div>
@@ -66,6 +71,30 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
 
       {item?.error && (
         <p className="mt-4 text-sm text-red-300 break-words">{item.error}</p>
+      )}
+
+      {offlineDiagnostics && (
+        <div className="mt-5 rounded-lg border border-emerald-500/20 bg-emerald-950/10 p-4 text-sm">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <div className="font-bold text-emerald-200">離線診斷工具</div>
+            <div className="font-mono text-xs text-emerald-100">
+              {offlineDiagnostics.Mode} · tools={offlineDiagnostics.ToolCount} · executed={String(offlineDiagnostics.Executed)}
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
+            {offlineDiagnostics.PlannedTools.map((tool) => (
+              <div key={tool.Id} className="rounded-md border border-white/10 bg-black/30 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="font-semibold text-white">{tool.Name}</div>
+                  <div className="text-xs text-slate-300">{tool.Status}</div>
+                </div>
+                <code className="mt-2 block break-all rounded border border-white/10 bg-black/40 p-2 text-xs text-slate-200">
+                  {tool.CommandPreview || "No command preview"}
+                </code>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {summary && (

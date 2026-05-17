@@ -1,3 +1,33 @@
+# 2026-05-17 RUN-Gated Offline Diagnostic Runner
+
+- Continued the offline tool automation plan after the UI auto-selection layer.
+- Added:
+  - `scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `scripts\Convert-OfflineDiagnosticToolOutput.ps1`
+  - `POST /api/work/offline-diagnostics`
+  - `startOfflineDiagnosticWork` in Broker work queue
+  - work-window display for offline diagnostic planned tools and command preview
+- Behavior:
+  - default runner mode is preview only.
+  - execution requires `-Execute -ConfirmToken RUN`.
+  - selected tools run sequentially, one at a time.
+  - resource safety runs before and after tool use.
+  - package SHA-256 is checked before use.
+  - output conversion is diagnostic evidence only.
+- Safety:
+  - no external diagnostic tool was executed in this task.
+  - no repair was executed.
+  - no installation, PATH, service, registry, scheduled task, or allowlist change.
+  - no GUI/Broker startup.
+  - no production build.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-tools-preview-20260517.json`: `PASS`, `Executed=false`, `ToolCount=2`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-output-conversion-preview-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\offline-tool-automation-runner-20260517.json`: `PASS`
+  - broker service tests: `PASS`
+  - lint: `PASS`
+  - targeted Pester parse: `PASS`
+
 # 2026-05-17 Offline Tool Auto-Selection UI
 
 - User clarified that the offline interface must gain the ability to automatically use/select tools because normal users cannot manually choose the correct diagnostic utility.

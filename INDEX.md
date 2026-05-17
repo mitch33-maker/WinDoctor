@@ -75,6 +75,8 @@ Last updated: `2026-05-17`
 | `scripts\New-RepairToolPackage.ps1` | 將已驗證工具封裝到隔離 repair-tools 套件，不安裝、不執行 |
 | `scripts\Save-OfflineRepairTools.ps1` | 下載 Microsoft 官方離線診斷工具、驗證 SHA-256/簽章並封裝 |
 | `scripts\Test-OfflineToolAutomation.ps1` | 驗證離線介面可自動選用診斷工具、顯示命令預覽，且不安裝、不執行、不改 allowlist |
+| `scripts\Invoke-OfflineDiagnosticTools.ps1` | RUN-gated 離線診斷工具序列化 runner；預設只產生 preview |
+| `scripts\Convert-OfflineDiagnosticToolOutput.ps1` | 將離線診斷工具輸出轉成 WindowsDoctor JSON 證據，不執行修復 |
 | `scripts\Test-LowResourceStartup.ps1` | 驗證 Broker-only 低資源模式，不啟動 Next dev GUI |
 | `scripts\New-PortableIncrementalPatch.ps1` | 建立小型 USB 增量 patch zip，避免重壓完整 GUI-ready package |
 | `scripts\Test-PortableIncrementalPatch.ps1` | 驗證增量 patch zip、manifest 與 package root 內容一致 |

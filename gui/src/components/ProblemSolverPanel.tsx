@@ -8,9 +8,10 @@ type Props = {
   onTextChange: (value: string) => void;
   onPreview: () => void;
   onStartWork: () => void;
+  onStartOfflineDiagnostics: () => void;
 };
 
-export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onTextChange, onPreview, onStartWork }: Props) {
+export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onTextChange, onPreview, onStartWork, onStartOfflineDiagnostics }: Props) {
   const active = workStatus?.active?.type === "issue-diagnostic" ? workStatus.active : null;
   const lastIssuePlan = workStatus?.last?.result?.issuePlan || null;
   const displayPlan = lastIssuePlan || plan;
@@ -42,6 +43,13 @@ export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onT
             className="rounded-md border border-blue-400/60 px-4 py-2 text-sm font-medium text-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             放入即時工作視窗
+          </button>
+          <button
+            onClick={onStartOfflineDiagnostics}
+            disabled={loading || !displayPlan?.OfflineToolPlan || !!active}
+            className="rounded-md border border-emerald-400/60 px-4 py-2 text-sm font-medium text-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            離線工具佇列預覽
           </button>
         </div>
       </div>
