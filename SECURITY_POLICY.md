@@ -36,6 +36,8 @@ Last updated: `2026-05-09`
 - External management access requires token-based authorization.
 - Windows event log analysis is read-only; it may write JSON/CSV evidence but must not change services, registry, drivers, accounts, storage, network, or repair state.
 - Event-log repair hints remain preview-first and must still pass allowlist, dry-run impact, rollback guidance, local validation, and RUN gate before execution.
+- Optional repair/diagnostic tool packaging must validate manifest metadata, HTTPS source URL, source trust level, SHA-256 hash, license note, execution policy, and `autoRunAllowed=false`.
+- Tool packaging must not install, execute, register services, change PATH, add scheduled tasks, or update `scripts\repair-allowlist.json`.
 
 ## 4. Antivirus And EDR Compatibility
 - Standard operations use `ExecutionPolicy RemoteSigned`; `ExecutionPolicy Bypass`, encoded commands, and `Invoke-Expression` are prohibited in repository scripts.

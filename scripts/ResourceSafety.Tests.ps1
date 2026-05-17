@@ -21,6 +21,8 @@ Describe "WindowsDoctor resource safety scripts" {
             "$script:root\scripts\Test-PortableUsbReadiness.ps1",
             "$script:root\scripts\Test-SystemErrorScan.ps1",
             "$script:root\scripts\Analyze-WindowsEventLogs.ps1",
+            "$script:root\scripts\Test-RepairToolPackageManifest.ps1",
+            "$script:root\scripts\New-RepairToolPackage.ps1",
             "$script:root\scripts\Test-SystemErroeScan.ps1",
             "$script:root\scripts\Test-SystemErrorsScan.ps1",
             "$script:root\scripts\Test-PortableRuntimeSelfTest.ps1",
@@ -905,6 +907,62 @@ Describe "WindowsDoctor resource safety scripts" {
             Remove-Item -LiteralPath $inputPath -Force -ErrorAction SilentlyContinue
             Remove-Item -LiteralPath $reportPath -Force -ErrorAction SilentlyContinue
             Remove-Item -LiteralPath $csvPath -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It "packages repair tools only after manifest and SHA256 validation" {
+        $inputRoot = "$script:root\logs\repair-tool-package-test-input"
+        $outputRoot = "$script:root\logs\repair-tool-package-test-output"
+        $manifestPath = Join-Path $inputRoot "manifest.json"
+        $toolFile = Join-Path $inputRoot "tools\dummy-tool.txt"
+        $validateReport = "$script:root\logs\repair-tool-package-manifest.test.json"
+        $packageReport = "$script:root\logs\repair-tool-package.test.json"
+        try {
+            New-Item -Path (Split-Path -Parent $toolFile) -ItemType Directory -Force | Out-Null
+            Set-Content -LiteralPath $toolFile -Encoding UTF8 -Value "WindowsDoctor dummy diagnostic tool"
+            $hash = (Get-FileHash -LiteralPath $toolFile -Algorithm SHA256).Hash.ToLowerInvariant()
+            @{
+                schemaVersion = 1
+                packageId = "test-repair-tools"
+                packageName = "Test Repair Tools"
+                tools = @(
+                    @{
+                        id = "dummy-tool"
+                        name = "Dummy Diagnostic Tool"
+                        version = "1.0.0"
+                        publisher = "Microsoft"
+                        sourceUrl = "https://learn.microsoft.com/windows/"
+                        sourceTrustLevel = "microsoft_official"
+                        expectedSha256 = $hash
+                        license = "test"
+                        allowedUse = "diagnostic evidence only"
+                        executionPolicy = "diagnostic_only"
+                        autoRunAllowed = $false
+                        files = @(@{ relativePath = "tools\dummy-tool.txt"; expectedSha256 = $hash })
+                    }
+                )
+            } | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 -LiteralPath $manifestPath
+
+            $validationJson = & "$script:root\scripts\Test-RepairToolPackageManifest.ps1" -ManifestPath $manifestPath -InputRoot $inputRoot -ReportPath $validateReport -Json
+            $validation = $validationJson | ConvertFrom-Json
+            $validation.Status | Should -Be "PASS"
+            $validation.SafetyPolicy.NoInstall | Should -BeTrue
+            $validation.SafetyPolicy.NoExecute | Should -BeTrue
+
+            $packageJson = & "$script:root\scripts\New-RepairToolPackage.ps1" -ManifestPath $manifestPath -InputRoot $inputRoot -OutputRoot $outputRoot -ReportPath $packageReport -Json
+            $package = $packageJson | ConvertFrom-Json
+            $package.Status | Should -Be "PASS"
+            $package.SafetyPolicy.NoInstall | Should -BeTrue
+            $package.SafetyPolicy.NoExecute | Should -BeTrue
+            $package.SafetyPolicy.RepairAllowlistUpdated | Should -BeFalse
+            [int]$package.FileCount | Should -Be 1
+        }
+        finally {
+            Remove-Item -LiteralPath $inputRoot -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $outputRoot -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $validateReport -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $packageReport -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath "$packageReport.validation.json" -Force -ErrorAction SilentlyContinue
         }
     }
 

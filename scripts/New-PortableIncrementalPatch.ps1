@@ -75,6 +75,7 @@ $relativePaths = @(
     "WindowsDoctor\WINDOWS_RESOURCE_ORGANIZER_PLAN.md",
     "WindowsDoctor\MANAGEMENT_SYSTEM.md",
     "WindowsDoctor\EVENT_LOG_ANALYSIS.md",
+    "WindowsDoctor\REPAIR_TOOL_PACKAGING_POLICY.md",
     "WindowsDoctor\REPAIR_COVERAGE_ROADMAP.md",
     "WindowsDoctor\THIRD_PARTY_REPAIR_REFERENCE.md",
     "WindowsDoctor\PERFORMANCE_POLICY.md",
@@ -121,6 +122,8 @@ $relativePaths = @(
     "WindowsDoctor\scripts\Test-WindowsResourceOrganizerCapability.ps1",
     "WindowsDoctor\scripts\Test-ManagementSystemReadiness.ps1",
     "WindowsDoctor\scripts\Analyze-WindowsEventLogs.ps1",
+    "WindowsDoctor\scripts\Test-RepairToolPackageManifest.ps1",
+    "WindowsDoctor\scripts\New-RepairToolPackage.ps1",
     "WindowsDoctor\scripts\Update-MicrosoftOfficialRepairSources.ps1",
     "WindowsDoctor\scripts\Export-NormalizedKBDatabase.ps1",
     "WindowsDoctor\scripts\Test-NormalizedKBDatabase.ps1",
@@ -144,6 +147,7 @@ $relativePaths = @(
     "WindowsDoctor\gui\src\components\WorkStatusPanel.tsx",
     "WindowsDoctor\gui\src\lib\windowsDoctorApi.ts",
     "WindowsDoctor\gui\src\types\windows-doctor.ts",
+    "WindowsDoctor\templates\REPAIR_TOOL_PACKAGE_MANIFEST.template.json",
     "WindowsDoctor\knowledge_base\reviewed\RULE-WD-REPORT-CACHE.md",
     "WindowsDoctor\nas\windowsdoctor-management-profile.json"
 )

@@ -50,6 +50,8 @@ $scriptNames = @(
     "Test-WindowsResourceOrganizerCapability.ps1",
     "Test-ManagementSystemReadiness.ps1",
     "Analyze-WindowsEventLogs.ps1",
+    "Test-RepairToolPackageManifest.ps1",
+    "New-RepairToolPackage.ps1",
     "Update-MicrosoftOfficialRepairSources.ps1",
     "Export-NormalizedKBDatabase.ps1",
     "Test-NormalizedKBDatabase.ps1",
@@ -114,7 +116,8 @@ $relativeFiles = @(
     "gui\src\components\SettingsPanel.tsx",
     "gui\src\components\WorkStatusPanel.tsx",
     "gui\src\lib\windowsDoctorApi.ts",
-    "gui\src\types\windows-doctor.ts"
+    "gui\src\types\windows-doctor.ts",
+    "templates\REPAIR_TOOL_PACKAGE_MANIFEST.template.json"
 )
 
 foreach ($relativeFile in $relativeFiles) {
@@ -140,6 +143,7 @@ $rootFiles = @(
     "WINDOWS_RESOURCE_ORGANIZER_PLAN.md",
     "MANAGEMENT_SYSTEM.md",
     "EVENT_LOG_ANALYSIS.md",
+    "REPAIR_TOOL_PACKAGING_POLICY.md",
     "REPAIR_COVERAGE_ROADMAP.md",
     "THIRD_PARTY_REPAIR_REFERENCE.md",
     "PERFORMANCE_POLICY.md",

@@ -101,6 +101,8 @@ Current Intune baseline:
 
 ## 6. Safety Rules
 - Do not auto-run third-party cleanup suites.
+- Do not package optional repair tools unless a manifest declares source trust, HTTPS source URL, expected SHA-256, license metadata, allowed use, and `autoRunAllowed=false`.
+- Packaging a tool does not approve it for one-click repair or add it to `scripts\repair-allowlist.json`.
 - Do not import unverified GitHub/community workflows into reviewed KB or auto-repair.
 - Do not convert NotebookLM, learned, Wazuh, or RMM findings into allowlisted repairs automatically.
 - Do not perform reset, reinstall, Office scrub, DISM RestoreHealth, SFC repair, CHKDSK repair, BCD repair, or destructive maintenance without explicit RUN confirmation.

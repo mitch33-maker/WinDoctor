@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-09] 修復工具安全包裝而非直接安裝
+### 問題描述
+使用者希望系統能自動包裝修復所需軟體，但外部工具若未驗證來源、雜湊、授權與用途，會形成供應鏈與誤執行風險。
+### 成功解決方案
+新增 `REPAIR_TOOL_PACKAGING_POLICY.md`、manifest 範本、`Test-RepairToolPackageManifest.ps1` 與 `New-RepairToolPackage.ps1`。包裝流程要求 HTTPS source URL、source trust level、SHA-256、license、allowedUse、manual/diagnostic execution policy，且強制 `autoRunAllowed=false`。包裝結果不安裝、不執行、不更新 repair allowlist。
+### 驗證方式
+用 dummy diagnostic tool 建立 sample package，確認 manifest validation、SHA-256、package creation 均 PASS，且 `NoInstall=true`、`NoExecute=true`、`RepairAllowlistUpdated=false`。
+
 ## [SUCCESS-20260517-08] MIS 可讀的事件日誌解讀層
 ### 問題描述
 既有事件掃描能取得 System/Application 錯誤並對應 KB，但 MIS 需要更容易篩選的 Provider/Event ID 統計、主要事件清單、JSON/CSV 證據與明確安全分類。

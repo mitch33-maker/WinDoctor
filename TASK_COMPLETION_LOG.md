@@ -6,6 +6,41 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-131747] Safe repair tool packaging
+- Time: `2026-05-17 13:17:47 +08:00`
+- Status: `PASS`
+- Summary: Added manifest-gated repair/diagnostic tool packaging with source trust, HTTPS URL, SHA-256, license, execution policy, and no-autorun validation. Packaging does not install, execute, or update repair allowlist. No real third-party software was downloaded or installed.
+- Evidence:
+  - `E:\WindowsDoctor\logs\repair-tool-package-manifest-20260517.json`
+  - `E:\WindowsDoctor\logs\repair-tool-package-20260517.json`
+  - `E:\WindowsDoctor\logs\repair-tool-package-manifest-g-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.repair-tool-packaging-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-memory.repair-tool-packaging-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-repair-tool-packaging-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-repair-tool-packaging-g-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch.repair-tool-packaging-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.repair-tool-packaging-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify.repair-tool-packaging-g-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\REPAIR_TOOL_PACKAGING_POLICY.md`
+  - `E:\WindowsDoctor\templates\REPAIR_TOOL_PACKAGE_MANIFEST.template.json`
+  - `E:\WindowsDoctor\scripts\Test-RepairToolPackageManifest.ps1`
+  - `E:\WindowsDoctor\scripts\New-RepairToolPackage.ps1`
+  - `E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1`
+  - `E:\WindowsDoctor\scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `E:\WindowsDoctor\scripts\New-PortableIncrementalPatch.ps1`
+  - `E:\WindowsDoctor\INDEX.md`
+  - `E:\WindowsDoctor\OPERATIONS.md`
+  - `E:\WindowsDoctor\SECURITY_POLICY.md`
+  - `E:\WindowsDoctor\EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SUCCESS_EXPERIENCE.md`
+  - `E:\WindowsDoctor\TASK_COMPLETION_LOG.md`
+- Next actions:
+  - Use real repair tools only after manifest includes official/vendor source, expected SHA-256, license review, and diagnostic/manual-only policy.; Keep packaging separate from repair allowlist and one-click execution.
+
+
 ## [20260517-112824] MIS Windows event log analysis
 - Time: `2026-05-17 11:28:24 +08:00`
 - Status: `PASS`

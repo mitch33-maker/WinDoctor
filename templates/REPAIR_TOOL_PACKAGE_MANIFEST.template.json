@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "packageId": "repair-tools-template",
+  "packageName": "WindowsDoctor Repair Tool Package Template",
+  "createdBy": "WindowsDoctor",
+  "tools": [
+    {
+      "id": "example-tool",
+      "name": "Example Diagnostic Tool",
+      "version": "1.0.0",
+      "publisher": "Example Vendor",
+      "sourceUrl": "https://example.com/download/example-tool.zip",
+      "sourceTrustLevel": "vendor_official",
+      "expectedSha256": "REPLACE_WITH_64_HEX_SHA256",
+      "license": "Review vendor license before packaging",
+      "allowedUse": "diagnostic evidence collection only",
+      "executionPolicy": "diagnostic_only",
+      "autoRunAllowed": false,
+      "files": [
+        {
+          "relativePath": "example-tool.zip",
+          "expectedSha256": "REPLACE_WITH_64_HEX_SHA256"
+        }
+      ]
+    }
+  ]
+}

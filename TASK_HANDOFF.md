@@ -1,3 +1,34 @@
+# 2026-05-17 Safe Repair Tool Packaging
+
+- User requested automatic packaging of repair-required software while checking software safety and security risk.
+- Added safe packaging workflow, not installation:
+  - `REPAIR_TOOL_PACKAGING_POLICY.md`
+  - `templates\REPAIR_TOOL_PACKAGE_MANIFEST.template.json`
+  - `scripts\Test-RepairToolPackageManifest.ps1`
+  - `scripts\New-RepairToolPackage.ps1`
+- Security model:
+  - manifest required before packaging
+  - HTTPS source URL allowlist
+  - source trust level required: `microsoft_official`, `vendor_official`, or `enterprise_internal`
+  - SHA-256 required and verified for every file
+  - license and allowed-use metadata required
+  - execution policy limited to `manual_only` or `diagnostic_only`
+  - `autoRunAllowed=false`
+  - no install, no execute, no PATH/service/scheduled-task changes
+  - no update to `scripts\repair-allowlist.json`
+- Download support:
+  - disabled by default
+  - available only with `-AllowDownload`
+  - still requires approved HTTPS source URL and expected SHA-256 before packaging
+- Evidence:
+  - `E:\WindowsDoctor\logs\repair-tool-package-manifest-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\repair-tool-package-20260517.json`: `PASS`, `DownloadUsed=false`, `NoInstall=true`, `NoExecute=true`, `RepairAllowlistUpdated=false`
+  - targeted Pester `*packages repair tools only*`: `PASS`
+  - targeted Pester `*parses safety scripts*`: `PASS`
+  - documentation sync: `PASS`
+  - documentation memory: `PASS`
+- No real third-party repair software was downloaded, installed, or executed in this task.
+
 # 2026-05-17 MIS Windows Event Log Analysis
 
 - User asked whether WindowsDoctor can read system logs, interpret them, analyze problems, and help repair; requested a MIS-friendly system log interpretation feature.

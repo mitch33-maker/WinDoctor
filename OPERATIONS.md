@@ -147,6 +147,14 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 
 This is read-only. It reads event logs, summarizes Provider/Event ID hot spots, joins reviewed KB recommendations, and never executes repairs.
 
+Validate and package optional repair/diagnostic tools:
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RepairToolPackageManifest.ps1 -ManifestPath E:\WindowsDoctor\incoming\repair-tools\manifest.json -ReportPath E:\WindowsDoctor\logs\repair-tool-package-manifest.latest.json -Json
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\New-RepairToolPackage.ps1 -ManifestPath E:\WindowsDoctor\incoming\repair-tools\manifest.json -OutputRoot E:\WindowsDoctor\releases\repair-tools -ReportPath E:\WindowsDoctor\logs\repair-tool-package.latest.json -Json
+```
+
+Tool packaging validates source trust, HTTPS source URL, SHA-256, license metadata, and no-autorun policy. It does not install, execute, or add tools to the repair allowlist.
+
 Real data import readiness gate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json

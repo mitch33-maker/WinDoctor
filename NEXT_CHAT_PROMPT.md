@@ -1,5 +1,28 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 repair-tool-packaging`：
+- 已新增安全修復/診斷工具包裝流程。
+- 新增：
+  - `REPAIR_TOOL_PACKAGING_POLICY.md`
+  - `templates\REPAIR_TOOL_PACKAGE_MANIFEST.template.json`
+  - `scripts\Test-RepairToolPackageManifest.ps1`
+  - `scripts\New-RepairToolPackage.ps1`
+- 安全政策：
+  - 包裝不等於安裝。
+  - 包裝不會執行工具。
+  - 每個工具都必須有 manifest、HTTPS source URL、sourceTrustLevel、SHA-256、license、allowedUse、executionPolicy。
+  - `autoRunAllowed` 必須為 `false`。
+  - 不更新 `scripts\repair-allowlist.json`。
+  - 下載預設停用；只有明確使用 `-AllowDownload` 且 manifest 已提供 expected SHA-256 時才允許。
+- 驗證：
+  - `E:\WindowsDoctor\logs\repair-tool-package-manifest-20260517.json`: `PASS`
+  - `E:\WindowsDoctor\logs\repair-tool-package-20260517.json`: `PASS`
+  - targeted Pester `*packages repair tools only*`: `PASS`
+  - targeted Pester `*parses safety scripts*`: `PASS`
+  - documentation sync: `PASS`
+  - documentation memory: `PASS`
+- 本輪沒有下載、安裝或執行任何真實第三方修復軟體。
+
 最新狀態 `2026-05-17 event-log-analysis-mis`：
 - 已新增 MIS 系統日誌解讀功能。
 - 新增：
