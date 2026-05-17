@@ -1,0 +1,1063 @@
+{
+    "schemaVersion":  1,
+    "sources":  [
+                    {
+                        "id":  "MS-LEARN-APP-SERVICE-CRASH",
+                        "vendor":  "Microsoft",
+                        "title":  "The application or service crashing behavior troubleshooting guidance",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/troubleshoot-application-service-crashing-behavior",
+                        "retrievedDate":  "2026-04-30"
+                    },
+                    {
+                        "id":  "MS-LEARN-DISK-CORRUPTION",
+                        "vendor":  "Microsoft",
+                        "title":  "Guidance for Troubleshooting Data Corruption and Disk Errors",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/backup-and-storage/troubleshoot-data-corruption-and-disk-errors",
+                        "retrievedDate":  "2026-04-30"
+                    },
+                    {
+                        "id":  "MS-LEARN-DISM-REPAIR-IMAGE",
+                        "vendor":  "Microsoft",
+                        "title":  "Repair a Windows Image",
+                        "url":  "https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/repair-a-windows-image?view=windows-11",
+                        "retrievedDate":  "2026-04-30"
+                    },
+                    {
+                        "id":  "MS-LEARN-GETHELP-CLI",
+                        "vendor":  "Microsoft",
+                        "title":  "Command line version of Get Help",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/microsoft-365/admin/miscellaneous/get-help-command-line-overview",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-NETSH-WINSOCK",
+                        "vendor":  "Microsoft",
+                        "title":  "netsh winsock",
+                        "url":  "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winsock",
+                        "retrievedDate":  "2026-04-30"
+                    },
+                    {
+                        "id":  "MS-LEARN-SETUPDIAG",
+                        "vendor":  "Microsoft",
+                        "title":  "SetupDiag",
+                        "url":  "https://learn.microsoft.com/en-us/windows/deployment/upgrade/setupdiag",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-0x80070002",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot Windows Update error 0x80070002",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/troubleshoot-windows-update-error-0x80070002",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-0x80070490",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot Windows Update error 0x80070490",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/troubleshoot-windows-update-error-0x80070490",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-0x800f0823",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot Windows Update error code 0x800f0823",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/troubleshoot-windows-update-error-0x800f0823",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-0x800f0831",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot Windows Update installation error 0x800f0831",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/troubleshoot-windows-installation-error",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-CLIENT-TROUBLESHOOT",
+                        "vendor":  "Microsoft",
+                        "title":  "Windows Update issues troubleshooting",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-client/installing-updates-features-roles/windows-update-issues-troubleshooting",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-DOWNLOAD-ERRORS",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot Windows Update download errors",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/troubleshoot-windows-update-download-errors",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-LEARN-WU-FIX-CORRUPTION",
+                        "vendor":  "Microsoft",
+                        "title":  "Fix Windows Update corruptions and installation failures",
+                        "url":  "https://learn.microsoft.com/en-us/troubleshoot/windows-server/installing-updates-features-roles/fix-windows-update-errors",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-DEVICE-MANAGER-CODES",
+                        "vendor":  "Microsoft",
+                        "title":  "Error codes in Device Manager in Windows",
+                        "url":  "https://support.microsoft.com/en-us/topic/error-codes-in-device-manager-in-windows-524e9e89-4dee-8883-0afa-6bca0456324e",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-GRAPHICS-CODE43",
+                        "vendor":  "Microsoft",
+                        "title":  "Fix graphics device problems with error code 43",
+                        "url":  "https://support.microsoft.com/en-us/windows/fix-graphics-device-problems-with-error-code-43-6f6ae1ec-0bbe-a848-142e-0c6190502842",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-PRINTER-CONNECTION",
+                        "vendor":  "Microsoft",
+                        "title":  "Fix printer connection and printing problems in Windows",
+                        "url":  "https://support.microsoft.com/en-us/windows/fix-printer-connection-and-printing-problems-in-windows-fb830bff-7702-6349-33cd-9443fe987f73",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-PRINTER-NOT-FOUND",
+                        "vendor":  "Microsoft",
+                        "title":  "Fix printer not found and printer not recognized errors in Windows",
+                        "url":  "https://support.microsoft.com/en-us/windows/fix-printer-not-found-and-printer-not-recognized-errors-in-windows-031ec613-4221-4a99-bc57-afb70b2b6af0",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-SFC-DISM",
+                        "vendor":  "Microsoft",
+                        "title":  "Use the System File Checker tool to repair missing or corrupted system files",
+                        "url":  "https://support.microsoft.com/help/929833",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-UPGRADE-INSTALL-ERRORS",
+                        "vendor":  "Microsoft",
+                        "title":  "Get help with Windows upgrade and installation errors",
+                        "url":  "https://support.microsoft.com/windows/get-help-with-windows-upgrade-and-installation-errors-ea144c24-513d-a60e-40df-31ff78b3158a",
+                        "retrievedDate":  "2026-04-30"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-UPGRADE-INSTALL-ERRORS-2026",
+                        "vendor":  "Microsoft",
+                        "title":  "Get help with Windows upgrade and installation errors",
+                        "url":  "https://support.microsoft.com/en-us/windows/get-help-with-windows-upgrade-and-installation-errors-ea144c24-513d-a60e-40df-31ff78b3158a",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-WINDOWS-STOP-CODE",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshooting Windows unexpected restarts and stop code errors",
+                        "url":  "https://support.microsoft.com/help/14238",
+                        "retrievedDate":  "2026-05-08"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-WINDOWS-UPDATE-COMMON",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot problems updating Windows",
+                        "url":  "https://support.microsoft.com/en-us/windows/troubleshoot-problems-updating-windows-188c2b0f-10a7-d72f-65b8-32d177eb136c",
+                        "retrievedDate":  "2026-05-17"
+                    },
+                    {
+                        "id":  "MS-SUPPORT-WINDOWS-UPDATE-TROUBLESHOOT",
+                        "vendor":  "Microsoft",
+                        "title":  "Troubleshoot problems updating Windows",
+                        "url":  "https://support.microsoft.com/windows/troubleshoot-problems-updating-windows-188c2b0f-10a7-d72f-65b8-32d177eb136c",
+                        "retrievedDate":  "2026-04-30"
+                    }
+                ],
+    "rules":  [
+                  {
+                      "id":  "MS-APPCRASH-1000-1001",
+                      "title":  "Application or service repeated crash events",
+                      "component":  "application",
+                      "symptoms":  [
+                                       "application crash",
+                                       "service crash",
+                                       "faulting module"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+                                       1000,
+                                       1001
+                                   ],
+                      "triggerTerms":  [
+                                           "Event ID 1000",
+                                           "Event ID 1001",
+                                           "faulting module",
+                                           "application crash"
+                                       ],
+                      "recommendedActions":  [
+                                                 "verify latest OS updates",
+                                                 "update impacted application",
+                                                 "review faulting module",
+                                                 "collect dump if repeated"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-APP-SERVICE-CRASH"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-DISK-NTFS-55-98",
+                      "title":  "NTFS file system corruption events",
+                      "component":  "storage",
+                      "symptoms":  [
+                                       "file system corruption",
+                                       "run chkdsk utility"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+                                       55,
+                                       98,
+                                       50,
+                                       140
+                                   ],
+                      "triggerTerms":  [
+                                           "NTFS",
+                                           "Event ID 55",
+                                           "Event ID 98",
+                                           "chkdsk"
+                                       ],
+                      "recommendedActions":  [
+                                                 "back up critical data",
+                                                 "chkdsk /f /r",
+                                                 "verify disk hardware"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-DISK-CORRUPTION"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-DISK-STORPORT-129-153",
+                      "title":  "Storage timeout or overload events",
+                      "component":  "storage",
+                      "symptoms":  [
+                                       "disk IO timeout",
+                                       "storage subsystem overload"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+                                       129,
+                                       153
+                                   ],
+                      "triggerTerms":  [
+                                           "Event ID 129",
+                                           "Event ID 153",
+                                           "Storport",
+                                           "disk timeout"
+                                       ],
+                      "recommendedActions":  [
+                                                 "check storage performance",
+                                                 "verify controller capacity",
+                                                 "update storage drivers or firmware"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-DISK-CORRUPTION"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-GETHELP-CLI-M365-DIAGNOSTIC",
+                      "title":  "Get Help command line Microsoft 365 diagnostic source",
+                      "component":  "application",
+                      "symptoms":  [
+                                       "Microsoft 365 Apps issue",
+                                       "Outlook issue",
+                                       "Teams issue",
+                                       "Office activation issue"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Get Help command line",
+                                           "Microsoft 365",
+                                           "Office activation",
+                                           "Outlook",
+                                           "Teams"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Run Get Help command-line scenario outside WindowsDoctor",
+                                                 "Import output as external diagnostic evidence"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-GETHELP-CLI"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-HARDWARE-DEVICE-MANAGER-CODES",
+                      "title":  "Device Manager hardware error codes",
+                      "component":  "hardware",
+                      "symptoms":  [
+                                       "Device Manager error code",
+                                       "yellow exclamation device",
+                                       "device driver problem",
+                                       "hardware not working"
+                                   ],
+                      "errorCodes":  [
+                                         "Code 1",
+                                         "Code 3",
+                                         "Code 42",
+                                         "Code 43",
+                                         "Code 44",
+                                         "Code 45"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Device Manager",
+                                           "Code 43",
+                                           "device driver",
+                                           "hardware problem",
+                                           "yellow exclamation"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Record Device Manager code and device name",
+                                                 "Update, roll back, or reinstall driver only after confirmation",
+                                                 "Contact hardware vendor when Microsoft guidance requires vendor support"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-DEVICE-MANAGER-CODES"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-HARDWARE-GRAPHICS-CODE43",
+                      "title":  "Graphics device Code 43 driver or hardware failure",
+                      "component":  "hardware",
+                      "symptoms":  [
+                                       "graphics device error code 43",
+                                       "GPU driver problem",
+                                       "display adapter not working"
+                                   ],
+                      "errorCodes":  [
+                                         "Code 43"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Code 43",
+                                           "graphics device",
+                                           "display adapter",
+                                           "driver rollback",
+                                           "uninstall device"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Update graphics driver",
+                                                 "Roll back recent driver when appropriate",
+                                                 "Uninstall/reinstall device only after confirmation",
+                                                 "Treat hardware failure as manual review"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-GRAPHICS-CODE43",
+                                        "MS-SUPPORT-DEVICE-MANAGER-CODES"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-NET-WINSOCK-RESET",
+                      "title":  "Winsock catalog corruption reset",
+                      "component":  "network",
+                      "symptoms":  [
+                                       "network application connection failure",
+                                       "corrupted Winsock settings"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Winsock",
+                                           "netsh winsock reset",
+                                           "LSP",
+                                           "network reset"
+                                       ],
+                      "recommendedActions":  [
+                                                 "netsh winsock reset"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "low",
+                      "sourceIds":  [
+                                        "MS-LEARN-NETSH-WINSOCK"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-PRINTER-SPOOLER-AND-CONNECTION",
+                      "title":  "Printer connection, recognition, and spooler troubleshooting",
+                      "component":  "printer",
+                      "symptoms":  [
+                                       "printer not found",
+                                       "printer not recognized",
+                                       "print job stuck",
+                                       "Print Spooler issue"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "printer not found",
+                                           "printer not recognized",
+                                           "Print Spooler",
+                                           "print queue",
+                                           "printer troubleshooter"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Check printer connection and power",
+                                                 "Restart Print Spooler only through reviewed workflow",
+                                                 "Use Get Help printer troubleshooter",
+                                                 "Update or reinstall printer driver after confirmation"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-PRINTER-CONNECTION",
+                                        "MS-SUPPORT-PRINTER-NOT-FOUND"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-SETUPDIAG-UPGRADE-FAILURE",
+                      "title":  "SetupDiag Windows upgrade failure analysis",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows feature update failed",
+                                       "Windows upgrade rollback",
+                                       "setup log root cause needed"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "SetupDiag",
+                                           "upgrade failure",
+                                           "rollback",
+                                           "setupact.log",
+                                           "setuperr.log"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Run SetupDiag against Windows Setup logs",
+                                                 "Import SetupDiag output as diagnostic-only evidence"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-SETUPDIAG"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-SFC-DISM-OFFICIAL-SEQUENCE",
+                      "title":  "Official DISM and SFC system file repair sequence",
+                      "component":  "system_integrity",
+                      "symptoms":  [
+                                       "system file corruption",
+                                       "component store corruption",
+                                       "SFC found corrupt files",
+                                       "DISM source repair required"
+                                   ],
+                      "errorCodes":  [
+                                         "0x800f081f",
+                                         "0x80073712"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "sfc /scannow",
+                                           "DISM.exe /Online /Cleanup-image /Restorehealth",
+                                           "Windows Resource Protection",
+                                           "corrupt files"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Run DISM RestoreHealth before SFC when following official support guidance",
+                                                 "Capture CBS.log and DISM.log",
+                                                 "Keep RestoreHealth and SFC repair behind explicit RUN"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-SFC-DISM",
+                                        "MS-LEARN-DISM-REPAIR-IMAGE"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-STOPCODE-BSOD-EVIDENCE",
+                      "title":  "Windows unexpected restart and stop code evidence",
+                      "component":  "system",
+                      "symptoms":  [
+                                       "unexpected restart",
+                                       "stop code",
+                                       "blue screen or black screen failure"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "stop code",
+                                           "PAGE_FAULT_IN_NONPAGED_AREA",
+                                           "MEMORY_MANAGEMENT",
+                                           "unexpected restart",
+                                           "BSOD"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Record stop code and faulting module",
+                                                 "Review driver and hardware evidence before repair"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-STOP-CODE"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-SYS-DISM-SCAN-RESTORE",
+                      "title":  "Component store corruption check and repair",
+                      "component":  "system_integrity",
+                      "symptoms":  [
+                                       "component store corruption",
+                                       "system file corruption",
+                                       "Windows image corruption"
+                                   ],
+                      "errorCodes":  [
+                                         "0x800f081f"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "DISM",
+                                           "RestoreHealth",
+                                           "CheckHealth",
+                                           "ScanHealth",
+                                           "0x800f081f"
+                                       ],
+                      "recommendedActions":  [
+                                                 "DISM /Online /Cleanup-Image /ScanHealth",
+                                                 "DISM /Online /Cleanup-Image /RestoreHealth",
+                                                 "sfc /scannow"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-DISM-REPAIR-IMAGE"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-UPGRADE-0x80200056",
+                      "title":  "Windows upgrade interrupted by restart or sign-out",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "upgrade interrupted",
+                                       "installation retry needed"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80200056"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80200056",
+                                           "upgrade interrupted",
+                                           "restarted",
+                                           "signed out"
+                                       ],
+                      "recommendedActions":  [
+                                                 "retry upgrade",
+                                                 "keep PC plugged in",
+                                                 "avoid restart or sign-out during upgrade"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "low",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-UPGRADE-INSTALL-ERRORS"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x80070002-MISSING-FILES",
+                      "title":  "Windows Update 0x80070002 missing or corrupt files",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update error 0x80070002",
+                                       "missing update files",
+                                       "incomplete previous update"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80070002"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80070002",
+                                           "ERROR_FILE_NOT_FOUND",
+                                           "missing files",
+                                           "incomplete previous update"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Collect Windows Update and CBS evidence",
+                                                 "Validate component store before repair"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-0x80070002"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x80070422-SERVICE-DISABLED",
+                      "title":  "Windows Update 0x80070422 service disabled or stopped",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update service disabled",
+                                       "Windows Update service stopped",
+                                       "Windows Update error 0x80070422"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80070422"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80070422",
+                                           "Windows Update service is disabled",
+                                           "wuauserv",
+                                           "service disabled"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Check Windows Update service state",
+                                                 "Confirm policy or enterprise management before enabling services",
+                                                 "Use explicit RUN gate before changing service startup"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-UPDATE-COMMON"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x80070490-DRIVER-FAILURE",
+                      "title":  "Windows Update 0x80070490 driver operation failure",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update error 0x80070490",
+                                       "driver failure during update",
+                                       "pending update blocks installation"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80070490"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80070490",
+                                           "driver failure",
+                                           "pending updates",
+                                           "servicing stack"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Inspect update and driver installation evidence",
+                                                 "Back up OS disk before advanced repair"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-0x80070490"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x80073712",
+                      "title":  "Windows Update file is damaged or missing",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update failure",
+                                       "upgrade failure"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80073712"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80073712",
+                                           "Windows Update",
+                                           "damaged or missing"
+                                       ],
+                      "recommendedActions":  [
+                                                 "DISM /Online /Cleanup-Image /RestoreHealth",
+                                                 "sfc /scannow"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-UPGRADE-INSTALL-ERRORS",
+                                        "MS-LEARN-DISM-REPAIR-IMAGE"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x800f0823-SERVICING-STACK",
+                      "title":  "Windows Update 0x800f0823 servicing stack required",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update error 0x800f0823",
+                                       "CBS_E_NEW_SERVICING_STACK_REQUIRED",
+                                       "servicing stack mismatch"
+                                   ],
+                      "errorCodes":  [
+                                         "0x800f0823"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x800f0823",
+                                           "CBS_E_NEW_SERVICING_STACK_REQUIRED",
+                                           "servicing stack"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Confirm CBS.log servicing stack requirement",
+                                                 "Install required servicing stack or cumulative update path"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-0x800f0823"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0x800f0831-MANIFEST-MISSING",
+                      "title":  "Windows Update 0x800f0831 manifest or package corruption",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update error 0x800f0831",
+                                       "missing manifest",
+                                       "CBS store corruption"
+                                   ],
+                      "errorCodes":  [
+                                         "0x800f0831"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x800f0831",
+                                           "CBS_E_STORE_CORRUPTION",
+                                           "manifest",
+                                           "package missing"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Inspect CBS.log for missing package identity",
+                                                 "Use DISM/SFC only under explicit repair workflow"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-0x800f0831",
+                                        "MS-LEARN-WU-FIX-CORRUPTION"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-0xC1900101-DRIVER-UPGRADE",
+                      "title":  "Windows upgrade 0xC1900101 likely driver rollback",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows upgrade rollback",
+                                       "driver compatibility issue",
+                                       "Windows upgrade error 0xC1900101"
+                                   ],
+                      "errorCodes":  [
+                                         "0xC1900101"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0xC1900101",
+                                           "driver",
+                                           "upgrade rollback",
+                                           "incompatible driver",
+                                           "SetupDiag"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Run SetupDiag and review driver evidence",
+                                                 "Update or remove incompatible drivers only after confirmation",
+                                                 "Do not auto-remove drivers"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-UPDATE-COMMON",
+                                        "MS-LEARN-SETUPDIAG"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-COMMON-ERROR-MAP",
+                      "title":  "Windows Update common error code map",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update failed",
+                                       "Windows Update download or install error",
+                                       "Windows Update common error code"
+                                   ],
+                      "errorCodes":  [
+                                         "0x8007000d",
+                                         "0x800705b4",
+                                         "0x80240034",
+                                         "0x800f0922",
+                                         "0x80070057",
+                                         "0x80080005",
+                                         "0xC1900101",
+                                         "0x8007000E",
+                                         "0x800F081F",
+                                         "0x80073712",
+                                         "0x80246007",
+                                         "0x80070002",
+                                         "0x80070003",
+                                         "0x80070422"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Windows Update",
+                                           "0x8007000d",
+                                           "0x800705b4",
+                                           "0x80240034",
+                                           "0x800f0922",
+                                           "0x80070057",
+                                           "0x80080005",
+                                           "0xC1900101",
+                                           "0x8007000E",
+                                           "0x800F081F",
+                                           "0x80073712",
+                                           "0x80246007",
+                                           "0x80070422"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Map the error code to Microsoft official guidance",
+                                                 "Run Windows Update troubleshooter first",
+                                                 "Collect Windows Update logs before repair",
+                                                 "Use DISM/SFC only through explicit RUN repair workflow"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-UPDATE-COMMON",
+                                        "MS-LEARN-WU-CLIENT-TROUBLESHOOT"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-CORRUPTION-COMMON-CODES",
+                      "title":  "Windows Update corruption common error code set",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update corruption",
+                                       "servicing stack or component store update failure"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80070002",
+                                         "0x800f0831",
+                                         "0x80073712",
+                                         "0x800f081f"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Windows Update corruption",
+                                           "CBS_E_STORE_CORRUPTION",
+                                           "ERROR_FILE_NOT_FOUND",
+                                           "DISM"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Collect CBS.log and Windows Update logs",
+                                                 "Run DISM/SFC checks as diagnostic or explicit RUN repair only"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-FIX-CORRUPTION",
+                                        "MS-LEARN-DISM-REPAIR-IMAGE"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-DOWNLOAD-CONNECTION-ERRORS",
+                      "title":  "Windows Update download connection errors",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update scan or download cannot reach update service",
+                                       "update download timeout"
+                                   ],
+                      "errorCodes":  [
+                                         "0x80072EFD",
+                                         "0x80072EFE",
+                                         "0x80D02002"
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "0x80072EFD",
+                                           "0x80072EFE",
+                                           "0x80D02002",
+                                           "Windows Update download",
+                                           "server connection"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Check network connectivity and proxy configuration",
+                                                 "Collect Windows Update logs before any repair"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-LEARN-WU-DOWNLOAD-ERRORS"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-GETHELP-TROUBLESHOOTER-FIRST",
+                      "title":  "Windows Update troubleshooter and Get Help first-line path",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update problem",
+                                       "Windows Update error without local evidence",
+                                       "Windows 11 Update troubleshooting"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "Windows Update troubleshooter",
+                                           "Get Help",
+                                           "Other troubleshooters",
+                                           "Windows Update problem"
+                                       ],
+                      "recommendedActions":  [
+                                                 "Use Microsoft Get Help or Windows Update troubleshooter first",
+                                                 "Import resulting output as diagnostic evidence",
+                                                 "Do not invent findings when no output is available"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "guided",
+                      "repairAllowed":  false,
+                      "riskLevel":  "manual_review",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-UPDATE-COMMON",
+                                        "MS-LEARN-WU-CLIENT-TROUBLESHOOT"
+                                    ]
+                  },
+                  {
+                      "id":  "MS-WU-SOFTWAREDISTRIBUTION-RESET",
+                      "title":  "Windows Update cache reset with SoftwareDistribution and catroot2 rename",
+                      "component":  "windows_update",
+                      "symptoms":  [
+                                       "Windows Update stuck",
+                                       "Windows Update repeated failure"
+                                   ],
+                      "errorCodes":  [
+
+                                     ],
+                      "eventIds":  [
+
+                                   ],
+                      "triggerTerms":  [
+                                           "SoftwareDistribution",
+                                           "catroot2",
+                                           "wuauserv",
+                                           "BITS"
+                                       ],
+                      "recommendedActions":  [
+                                                 "net stop bits",
+                                                 "net stop wuauserv",
+                                                 "rename SoftwareDistribution",
+                                                 "rename catroot2",
+                                                 "net start bits",
+                                                 "net start wuauserv"
+                                             ],
+                      "script":  "N/A",
+                      "actionType":  "manual_review",
+                      "repairAllowed":  false,
+                      "riskLevel":  "medium",
+                      "sourceIds":  [
+                                        "MS-SUPPORT-WINDOWS-UPDATE-TROUBLESHOOT"
+                                    ]
+                  }
+              ]
+}

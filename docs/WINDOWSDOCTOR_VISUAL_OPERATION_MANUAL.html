@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WindowsDoctor 圖解操作說明書</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --ink: #162033;
+      --muted: #526274;
+      --line: #cfdae8;
+      --panel: #ffffff;
+      --blue: #2364d2;
+      --green: #1b7f45;
+      --orange: #b35c00;
+      --red: #b42318;
+      --violet: #6b46c1;
+    }
+    body { margin: 0; font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif; background: var(--bg); color: var(--ink); }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 18px 48px; }
+    header { margin-bottom: 20px; }
+    h1 { margin: 0 0 8px; font-size: 34px; letter-spacing: 0; }
+    h2 { margin: 28px 0 12px; font-size: 24px; }
+    h3 { margin: 0 0 8px; font-size: 18px; }
+    p { line-height: 1.65; color: var(--muted); }
+    code { background: #e9eef6; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; font-family: Consolas, monospace; }
+    .notice { background: #fff8e6; border: 1px solid #f0d38a; border-left: 5px solid var(--orange); border-radius: 8px; padding: 14px 16px; margin: 14px 0; }
+    .grid { display: grid; gap: 14px; }
+    .grid.two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .grid.three { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-weight: 700; font-size: 12px; }
+    .pass { background: #dff5e8; color: var(--green); }
+    .wait { background: #fff0d8; color: var(--orange); }
+    .safe { background: #e6efff; color: var(--blue); }
+    .danger { background: #ffe4e0; color: var(--red); }
+    .diagram { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 10px 0 18px; }
+    .stepbox { fill: #ffffff; stroke: #9fb0c5; stroke-width: 1.5; rx: 8; }
+    .stepbox.blue { fill: #e8f0ff; stroke: #7aa2ed; }
+    .stepbox.green { fill: #e4f6ec; stroke: #6ac28d; }
+    .stepbox.orange { fill: #fff1dc; stroke: #e2a64f; }
+    .stepbox.red { fill: #ffe8e5; stroke: #e08a82; }
+    .arrow { stroke: #526274; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+    .label { font-size: 14px; fill: #162033; font-weight: 700; }
+    .small { font-size: 12px; fill: #526274; }
+    .path { margin: 8px 0 0; }
+    .checklist { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e7edf5; vertical-align: top; }
+    th { background: #eef3f9; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      svg text { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>WindowsDoctor 圖解操作說明書</h1>
+    <p>適用於 USB GUI-ready 套件、WinPE 離線救援、One-click repair 預覽、真實錯誤資料匯入前置檢查。</p>
+    <div class="notice">
+      <strong>安全原則：</strong>預設只做檢查與預覽。任何修復都必須輸入 <code>RUN</code>，且只會執行低風險 allowlist safe batch。
+    </div>
+  </header>
+
+  <section>
+    <h2>1. 總覽圖</h2>
+    <svg class="diagram" viewBox="0 0 1120 330" role="img" aria-label="WindowsDoctor 使用總覽流程">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#526274"></path>
+        </marker>
+      </defs>
+      <rect class="stepbox blue" x="35" y="55" width="180" height="78"></rect>
+      <text class="label" x="125" y="86" text-anchor="middle">插入 USB</text>
+      <text class="small" x="125" y="110" text-anchor="middle">開啟 START_HERE.html</text>
+
+      <path class="arrow" d="M215 94 H285"></path>
+      <rect class="stepbox" x="285" y="55" width="190" height="78"></rect>
+      <text class="label" x="380" y="86" text-anchor="middle">選擇套件</text>
+      <text class="small" x="380" y="110" text-anchor="middle">GUI-ready / text / WinPE</text>
+
+      <path class="arrow" d="M475 94 H545"></path>
+      <rect class="stepbox green" x="545" y="55" width="205" height="78"></rect>
+      <text class="label" x="647" y="86" text-anchor="middle">執行 Preflight</text>
+      <text class="small" x="647" y="110" text-anchor="middle">記憶體 / cache / port / node</text>
+
+      <path class="arrow" d="M750 94 H820"></path>
+      <rect class="stepbox orange" x="820" y="55" width="230" height="78"></rect>
+      <text class="label" x="935" y="86" text-anchor="middle">開啟 GUI 預覽</text>
+      <text class="small" x="935" y="110" text-anchor="middle">先看診斷與修復計畫</text>
+
+      <rect class="stepbox" x="170" y="210" width="220" height="78"></rect>
+      <text class="label" x="280" y="241" text-anchor="middle">產生實測資料</text>
+      <text class="small" x="280" y="265" text-anchor="middle">NotebookLM / 診斷 log</text>
+
+      <path class="arrow" d="M390 249 H470"></path>
+      <rect class="stepbox blue" x="470" y="210" width="220" height="78"></rect>
+      <text class="label" x="580" y="241" text-anchor="middle">放入 incoming</text>
+      <text class="small" x="580" y="265" text-anchor="middle">等待 readiness PASS</text>
+
+      <path class="arrow" d="M690 249 H770"></path>
+      <rect class="stepbox green" x="770" y="210" width="210" height="78"></rect>
+      <text class="label" x="875" y="241" text-anchor="middle">匯入 / 重建 KB</text>
+      <text class="small" x="875" y="265" text-anchor="middle">驗證後才納入資料庫</text>
+    </svg>
+  </section>
+
+  <section>
+    <h2>2. USB 啟動圖解</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3><span class="badge safe">入口 A</span> 圖形介面模式</h3>
+        <svg class="diagram" viewBox="0 0 520 160" role="img" aria-label="GUI-ready 啟動流程">
+          <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
+          <rect class="stepbox blue" x="18" y="42" width="130" height="70"></rect>
+          <text class="label" x="83" y="72" text-anchor="middle">START_HERE</text>
+          <text class="small" x="83" y="96" text-anchor="middle">狀態頁</text>
+          <path class="arrow" marker-end="url(#arrow2)" d="M148 77 H190"></path>
+          <rect class="stepbox green" x="190" y="42" width="150" height="70"></rect>
+          <text class="label" x="265" y="72" text-anchor="middle">GUI-ready</text>
+          <text class="small" x="265" y="96" text-anchor="middle">preflight + cache</text>
+          <path class="arrow" marker-end="url(#arrow2)" d="M340 77 H382"></path>
+          <rect class="stepbox orange" x="382" y="42" width="120" height="70"></rect>
+          <text class="label" x="442" y="72" text-anchor="middle">瀏覽器</text>
+          <text class="small" x="442" y="96" text-anchor="middle">localhost:3000</text>
+        </svg>
+        <p class="path"><code>G:\START_HERE.html</code></p>
+        <p class="path"><code>G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\Start-WindowsDoctor-GUI-Ready.cmd</code></p>
+      </div>
+
+      <div class="card">
+        <h3><span class="badge safe">入口 B</span> 離線救援模式</h3>
+        <svg class="diagram" viewBox="0 0 520 160" role="img" aria-label="WinPE 離線救援流程">
+          <defs><marker id="arrow3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
+          <rect class="stepbox blue" x="20" y="42" width="130" height="70"></rect>
+          <text class="label" x="85" y="72" text-anchor="middle">USB 開機</text>
+          <text class="small" x="85" y="96" text-anchor="middle">WinPE</text>
+          <path class="arrow" marker-end="url(#arrow3)" d="M150 77 H195"></path>
+          <rect class="stepbox" x="195" y="42" width="145" height="70"></rect>
+          <text class="label" x="268" y="72" text-anchor="middle">離線 KB</text>
+          <text class="small" x="268" y="96" text-anchor="middle">不需網路</text>
+          <path class="arrow" marker-end="url(#arrow3)" d="M340 77 H385"></path>
+          <rect class="stepbox orange" x="385" y="42" width="115" height="70"></rect>
+          <text class="label" x="442" y="72" text-anchor="middle">預覽</text>
+          <text class="small" x="442" y="96" text-anchor="middle">不自動修復</text>
+        </svg>
+        <p class="path"><code>G:\sources\boot.wim</code></p>
+        <p>適合 Windows 無法正常進入桌面時，先做離線診斷與知識庫查詢。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. 修復安全門檻圖解</h2>
+    <svg class="diagram" viewBox="0 0 1120 300" role="img" aria-label="RUN gate 修復流程">
+      <defs><marker id="arrow4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
+      <rect class="stepbox blue" x="40" y="72" width="170" height="72"></rect>
+      <text class="label" x="125" y="101" text-anchor="middle">Preview</text>
+      <text class="small" x="125" y="125" text-anchor="middle">只產生計畫</text>
+      <path class="arrow" marker-end="url(#arrow4)" d="M210 108 H275"></path>
+      <rect class="stepbox" x="275" y="72" width="195" height="72"></rect>
+      <text class="label" x="372" y="101" text-anchor="middle">Evidence scoring</text>
+      <text class="small" x="372" y="125" text-anchor="middle">信心 / 風險 / evidence</text>
+      <path class="arrow" marker-end="url(#arrow4)" d="M470 108 H535"></path>
+      <rect class="stepbox green" x="535" y="72" width="190" height="72"></rect>
+      <text class="label" x="630" y="101" text-anchor="middle">Safe batch</text>
+      <text class="small" x="630" y="125" text-anchor="middle">低風險 allowlist</text>
+      <path class="arrow" marker-end="url(#arrow4)" d="M725 108 H790"></path>
+      <rect class="stepbox red" x="790" y="72" width="230" height="72"></rect>
+      <text class="label" x="905" y="101" text-anchor="middle">RUN required</text>
+      <text class="small" x="905" y="125" text-anchor="middle">未輸入 RUN 不會執行</text>
+      <rect class="stepbox orange" x="310" y="205" width="500" height="54"></rect>
+      <text class="label" x="560" y="236" text-anchor="middle">手動審查項目：開機、系統完整性、維護、Windows Update cache reset</text>
+    </svg>
+    <table>
+      <thead><tr><th>狀態</th><th>意思</th><th>是否會修復</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge safe">Preview</span></td><td>只顯示診斷、建議、風險與 dry-run 影響</td><td>否</td></tr>
+        <tr><td><span class="badge pass">Safe batch</span></td><td>符合 active evidence、低風險、allowlist、confidence 門檻</td><td>只有輸入 RUN 後才會</td></tr>
+        <tr><td><span class="badge wait">Manual review</span></td><td>風險較高或不在 safe batch</td><td>否</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>4. 真實資料匯入圖解</h2>
+    <svg class="diagram" viewBox="0 0 1120 260" role="img" aria-label="真實資料匯入流程">
+      <defs><marker id="arrow5" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526274"></path></marker></defs>
+      <rect class="stepbox orange" x="40" y="60" width="210" height="76"></rect>
+      <text class="label" x="145" y="91" text-anchor="middle">實測產生錯誤</text>
+      <text class="small" x="145" y="116" text-anchor="middle">目前尚未開始</text>
+      <path class="arrow" marker-end="url(#arrow5)" d="M250 98 H320"></path>
+      <rect class="stepbox blue" x="320" y="60" width="250" height="76"></rect>
+      <text class="label" x="445" y="91" text-anchor="middle">放入 incoming</text>
+      <text class="small" x="445" y="116" text-anchor="middle">notebooklm / diagnostics / official logs</text>
+      <path class="arrow" marker-end="url(#arrow5)" d="M570 98 H640"></path>
+      <rect class="stepbox" x="640" y="60" width="205" height="76"></rect>
+      <text class="label" x="742" y="91" text-anchor="middle">Readiness gate</text>
+      <text class="small" x="742" y="116" text-anchor="middle">WAITING / PASS / FAIL</text>
+      <path class="arrow" marker-end="url(#arrow5)" d="M845 98 H915"></path>
+      <rect class="stepbox green" x="915" y="60" width="165" height="76"></rect>
+      <text class="label" x="998" y="91" text-anchor="middle">匯入與重建</text>
+      <text class="small" x="998" y="116" text-anchor="middle">只在 PASS 後</text>
+    </svg>
+    <div class="grid three">
+      <div class="card"><h3>NotebookLM</h3><p><code>E:\WindowsDoctor\incoming\notebooklm</code></p><p>放入 source pack JSON。</p></div>
+      <div class="card"><h3>外部診斷包</h3><p><code>E:\WindowsDoctor\incoming\external-diagnostics</code></p><p>放入 external diagnostics JSON。</p></div>
+      <div class="card"><h3>官方診斷輸出</h3><p><code>E:\WindowsDoctor\incoming\official-diagnostics</code></p><p>放入 SetupDiag、DISM、SFC、Get Help log。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. 應用場景範例</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>場景 A：一般 Windows 還能開機</h3>
+        <ul class="checklist">
+          <li>插入 USB，開啟 <code>G:\START_HERE.html</code>。</li>
+          <li>選擇 GUI-ready 套件，執行啟動器。</li>
+          <li>先看 Preview，不輸入 RUN。</li>
+          <li>若有真實錯誤，再保存診斷輸出供日後匯入。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>場景 B：Windows 無法正常進桌面</h3>
+        <ul class="checklist">
+          <li>從 USB 開機進 WinPE。</li>
+          <li>使用離線 KB 查詢故障方向。</li>
+          <li>只做診斷與預覽，不直接執行修復。</li>
+          <li>必要時交由人工審查高風險項目。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>場景 C：企業 Helpdesk 快速判斷</h3>
+        <ul class="checklist">
+          <li>先跑 USB acceptance，確認套件完整。</li>
+          <li>用 GUI preview 產生 evidence scoring。</li>
+          <li>safe batch 也必須由操作員輸入 RUN。</li>
+          <li>將報告交給二線或資安審查。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>場景 D：實測後匯入真實錯誤資料</h3>
+        <ul class="checklist">
+          <li>把真實 JSON/log 放入 incoming 對應資料夾。</li>
+          <li>執行 readiness gate。</li>
+          <li>只有 PASS 才做 validate/import/rebuild normalized KB。</li>
+          <li>匯入後重新跑 low-risk baseline 與 USB acceptance。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. 常用驗收命令</h2>
+    <div class="card">
+      <p>USB self-acceptance：</p>
+      <p><code>powershell -NoProfile -ExecutionPolicy RemoteSigned -File G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\WindowsDoctor\scripts\Invoke-PortableUsbAcceptance.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3 -ZipPath G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip -UsbRoot G:\ -ReportPath E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-before-field-test.json -Json</code></p>
+      <p>Real-data readiness：</p>
+      <p><code>powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Test-RealDataImportReadiness.ps1 -CreateDirectories -ReportPath E:\WindowsDoctor\logs\real-data-import-readiness.latest.json -Json</code></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

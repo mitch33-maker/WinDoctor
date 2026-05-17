@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WindowsDoctor USB 入口</title>
+  <style>
+    body { margin: 0; font-family: "Microsoft JhengHei", Arial, sans-serif; background: #f7f9fc; color: #172033; }
+    main { max-width: 980px; margin: 0 auto; padding: 28px 18px 40px; }
+    h1 { font-size: 34px; margin: 0 0 10px; }
+    .lead { font-size: 20px; margin: 0 0 22px; color: #41516b; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: #fff; border: 2px solid #dce5f2; border-radius: 8px; padding: 18px; }
+    .icon { font-size: 52px; line-height: 1; margin-bottom: 10px; }
+    h2 { font-size: 24px; margin: 0 0 10px; }
+    ol { padding-left: 24px; font-size: 18px; line-height: 1.65; }
+    code { background: #eef3fb; padding: 2px 6px; border-radius: 5px; }
+    .safe { margin-top: 18px; background: #fff8e1; border: 2px solid #f2ca52; border-radius: 8px; padding: 14px 18px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>WindowsDoctor USB 入口</h1>
+    <p class="lead">這支 USB 已整合 2 個功能：正常 Windows 工具包 + 不能開機時的 WinPE 救援。</p>
+
+    <section class="grid" aria-label="兩種使用方式">
+      <article class="card">
+        <div class="icon">🖥️</div>
+        <h2>電腦可以正常開機</h2>
+        <ol>
+          <li>插入 USB。</li>
+          <li>打開 <code>G:\WindowsDoctor-PortableUSB-GUI-READY-20260503</code>。</li>
+          <li>要看圖形介面：雙擊 <code>Start-WindowsDoctor-GUI-Ready.cmd</code>。</li>
+          <li>這會先同步到本機快取，再開啟 <code>http://localhost:3000</code>。</li>
+          <li>只要安全文字選單：雙擊 <code>Start-WindowsDoctor-Portable.cmd</code>。</li>
+          <li>依畫面操作診斷、查詢錯誤、匯入 NotebookLM JSON。</li>
+        </ol>
+      </article>
+
+      <article class="card">
+        <div class="icon">🛟</div>
+        <h2>電腦不能正常開機</h2>
+        <ol>
+          <li>關機後插入 USB。</li>
+          <li>開機時按 Boot Menu 鍵，例如 <code>F12</code>、<code>F11</code>、<code>Esc</code>。</li>
+          <li>選擇這支 USB 開機。</li>
+          <li>進入 WinPE 後使用 WindowsDoctor 文字選單。</li>
+        </ol>
+      </article>
+    </section>
+
+    <div class="safe">
+      安全規則：診斷與預覽可以直接使用；真正修復前需要看到 <code>RUN</code> 確認。
+    </div>
+
+    <div class="safe">
+      NotebookLM GUI 圖文說明：打開 <code>G:\WINDOWSDOCTOR_NOTEBOOKLM_GUI_USER_GUIDE.html</code>
+    </div>
+  </main>
+</body>
+</html>

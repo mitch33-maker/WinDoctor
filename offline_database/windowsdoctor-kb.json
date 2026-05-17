@@ -1,0 +1,1072 @@
+{
+    "schemaVersion":  1,
+    "generatedAt":  "2026-05-17 10:03:47",
+    "root":  "E:\\WindowsDoctor",
+    "allowlist":  [
+                      "Repair-BCDBoot.bat",
+                      "Repair-NetworkStack.bat",
+                      "Repair-Services.bat",
+                      "Repair-SystemMaintenance.bat",
+                      "Repair-SystemIntegrity.bat",
+                      "Repair-WUSoftwareDistribution.bat"
+                  ],
+    "stats":  {
+                  "totalRules":  64,
+                  "reviewedRules":  63,
+                  "learnedRules":  1,
+                  "autoRepairRules":  20,
+                  "guidedRules":  44,
+                  "manualReviewRules":  0
+              },
+    "rules":  [
+                  {
+                      "id":  "bios_secureboot_fix",
+                      "title":  "Secure Boot 未開啟 (影響 Win11 快取/安全性)",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SecureBootDisabled"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/bios_secureboot_fix.md"
+                  },
+                  {
+                      "id":  "boot_failure_fix",
+                      "title":  "Windows 引導損壞 (BCD/Winload)",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0xc000000f"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/boot_failure_fix.md"
+                  },
+                  {
+                      "id":  "hardware_driver_fix",
+                      "title":  "硬體驅動程式缺失或衝突 (Yellow Bang)",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "DeviceError"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/hardware_driver_fix.md"
+                  },
+                  {
+                      "id":  "optimization_rules",
+                      "title":  "系統效能優化建議",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SystemSlow"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/optimization_rules.md"
+                  },
+                  {
+                      "id":  "printer_spooler_fix",
+                      "title":  "印表機後台列印服務 (Spooler) 故障",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SpoolerStopped"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/printer_spooler_fix.md"
+                  },
+                  {
+                      "id":  "RULE-BOOT-BCD",
+                      "title":  "Windows 開機引導 BCD 損毀",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0xc0000034",
+                                       "Boot Configuration Data",
+                                       "WinPE",
+                                       "開機失敗",
+                                       "MBR"
+                                   ],
+                      "script":  "Repair-BCDBoot.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Windows 開機引導 BCD 損毀 (0xc0000034)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BOOT-BCD.md"
+                  },
+                  {
+                      "id":  "RULE-BOOT-BITLOCKER-RECOVERY",
+                      "title":  "BitLocker 開機要求修復金鑰",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "BitLocker recovery",
+                                       "recovery key",
+                                       "TPM",
+                                       "Secure Boot policy",
+                                       "PCR"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "BitLocker 開機要求修復金鑰",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BOOT-BITLOCKER-RECOVERY.md"
+                  },
+                  {
+                      "id":  "RULE-BOOT-INACCESSIBLE-BOOT-DEVICE",
+                      "title":  "開機藍屏 INACCESSIBLE_BOOT_DEVICE",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "INACCESSIBLE_BOOT_DEVICE",
+                                       "0x0000007B",
+                                       "boot device",
+                                       "storage controller",
+                                       "AHCI",
+                                       "RAID"
+                                   ],
+                      "script":  "Repair-BCDBoot.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "開機藍屏 INACCESSIBLE_BOOT_DEVICE",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BOOT-INACCESSIBLE-BOOT-DEVICE.md"
+                  },
+                  {
+                      "id":  "RULE-BOOT-SAFE-MODE-LOOP",
+                      "title":  "Windows 卡在安全模式或診斷啟動",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "safe mode loop",
+                                       "safeboot",
+                                       "msconfig diagnostic startup",
+                                       "Minimal Safe Boot"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows 卡在安全模式或診斷啟動",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BOOT-SAFE-MODE-LOOP.md"
+                  },
+                  {
+                      "id":  "RULE-BOOT-WINRE-MISSING",
+                      "title":  "Windows Recovery Environment 遺失或停用",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Windows RE status: Disabled",
+                                       "WinRE",
+                                       "reagentc",
+                                       "Recovery environment not found"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows Recovery Environment 遺失或停用",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BOOT-WINRE-MISSING.md"
+                  },
+                  {
+                      "id":  "RULE-BSOD-CRITICAL",
+                      "title":  "系統核心檔案損毀",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "CRITICAL_PROCESS_DIED",
+                                       "藍屏",
+                                       "Blue Screen",
+                                       "0x000000EF"
+                                   ],
+                      "script":  "Repair-SystemIntegrity.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "系統核心檔案損毀 (CRITICAL_PROCESS_DIED)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-BSOD-CRITICAL.md"
+                  },
+                  {
+                      "id":  "RULE-DCOM-10016",
+                      "title":  "DCOM 權限異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "DistributedCOM",
+                                       "Event ID: 10016",
+                                       "DCOM"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "DCOM 權限異常 (Event ID 10016)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-DCOM-10016.md"
+                  },
+                  {
+                      "id":  "RULE-HW-BATTERY-ACPI",
+                      "title":  "筆電電池或 ACPI 電源管理異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "ACPI",
+                                       "Microsoft ACPI-Compliant Control Method Battery",
+                                       "battery not charging",
+                                       "plugged in not charging"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "筆電電池或 ACPI 電源管理異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-HW-BATTERY-ACPI.md"
+                  },
+                  {
+                      "id":  "RULE-HW-DISK-SMART",
+                      "title":  "磁碟 SMART 或硬體預警",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SMART",
+                                       "PredictFailure",
+                                       "disk health",
+                                       "reallocated sector",
+                                       "Current Pending Sector",
+                                       "Event ID: 52"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "磁碟 SMART 或硬體預警",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-HW-DISK-SMART.md"
+                  },
+                  {
+                      "id":  "RULE-HW-GPU-TDR",
+                      "title":  "顯示卡驅動 TDR 重置或畫面黑屏",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Display driver stopped responding",
+                                       "nvlddmkm",
+                                       "amdkmdag",
+                                       "igfx",
+                                       "LiveKernelEvent 141",
+                                       "VIDEO_TDR_FAILURE"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "顯示卡驅動 TDR 重置或畫面黑屏",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-HW-GPU-TDR.md"
+                  },
+                  {
+                      "id":  "RULE-HW-USB-CODE43",
+                      "title":  "USB 裝置 Code 43 或裝置描述元失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Code 43",
+                                       "USB device descriptor failed",
+                                       "Unknown USB Device",
+                                       "Device Descriptor Request Failed"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "USB 裝置 Code 43 或裝置描述元失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-HW-USB-CODE43.md"
+                  },
+                  {
+                      "id":  "RULE-NET-DHCP-169254",
+                      "title":  "DHCP 失敗取得 169.254 APIPA 位址",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "169.254",
+                                       "APIPA",
+                                       "DHCP",
+                                       "Event ID: 1001",
+                                       "unable to contact your DHCP server"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "DHCP 失敗取得 169.254 APIPA 位址",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-DHCP-169254.md"
+                  },
+                  {
+                      "id":  "RULE-NET-DNS",
+                      "title":  "網路 DNS 與閘道解析異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80072EE7",
+                                       "DNS",
+                                       "無法連線至網際網路",
+                                       "GetAddrInfo"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "網路 DNS 與閘道解析異常 (0x80072EE7)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-DNS.md"
+                  },
+                  {
+                      "id":  "RULE-NET-DNS-SUFFIX",
+                      "title":  "DNS 尾碼或公司網域解析錯誤",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "DNS suffix",
+                                       "DNS 尾碼",
+                                       "公司網域",
+                                       "internal domain"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "DNS 尾碼或公司網域解析錯誤",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-DNS-SUFFIX.md"
+                  },
+                  {
+                      "id":  "RULE-NET-FIREWALL-BLOCK",
+                      "title":  "Windows 防火牆封鎖連線",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "防火牆封鎖",
+                                       "firewall blocked",
+                                       "5152",
+                                       "5157"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows 防火牆封鎖連線",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-FIREWALL-BLOCK.md"
+                  },
+                  {
+                      "id":  "RULE-NET-GATEWAY-MISSING",
+                      "title":  "預設閘道遺失或路由不完整",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "無預設閘道",
+                                       "default gateway missing",
+                                       "不能上網",
+                                       "路由遺失"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "預設閘道遺失或路由不完整",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-GATEWAY-MISSING.md"
+                  },
+                  {
+                      "id":  "RULE-NET-IP-CONFLICT",
+                      "title":  "IP 位址衝突",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "IP 位址衝突",
+                                       "duplicate IP",
+                                       "address conflict",
+                                       "4199"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "IP 位址衝突",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-IP-CONFLICT.md"
+                  },
+                  {
+                      "id":  "RULE-NET-LIMITED-CONNECTIVITY",
+                      "title":  "網路受限或無網際網路連線",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "網路受限",
+                                       "limited connectivity",
+                                       "no internet",
+                                       "無網際網路"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "網路受限或無網際網路連線",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-LIMITED-CONNECTIVITY.md"
+                  },
+                  {
+                      "id":  "RULE-NET-MTU-FRAGMENT",
+                      "title":  "MTU 或封包碎片造成 VPN/網站連線異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "MTU",
+                                       "fragment",
+                                       "VPN 網站打不開",
+                                       "部分網站無法連線"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "MTU 或封包碎片造成 VPN/網站連線異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-MTU-FRAGMENT.md"
+                  },
+                  {
+                      "id":  "RULE-NET-NCSI-NOINTERNET",
+                      "title":  "Windows NCSI 誤判無網際網路",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "NCSI",
+                                       "無網際網路",
+                                       "No Internet",
+                                       "msftconnecttest"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows NCSI 誤判無網際網路",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-NCSI-NOINTERNET.md"
+                  },
+                  {
+                      "id":  "RULE-NET-PROFILE-PUBLIC",
+                      "title":  "網路設定檔為公用導致分享或探索失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "公用網路",
+                                       "Public network",
+                                       "網路探索關閉",
+                                       "network discovery"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "網路設定檔為公用導致分享或探索失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-PROFILE-PUBLIC.md"
+                  },
+                  {
+                      "id":  "RULE-NET-RDP-3389",
+                      "title":  "遠端桌面 RDP 連線失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "RDP",
+                                       "遠端桌面",
+                                       "3389",
+                                       "CredSSP",
+                                       "NLA"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "遠端桌面 RDP 連線失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-RDP-3389.md"
+                  },
+                  {
+                      "id":  "RULE-NET-TLS-CERT",
+                      "title":  "TLS 或憑證信任造成連線失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "TLS",
+                                       "憑證",
+                                       "certificate",
+                                       "0x80072F8F",
+                                       "SSL"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "TLS 或憑證信任造成連線失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-TLS-CERT.md"
+                  },
+                  {
+                      "id":  "RULE-NET-VPN-DNS",
+                      "title":  "VPN 連線後 DNS 或路由異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "VPN",
+                                       "DNS suffix",
+                                       "split tunnel",
+                                       "route print",
+                                       "NRPT",
+                                       "Name Resolution Policy"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "VPN 連線後 DNS 或路由異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-VPN-DNS.md"
+                  },
+                  {
+                      "id":  "RULE-NET-WIFI-ADAPTER",
+                      "title":  "Wi-Fi 介面卡消失或無法啟動",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Wi-Fi",
+                                       "WLAN AutoConfig",
+                                       "NativeWifi",
+                                       "wireless adapter",
+                                       "Code 10",
+                                       "Code 43"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Wi-Fi 介面卡消失或無法啟動",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-WIFI-ADAPTER.md"
+                  },
+                  {
+                      "id":  "RULE-NET-WINHTTP-PROXY",
+                      "title":  "WinHTTP Proxy 或系統 Proxy 設定造成連線失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "WinHTTP",
+                                       "proxy",
+                                       "0x80072EFD",
+                                       "0x80072EE2",
+                                       "407 Proxy Authentication Required",
+                                       "proxy server isn\u0027t responding"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "WinHTTP Proxy 或系統 Proxy 設定造成連線失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-WINHTTP-PROXY.md"
+                  },
+                  {
+                      "id":  "RULE-NET-WINSOCK-CATALOG",
+                      "title":  "Winsock 或 TCP/IP 堆疊異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Winsock",
+                                       "TCP/IP",
+                                       "socket error",
+                                       "WSA",
+                                       "0x8007274c",
+                                       "network stack"
+                                   ],
+                      "script":  "Repair-NetworkStack.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Winsock 或 TCP/IP 堆疊異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-NET-WINSOCK-CATALOG.md"
+                  },
+                  {
+                      "id":  "RULE-PRINTER-0x0709",
+                      "title":  "網路印表機連線錯誤",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x00000709",
+                                       "0x0000011B",
+                                       "印表機",
+                                       "Print Spooler",
+                                       "RPC_S_SERVER_UNAVAILABLE"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "網路印表機連線錯誤 (0x00000709 / 0x0000011B)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRINTER-0x0709.md"
+                  },
+                  {
+                      "id":  "RULE-PRN-ACCESS-DENIED",
+                      "title":  "連線共用印表機存取被拒",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Access is denied",
+                                       "printer access denied",
+                                       "Point and Print",
+                                       "Package Point and Print",
+                                       "0x00000005"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "連線共用印表機存取被拒",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRN-ACCESS-DENIED.md"
+                  },
+                  {
+                      "id":  "RULE-PRN-DRIVER-0x0000011B",
+                      "title":  "網路印表機 0x0000011B 或 RPC 加密相容性問題",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x0000011B",
+                                       "RpcAuthnLevelPrivacyEnabled",
+                                       "network printer",
+                                       "Windows cannot connect to the printer"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "網路印表機 0x0000011B 或 RPC 加密相容性問題",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRN-DRIVER-0x0000011B.md"
+                  },
+                  {
+                      "id":  "RULE-PRN-DRIVER-PACKAGE",
+                      "title":  "印表機驅動套件不相容或安裝失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "printer driver",
+                                       "Type 3",
+                                       "Type 4",
+                                       "driver package",
+                                       "0x00000002",
+                                       "0x0000007e"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "印表機驅動套件不相容或安裝失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRN-DRIVER-PACKAGE.md"
+                  },
+                  {
+                      "id":  "RULE-PRN-OFFLINE-WSD",
+                      "title":  "WSD 印表機離線或連線不穩",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "WSD",
+                                       "printer offline",
+                                       "Web Services Device",
+                                       "SNMP status",
+                                       "port monitor"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "WSD 印表機離線或連線不穩",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRN-OFFLINE-WSD.md"
+                  },
+                  {
+                      "id":  "RULE-PRN-QUEUE-STUCK",
+                      "title":  "列印佇列卡住或 Spooler 無法清除",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "print queue",
+                                       "stuck print job",
+                                       "Spooler",
+                                       "splwow64",
+                                       "win32spl"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "列印佇列卡住或 Spooler 無法清除",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-PRN-QUEUE-STUCK.md"
+                  },
+                  {
+                      "id":  "RULE-SCM-7000",
+                      "title":  "Windows 服務啟動失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Service Control Manager",
+                                       "Event ID: 7000",
+                                       "服務無法啟動"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Windows 服務啟動失敗 (Event ID 7000)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SCM-7000.md"
+                  },
+                  {
+                      "id":  "RULE-SMB-0x0035",
+                      "title":  "網路共用硬碟連線失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80070035",
+                                       "找不到網路路徑",
+                                       "SMB",
+                                       "共用資料夾",
+                                       "NAS"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "網路共用硬碟連線失敗 (SMB 0x80070035)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SMB-0x0035.md"
+                  },
+                  {
+                      "id":  "RULE-SMB-CREDENTIAL-1219",
+                      "title":  "網路磁碟多重帳號連線衝突 1219",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "System error 1219",
+                                       "multiple connections",
+                                       "more than one user name",
+                                       "net use",
+                                       "SMB credential"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "網路磁碟多重帳號連線衝突 1219",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SMB-CREDENTIAL-1219.md"
+                  },
+                  {
+                      "id":  "RULE-SMB-DIALECT-SIGNING",
+                      "title":  "SMB 版本或簽章需求不相容",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SMB1",
+                                       "SMB2",
+                                       "SMB signing",
+                                       "STATUS_NOT_SUPPORTED",
+                                       "The specified network name is no longer available"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "SMB 版本或簽章需求不相容",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SMB-DIALECT-SIGNING.md"
+                  },
+                  {
+                      "id":  "RULE-SMB-GUEST-DISABLED",
+                      "title":  "Windows 停用不安全 Guest SMB 存取",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "guest access",
+                                       "insecure guest logons",
+                                       "SMB guest",
+                                       "You can\u0027t access this shared folder because your organization\u0027s security policies"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows 停用不安全 Guest SMB 存取",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SMB-GUEST-DISABLED.md"
+                  },
+                  {
+                      "id":  "RULE-SMB-OFFLINE-FILES",
+                      "title":  "離線檔案快取造成網路磁碟同步或存取異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Offline Files",
+                                       "CSC",
+                                       "Sync Center",
+                                       "conflict",
+                                       "The process cannot access the file because it is being used by another process"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "離線檔案快取造成網路磁碟同步或存取異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SMB-OFFLINE-FILES.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-APPX-0x80073D02",
+                      "title":  "Microsoft Store 或 AppX 套件更新被使用中程序鎖定",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80073D02",
+                                       "AppX",
+                                       "Microsoft Store",
+                                       "package could not be installed because resources it modifies are currently in use"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Microsoft Store 或 AppX 套件更新被使用中程序鎖定",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-APPX-0x80073D02.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-DEFENDER-SECURITY",
+                      "title":  "Windows Defender 或安全中心異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Defender",
+                                       "Security Center",
+                                       "安全性中心",
+                                       "5007",
+                                       "5013"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows Defender 或安全中心異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-DEFENDER-SECURITY.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-DISK-LOWSPACE",
+                      "title":  "系統磁碟空間不足",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "磁碟空間不足",
+                                       "low disk space",
+                                       "2013",
+                                       "C 槽滿"
+                                   ],
+                      "script":  "Repair-SystemMaintenance.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "系統磁碟空間不足",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-DISK-LOWSPACE.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-DISK-NTFS",
+                      "title":  "NTFS 或磁碟檔案系統錯誤",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "NTFS",
+                                       "Disk",
+                                       "Event ID: 55",
+                                       "Event ID: 7",
+                                       "bad block",
+                                       "file system structure",
+                                       "chkdsk"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "NTFS 或磁碟檔案系統錯誤",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-DISK-NTFS.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-EVENTLOG-CORRUPT",
+                      "title":  "事件記錄服務或事件檔異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "EventLog",
+                                       "事件記錄",
+                                       "1101",
+                                       "1105",
+                                       "event log corrupt"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "事件記錄服務或事件檔異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-EVENTLOG-CORRUPT.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-HIGHCPU-HANG",
+                      "title":  "高 CPU 或系統卡頓",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "高 CPU",
+                                       "系統卡頓",
+                                       "hang",
+                                       "100% CPU"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "高 CPU 或系統卡頓",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-HIGHCPU-HANG.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-MAINTENANCE",
+                      "title":  "Windows 系統維護與資源清理",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "SYSTEM_MAINTENANCE",
+                                       "MAINTENANCE_CLEANUP",
+                                       "LOGOFF_DISCONNECTED_USERS",
+                                       "DISK_CLEANUP",
+                                       "MEMORY_RELEASE",
+                                       "DISM",
+                                       "SFC",
+                                       "CHKDSK",
+                                       "系統維護",
+                                       "登出中斷連線使用者",
+                                       "硬碟清理",
+                                       "記憶體釋放"
+                                   ],
+                      "script":  "Repair-SystemMaintenance.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Windows 系統維護、安全清理與離線預覽入口",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-MAINTENANCE.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-MSI-1603",
+                      "title":  "Windows Installer 安裝失敗 1603",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "1603",
+                                       "Windows Installer",
+                                       "MSI",
+                                       "Fatal error during installation",
+                                       "Event ID: 11708"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Windows Installer 安裝失敗 1603",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-MSI-1603.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-PENDING-REBOOT",
+                      "title":  "系統等待重新啟動導致安裝或更新失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "pending reboot",
+                                       "需要重新啟動",
+                                       "CBS RebootPending",
+                                       "安裝失敗"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "系統等待重新啟動導致安裝或更新失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-PENDING-REBOOT.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-RDP-NLA",
+                      "title":  "遠端桌面 NLA 或認證失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "NLA",
+                                       "CredSSP",
+                                       "遠端桌面認證",
+                                       "0x800903"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "遠端桌面 NLA 或認證失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-RDP-NLA.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-SFC-CBS",
+                      "title":  "Windows 系統檔案或 CBS 元件存放區損毀",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "CBS",
+                                       "DISM",
+                                       "SFC",
+                                       "Windows Resource Protection",
+                                       "The component store is repairable",
+                                       "0x800f081f",
+                                       "0x80073712"
+                                   ],
+                      "script":  "Repair-SystemIntegrity.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Windows 系統檔案或 CBS 元件存放區損毀",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-SFC-CBS.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-STORE-CACHE",
+                      "title":  "Microsoft Store 快取或授權異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Microsoft Store",
+                                       "Store cache",
+                                       "wsreset",
+                                       "0x80073CF9"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Microsoft Store 快取或授權異常",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-STORE-CACHE.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-TASKSCHEDULER",
+                      "title":  "工作排程器任務失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "Task Scheduler",
+                                       "工作排程器",
+                                       "101",
+                                       "102",
+                                       "201"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "工作排程器任務失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-TASKSCHEDULER.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-TEMP-PROFILE",
+                      "title":  "登入暫時設定檔",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "暫時設定檔",
+                                       "temporary profile",
+                                       "User Profile Service",
+                                       "1511",
+                                       "1515"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "登入暫時設定檔",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-TEMP-PROFILE.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-TIME-SYNC",
+                      "title":  "系統時間同步失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "時間同步",
+                                       "Time-Service",
+                                       "W32Time",
+                                       "Kerberos time skew"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "系統時間同步失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-TIME-SYNC.md"
+                  },
+                  {
+                      "id":  "RULE-SYS-WMI-REPOSITORY",
+                      "title":  "WMI Repository 異常造成管理工具或查詢失敗",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "WMI",
+                                       "Winmgmt",
+                                       "repository is inconsistent",
+                                       "0x80041010",
+                                       "0x80041002",
+                                       "Invalid class"
+                                   ],
+                      "script":  "Repair-Services.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "WMI Repository 異常造成管理工具或查詢失敗",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-SYS-WMI-REPOSITORY.md"
+                  },
+                  {
+                      "id":  "RULE-WU-0x8024",
+                      "title":  "Windows Update 更新機制異常",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80244018",
+                                       "Windows Update",
+                                       "SoftwareDistribution"
+                                   ],
+                      "script":  "Repair-WUSoftwareDistribution.bat",
+                      "repairAllowed":  true,
+                      "actionType":  "auto_repair",
+                      "details":  "Windows Update 更新機制異常 (0x80244018)",
+                      "sourceFile":  "knowledge_base/reviewed/RULE-WU-0x8024.md"
+                  },
+                  {
+                      "id":  "vss_0x80042306",
+                      "title":  "VSS Provider Veto (0x80042306)",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80042306"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/vss_0x80042306.md"
+                  },
+                  {
+                      "id":  "win_update_0x80070005",
+                      "title":  "Windows Update Access Denied (0x80070005)",
+                      "category":  "reviewed",
+                      "triggers":  [
+                                       "0x80070005"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Matched Knowledge Base",
+                      "sourceFile":  "knowledge_base/reviewed/win_update_0x80070005.md"
+                  },
+                  {
+                      "id":  "LEARN-0xE0FFLIVE",
+                      "title":  "Unknown test error",
+                      "category":  "learned",
+                      "triggers":  [
+                                       "0xE0FFLIVE",
+                                       "Unknown test error",
+                                       "manual"
+                                   ],
+                      "script":  "N/A",
+                      "repairAllowed":  false,
+                      "actionType":  "guided",
+                      "details":  "Unknown test error",
+                      "sourceFile":  "knowledge_base/learned/LEARN-0xE0FFLIVE.md"
+                  }
+              ]
+}

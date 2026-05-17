@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "packageTitle": "External Diagnostics Example",
+  "sources": [
+    {
+      "id": "MS-SETUPDIAG",
+      "vendor": "Microsoft",
+      "title": "SetupDiag Windows upgrade failure result",
+      "url": "https://learn.microsoft.com/en-in/windows/deployment/upgrade/setupdiag",
+      "sourceType": "microsoft_official",
+      "sourceTrustLevel": "microsoft_official",
+      "retrievedDate": "2026-05-08"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SETUPDIAG-0xC1900101",
+      "adapterName": "setupdiag",
+      "sourceTrustLevel": "microsoft_official",
+      "title": "SetupDiag detected Windows upgrade driver rollback",
+      "component": "windows_update",
+      "symptoms": [
+        "Windows upgrade failed and rolled back"
+      ],
+      "errorCodes": [
+        "0xC1900101"
+      ],
+      "eventIds": [],
+      "triggerTerms": [
+        "SetupDiag",
+        "0xC1900101",
+        "rollback"
+      ],
+      "evidence": [
+        "SetupDiag matched a Windows setup failure rule"
+      ],
+      "recommendedActions": [
+        "Review SetupDiag output and device drivers before retrying upgrade"
+      ],
+      "riskLevel": "manual_review",
+      "sourceIds": [
+        "MS-SETUPDIAG"
+      ]
+    }
+  ]
+}

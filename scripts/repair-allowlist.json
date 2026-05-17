@@ -1,0 +1,10 @@
+{
+  "scripts": [
+    "Repair-BCDBoot.bat",
+    "Repair-NetworkStack.bat",
+    "Repair-Services.bat",
+    "Repair-SystemMaintenance.bat",
+    "Repair-SystemIntegrity.bat",
+    "Repair-WUSoftwareDistribution.bat"
+  ]
+}

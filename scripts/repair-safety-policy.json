@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "lastUpdated": "2026-05-17",
+  "policy": "Auto repair requires reversibility, dry-run impact, local evidence, no critical interruption, rollback guidance, allowlist review, and RUN-gated execution.",
+  "minimumAutoBatchReviewStatus": "APPROVED",
+  "scripts": [
+    {
+      "scriptName": "Repair-BCDBoot.bat",
+      "riskLevel": "high",
+      "reversible": false,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "MANUAL_REQUIRED",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "MANUAL_REQUIRED",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "Boot repair can make a system unbootable. Require offline backup, boot media, BCD export, and explicit RUN before execution."
+    },
+    {
+      "scriptName": "Repair-NetworkStack.bat",
+      "riskLevel": "medium",
+      "reversible": false,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "NEEDS_DRY_RUN_EVIDENCE",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "PENDING",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "Network stack reset may interrupt connectivity and often requires reboot. Capture adapter/IP/DNS state before RUN."
+    },
+    {
+      "scriptName": "Repair-Services.bat",
+      "riskLevel": "medium",
+      "reversible": false,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "NEEDS_DRY_RUN_EVIDENCE",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "PENDING",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "Service startup and service restart changes require pre-captured service state and rollback commands before unattended execution."
+    },
+    {
+      "scriptName": "Repair-SystemIntegrity.bat",
+      "riskLevel": "high",
+      "reversible": false,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "MANUAL_REQUIRED",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "MANUAL_REQUIRED",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "DISM RestoreHealth and SFC repair are high-impact OS repair actions. Require explicit RUN and post-repair verification."
+    },
+    {
+      "scriptName": "Repair-SystemMaintenance.bat",
+      "riskLevel": "high",
+      "reversible": false,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "MANUAL_REQUIRED",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "MANUAL_REQUIRED",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "Broad system maintenance remains manual because cleanup or repair steps can remove evidence or change OS state."
+    },
+    {
+      "scriptName": "Repair-WUSoftwareDistribution.bat",
+      "riskLevel": "medium",
+      "reversible": true,
+      "dryRunImpactAvailable": true,
+      "localValidationStatus": "NEEDS_DRY_RUN_EVIDENCE",
+      "criticalInterruption": true,
+      "rollbackGuidanceAvailable": true,
+      "allowlistReviewStatus": "PENDING",
+      "autoBatchAllowed": false,
+      "runGateRequired": true,
+      "rollbackGuidance": "Windows Update cache reset renames cache folders and restarts update services. Capture service and folder state before RUN."
+    }
+  ]
+}

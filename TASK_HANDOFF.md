@@ -1,0 +1,3518 @@
+# 2026-05-17 Auto Repair Safety Gate Framework
+
+- Built the promotion framework for the final one-click detect-and-repair target.
+- Added:
+  - `AUTO_REPAIR_SAFETY_POLICY.md`
+  - `scripts\repair-safety-policy.json`
+  - `scripts\Test-AutoRepairSafetyPolicy.ps1`
+- Updated:
+  - `scripts\Invoke-RecommendedRepairPlan.ps1`
+  - `scripts\Invoke-AllowedRepair.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+  - `INDEX.md`
+  - `OPERATIONS.md`
+- Safety gates now represented as machine-readable policy:
+  - reversible action or proven backout path
+  - preview/dry-run impact
+  - local validation evidence
+  - no critical interruption
+  - rollback guidance
+  - allowlist review approval
+  - RUN-gated execution
+- Current result:
+  - allowlisted repair scripts: `6`
+  - scripts covered by safety policy: `6`
+  - unattended auto-batch approved scripts: `0`
+- Reason:
+  - existing scripts affect network, services, boot, system integrity, Windows Update cache, or maintenance state.
+  - they remain preview/manual until pre-state capture, rollback evidence, and local validation are complete.
+- Evidence:
+  - `E:\WindowsDoctor\logs\auto-repair-safety-policy-20260517.json`
+  - `E:\WindowsDoctor\logs\allowed-repair-preview-safety-policy-20260517.json`
+  - `E:\WindowsDoctor\logs\recommended-repair-plan.safety-policy-20260517.json`
+- Safety:
+  - no OS repair or destructive maintenance was run.
+  - no production build was run.
+  - no GUI/Broker was started.
+
+# 2026-05-17 Microsoft Official Repair Coverage Expansion
+
+- Expanded WindowsDoctor repair knowledge toward Microsoft-official-first coverage.
+- Added:
+  - `scripts\Test-RepairCoverageGoal.ps1`
+  - `REPAIR_COVERAGE_ROADMAP.md`
+  - `THIRD_PARTY_REPAIR_REFERENCE.md`
+- Updated:
+  - `scripts\Update-MicrosoftOfficialRepairSources.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+  - `INDEX.md`
+  - `OPERATIONS.md`
+  - `EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+- Knowledge baseline:
+  - normalized KB records: `90`
+  - Microsoft official reference records: `25`
+  - target components covered: `9/9`
+  - component coverage: `100%`
+  - Microsoft official component coverage: `88.89%`
+  - auto-repair records remain allowlist-only: `21`
+- Third-party/GitHub policy:
+  - unverified community code is quarantined in `THIRD_PARTY_REPAIR_REFERENCE.md`
+  - no third-party flow was imported into reviewed KB or auto-repair
+- Evidence:
+  - `E:\WindowsDoctor\logs\normalized-kb.official-coverage-20260517.json`
+  - `E:\WindowsDoctor\logs\repair-coverage-goal.official-coverage-20260517.json`
+  - `E:\WindowsDoctor\logs\documentation-sync.official-coverage-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.official-coverage-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-official-coverage-local-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-official-coverage-g-20260517.json`
+  - `E:\WindowsDoctor\logs\portable-incremental-patch-official-coverage-g-20260517.json`
+  - `E:\WindowsDoctor\logs\portable-incremental-patch-verify-official-coverage-g-20260517.json`
+  - `E:\WindowsDoctor\logs\repair-coverage-goal-usb-g-official-coverage-20260517.json`
+- Package sync:
+  - local release package synced: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - USB package synced: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - incremental patch created and copied to USB:
+    - `E:\WindowsDoctor\releases\portable-usb\incremental-patches\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260517-OfficialCoverage.zip`
+    - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260517-OfficialCoverage.zip`
+- Safety:
+  - no OS repair, BCD, DISM, SFC, CHKDSK, cleanup, or destructive maintenance was run.
+  - no production build was run.
+  - no Next dev GUI was started.
+
+# 2026-05-17 Self-Healing Baseline Guard
+
+- Entered unattended self-healing mode within safety policy.
+- Resource safety passed before work.
+- Findings:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild` timed out because the default Pester step ran the full large test set without a low-resource default.
+  - the timeout left a WindowsDoctor Pester PowerShell process running.
+  - `MEMORY_SYSTEM.md` still stated USB was `F:`, but this host currently has no `F:` drive and the active package is on `G:`.
+- Safe self-healing actions:
+  - stopped only the orphaned WindowsDoctor Pester PowerShell process created by this run.
+  - changed `Test-SystemBaseline.ps1` so default Pester is a low-resource safety parse smoke.
+  - added explicit `-FullPester` for the full Pester suite.
+  - changed `Test-UsbLowResourceAcceptance.ps1` to auto-select the latest USB incremental patch when `PatchZipPath` is not specified.
+  - updated `MEMORY_SYSTEM.md` to require USB drive auto-detection.
+  - documented explicit full Pester usage in `OPERATIONS.md`.
+- Final verification:
+  - low-risk baseline: `PASS`
+    - `E:\WindowsDoctor\logs\system-baseline.self-healing-fixed-20260517.json`
+  - USB low-resource acceptance on `G:`: `PASS`
+    - `E:\WindowsDoctor\logs\usb-low-resource-acceptance.self-healing-final-g-20260517.json`
+  - low-resource startup: `PASS`
+    - `NodeCount=1`
+    - `PostCssWorkers=0`
+    - `TotalWorkingSetMB=46.37..47.41`
+  - latest incremental patch selected automatically:
+    - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260517-SelfHealingFinal.zip`
+  - real data import readiness: `WAITING`
+    - `E:\WindowsDoctor\logs\real-data-import-readiness.self-healing-20260517.json`
+  - TASK_HANDOFF archive readiness: `WAITING`
+    - `Lines=3418 Threshold=3500`
+- Safety:
+  - no OS repair, BCD, DISM, SFC, CHKDSK, cleanup, or destructive maintenance was run.
+  - no production build was run.
+  - no Next dev GUI was started.
+
+# 2026-05-17 Documentation Memory System
+
+- Built a safer and more sustainable documentation memory layer.
+- Added long-term memory authority:
+  - `MEMORY_SYSTEM.md`
+- Added per-task completion log:
+  - `TASK_COMPLETION_LOG.md`
+- Added reusable documentation/memory skill:
+  - `skills\windowsdoctor-documentation-system\SKILL.md`
+- Added completion-record automation:
+  - `scripts\Add-TaskCompletionRecord.ps1`
+- Added memory-system validation:
+  - `scripts\Test-DocumentationMemorySystem.ps1`
+- Added USB/incremental patch coverage for the memory system:
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+- Updated:
+  - `INDEX.md`
+  - `DOCUMENTATION_ARCHITECTURE.md`
+  - `DOCS_ARCHITECTURE_AUDIT.md`
+  - `OPERATIONS.md`
+  - `SUCCESS_EXPERIENCE.md`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\New-PortableIncrementalPatch.ps1`
+- Purpose:
+  - avoid rereading all historical documents for documentation and handoff tasks.
+  - record every completed task with evidence paths.
+  - preserve successful reusable workflows as skills.
+  - keep `logs\*.json` as evidence source of truth.
+- Safety:
+  - resource safety gate ran before work.
+  - no GUI/Broker startup.
+  - no production build.
+  - no repair execution.
+
+# 2026-05-09 Low-Resource Incremental Patch Delivery
+
+- Continued unattended work toward high performance and low resource consumption.
+- Added low-resource portable update packaging:
+  - `scripts\New-PortableIncrementalPatch.ps1`
+  - `scripts\Test-PortableIncrementalPatch.ps1`
+- Added USB package-root low-resource launchers:
+  - `Start-WindowsDoctor-LowResource.cmd`
+  - `Start-WindowsDoctor-LowResource-Silent.vbs`
+  - `Stop-WindowsDoctor-LowResource.cmd`
+- Updated USB selector generation to show low-resource entry first.
+- Updated `scripts\Start-WindowsDoctor.ps1` to prefer portable `node-runtime\node.exe` when the root is inside a USB package.
+- Fixed USB sync coverage for Broker work queue service:
+  - `gui\broker\services\work.js`
+- Fixed USB sync coverage for resource safety gate:
+  - `scripts\Test-ResourceSafety.ps1`
+- Added USB low-resource entry static acceptance:
+  - `scripts\Test-UsbLowResourceEntry.ps1`
+- Added USB low-resource end-to-end acceptance:
+  - `scripts\Test-UsbLowResourceAcceptance.ps1`
+- Hardened Broker startup failure behavior:
+  - `scripts\Start-WindowsDoctor.ps1` now stops the just-started Broker process and clears the port listener if Broker readiness times out.
+- Hardened `START_HERE.html` generation:
+  - low-resource label and recommendation text now use HTML entities.
+  - avoids PowerShell encoding drift in generated selector HTML.
+- Purpose:
+  - create small USB incremental patch zip from the current package tree.
+  - avoid rebuilding a full 500MB+ GUI-ready zip for small documentation/script/UI updates.
+  - include SHA-256 manifest for patch contents.
+  - verify patch zip against package root without expanding the full package.
+  - exclude target-specific `portable-usb-manifest.json`.
+  - keep Broker-only USB startup independent from system Node installation.
+  - keep USB Broker routes and service files synchronized.
+  - keep USB low-resource startup reports populated with working-set budget fields.
+  - verify low-resource launcher ordering and safety parameters without starting services.
+  - run resource safety before/after, low-resource startup, release validation, and incremental patch verification from one script.
+- Final static USB low-resource entry acceptance:
+  - `E:\WindowsDoctor\logs\usb-low-resource-entry-final-f-20260509.json`
+  - `Status=PASS`
+  - low-resource entry index `1586`
+  - GUI-ready entry index `3654`
+- Final USB release validation after static entry hardening:
+  - `E:\WindowsDoctor\logs\release-validation-final-low-entry-f-20260509.json`
+  - `Status=PASS`
+- Final full USB low-resource acceptance:
+  - `E:\WindowsDoctor\logs\usb-low-resource-acceptance-f-20260509.json`
+  - `Status=PASS`
+  - resource safety before: `PASS`
+  - USB low-resource entry: `PASS`
+  - low-resource startup: `PASS`
+  - USB release validation: `PASS`
+  - incremental patch verify: `PASS`
+  - resource safety after: `PASS`
+- Incremental patch after acceptance hardening:
+  - `F:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260509-LowResource.zip`
+  - `FileCount=51`
+  - size may change after documentation sync; use the latest `portable-incremental-patch.*.json` report as source of truth.
+- Updated:
+  - `INDEX.md`
+  - `PERFORMANCE_POLICY.md`
+  - `OPERATIONS.md`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+- Safety:
+  - no production build.
+  - no repair execution.
+  - no Next dev GUI startup.
+- Verification:
+  - local incremental patch: `PASS`
+    - `E:\WindowsDoctor\logs\portable-incremental-patch.low-resource-20260509.json`
+    - `FileCount=43`
+    - `ZipBytes=182458`
+  - local patch verify: `PASS`
+    - `E:\WindowsDoctor\logs\portable-incremental-patch.verify-local-20260509.json`
+  - USB `F:` patch verify: `PASS`
+    - `E:\WindowsDoctor\logs\portable-incremental-patch.verify-f-20260509.json`
+    - `E:\WindowsDoctor\logs\portable-incremental-patch.verify-f-self-20260509.json`
+  - USB `F:` release validation: `PASS`
+    - `E:\WindowsDoctor\logs\release-validation-f-incremental-low-resource-20260509.json`
+- USB target:
+  - `F:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - `F:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3\Start-WindowsDoctor-LowResource-Silent.vbs`
+  - `F:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260509-LowResource.zip`
+- Final low-resource USB startup verification:
+  - `E:\WindowsDoctor\logs\low-resource-startup-f-usb-final-20260509.json`
+  - `Status=PASS`
+  - `NodeCount=1`
+  - `PostCssWorkers=0`
+  - `TotalWorkingSetMB=45.93..47.22`
+  - `BrokerListening=true`
+- Final USB selector:
+  - `F:\START_HERE.html`
+  - low-resource launcher appears before GUI-ready launcher.
+  - report: `E:\WindowsDoctor\logs\usb-selector-final-low-resource-first-f-20260509.json`
+- Final USB release validation:
+  - `E:\WindowsDoctor\logs\release-validation-f-low-resource-final-20260509.json`
+  - `Status=PASS`
+
+# 2026-05-09 Performance Policy And Default Low-Resource Entry
+
+- Set product direction:
+  - high performance.
+  - low resource consumption.
+  - sequential work execution.
+  - low-resource user entry by default.
+- Added:
+  - `PERFORMANCE_POLICY.md`
+  - `Start-WindowsDoctor-DevGui.cmd`
+  - `Start-WindowsDoctor-DevGui-Silent.vbs`
+- Changed default launchers:
+  - `Start-WindowsDoctor.cmd`
+  - `Start-WindowsDoctor-Silent.vbs`
+- New default behavior:
+  - starts Broker only.
+  - opens `docs\WINDOWSDOCTOR_LOW_RESOURCE_CONSOLE.html`.
+  - does not start Next dev GUI.
+  - does not create PostCSS worker.
+- Dev GUI is retained as an explicit development path only.
+- Updated:
+  - `INDEX.md`
+  - `DOCUMENTATION_ARCHITECTURE.md`
+  - `OPERATIONS.md`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+- Safety constraints: no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Low Resource Broker-Only Console
+
+- Completed the next planned low-resource path without production build.
+- Added low-resource HTML shell:
+  - `docs\WINDOWSDOCTOR_LOW_RESOURCE_CONSOLE.html`
+- Added Broker-only launchers:
+  - `Start-WindowsDoctor-LowResource.cmd`
+  - `Start-WindowsDoctor-LowResource-Silent.vbs`
+- Added low-resource validation:
+  - `scripts\Test-LowResourceStartup.ps1`
+- Behavior:
+  - starts Broker only.
+  - does not start Next dev GUI.
+  - opens local HTML console from `docs`.
+  - console calls Broker APIs directly.
+  - supports health, AI triage, work status, repair preview work item, and cancel work.
+  - avoids PostCSS and Next first-load compilation cost.
+- Updated:
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `OPERATIONS.md`
+- Safety constraints: no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 PostCSS Startup Grace Window
+
+- Previous resource test showed:
+  - normal listener startup stayed under budget.
+  - first page load briefly created `PostCssWorkers=1`.
+  - old watchdog policy `MaxPostCssWorkers=0` immediately stopped GUI, preventing normal first-load compile.
+- Updated watchdog policy:
+  - allow `MaxPostCssWorkers=1` during GUI startup.
+  - allow the worker for up to `45` seconds.
+  - if the worker persists longer than `45` seconds, stop GUI dev server and GUI port listener.
+  - memory and node-process budgets remain active during the grace window.
+- Updated:
+  - `scripts\Watch-WDResourceSafety.ps1`
+  - `scripts\Start-WindowsDoctor.ps1`
+  - `Start-WindowsDoctor.cmd`
+  - `Start-WindowsDoctor-Silent.vbs`
+  - `OPERATIONS.md`
+- Safety constraints: no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Local AI Triage Assistant
+
+- Added offline AI triage assistant:
+  - `gui\broker\services\aiAssistant.js`
+  - `gui\src\components\AiAssistantPanel.tsx`
+- Added Broker API:
+  - `GET /api/ai/triage`
+- Behavior:
+  - combines local health, recent system events, reviewed/learned KB rules, repair decision engine preview, and resource safety.
+  - returns overall risk, finding counts, safe batch count, ranked findings, next actions, and safety policy.
+  - does not call external AI services.
+  - does not execute repairs.
+  - keeps repair execution behind existing `RUN` gate and work-window flow.
+- Updated:
+  - `gui\broker\routes.js`
+  - `gui\broker\tests\services.test.js`
+  - `gui\src\app\page.tsx`
+  - `gui\src\lib\windowsDoctorApi.ts`
+  - `gui\src\types\windows-doctor.ts`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `OPERATIONS.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Repair Report And Interruptible Work Window
+
+- Added interruptible broker work queue for repair plan operations:
+  - `gui\broker\services\work.js`
+- Added Broker APIs:
+  - `GET /api/work/status`
+  - `POST /api/work/cancel`
+  - `POST /api/work/repair-plan`
+- Behavior:
+  - allows only one active work item at a time.
+  - records resource snapshots while work is running.
+  - if resource safety fails, cancels the running work.
+  - operator can cancel active work from the GUI.
+  - repair execution remains gated by `RUN`.
+- Added GUI work window:
+  - `gui\src\components\WorkStatusPanel.tsx`
+  - shows current work status, current step, free memory, node count, total working set, max process working set, report path, and cancel action.
+  - after completion, shows repaired items, not-auto-repaired items, and next-step recommendations.
+- Updated:
+  - `gui\broker\routes.js`
+  - `gui\src\app\page.tsx`
+  - `gui\src\lib\windowsDoctorApi.ts`
+  - `gui\src\types\windows-doctor.ts`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `OPERATIONS.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Resource Control Budget Hardening
+
+- Researched current resource-control fit:
+  - PowerShell `Start-Process` supports process launch sequencing, hidden windows, inherited environment variables, and `PassThru` for priority adjustment.
+  - Node supports `--max-old-space-size` through `NODE_OPTIONS`, suitable for capping V8 heap pressure.
+  - Windows Job Objects can enforce hard process-tree limits, but require native Win32 API integration and add compatibility risk for the current portable PowerShell-first architecture.
+- Implemented the safer first step for this project:
+  - soft budgets plus watchdog fuse.
+  - startup sequencing.
+  - process priority lowered to `BelowNormal`.
+  - Node heap capped through inherited `NODE_OPTIONS`.
+  - working-set budgets added to resource safety checks.
+- Updated defaults:
+  - launcher/watchdog `MaxWindowsDoctorNodeProcesses=8`
+  - `MaxWindowsDoctorTotalWorkingSetMB=1200`
+  - `MaxWindowsDoctorProcessWorkingSetMB=512`
+  - `NodeMaxOldSpaceSizeMB=384`
+- Updated:
+  - `scripts\Test-ResourceSafety.ps1`
+  - `scripts\Watch-WDResourceSafety.ps1`
+  - `scripts\Invoke-WDSequentialTaskQueue.ps1`
+  - `scripts\Start-WindowsDoctor.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `Start-WindowsDoctor.cmd`
+  - `Start-WindowsDoctor-Silent.vbs`
+  - `OPERATIONS.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Resource-Bounded Sequential Execution
+
+- User requested resource use to stay within a fixed limit and tasks to run one at a time instead of all at once.
+- Added sequential task queue:
+  - `E:\WindowsDoctor\scripts\Invoke-WDSequentialTaskQueue.ps1`
+- Behavior:
+  - Runs one named task at a time.
+  - Runs `Test-ResourceSafety.ps1` before and after each task.
+  - Stops on first failure by default.
+  - Default `MaxWindowsDoctorNodeProcesses=8`.
+  - Default `MinFreeMemoryGB=4`.
+  - Writes machine-readable JSON reports.
+- Updated startup sequencing:
+  - `Start-WindowsDoctor.ps1` now starts Broker first.
+  - waits for Broker port `3001`.
+  - waits between Broker and GUI startup.
+  - reruns resource safety before GUI startup.
+  - starts Broker/GUI parent processes with `BelowNormal` priority by default.
+- Updated:
+  - `scripts\Start-WindowsDoctor.ps1`
+  - `scripts\Invoke-WDSequentialTaskQueue.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\Test-DocumentationSync.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `Start-WindowsDoctor.cmd`
+  - `Start-WindowsDoctor-Silent.vbs`
+  - `OPERATIONS.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 Windows Launcher Resource Watchdog
+
+- User reported that system startup can still consume computer resources until the machine becomes unusable.
+- Root cause in current launch path:
+  - root double-click launcher starts the Next dev GUI.
+  - `Start-WindowsDoctor.ps1` had preflight and one post-start guard, but no continuous startup-period fuse after the browser/GUI begins loading.
+- Added resource fuse:
+  - `E:\WindowsDoctor\scripts\Watch-WDResourceSafety.ps1`
+  - monitors resource safety after GUI startup.
+  - default watch duration: `600` seconds.
+  - default interval: `5` seconds.
+  - default `MaxWindowsDoctorNodeProcesses`: `8`.
+  - default `MaxPostCssWorkers`: `0`.
+  - stops GUI dev server and GUI port listener if resource safety fails.
+- Added safer stop wrapper:
+  - `E:\WindowsDoctor\scripts\Stop-WindowsDoctorServices.ps1`
+  - stops WindowsDoctor GUI dev workers plus GUI/Broker port listeners.
+- Updated:
+  - `scripts\Start-WindowsDoctor.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `Start-WindowsDoctor.cmd`
+  - `Start-WindowsDoctor-Silent.vbs`
+  - `Stop-WindowsDoctor.cmd`
+  - `Stop-WindowsDoctor-Silent.vbs`
+  - `OPERATIONS.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+
+# 2026-05-09 TASK_HANDOFF Archive Readiness Gate
+
+- Added non-destructive archive readiness gate:
+  - `E:\WindowsDoctor\scripts\Test-TaskHandoffArchiveReadiness.ps1`
+- Purpose:
+  - Count `TASK_HANDOFF.md` lines.
+  - Verify latest dated status remains at the top.
+  - Report `WAITING` before the `3500` line threshold.
+  - Report `ACTION_REQUIRED` and propose an archive path after threshold.
+  - Do not move, rewrite, or delete handoff history.
+- Updated:
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Test-DocumentationSync.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - `OPERATIONS.md`
+  - `INDEX.md`
+  - `DOCUMENTATION_ARCHITECTURE.md`
+  - `DOCS_ARCHITECTURE_AUDIT.md`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive maintenance.
+- USB package not republished in this step; sync script now includes the new archive readiness script and documentation architecture files for the next validated USB sync.
+
+# 2026-05-09 Documentation Architecture Audit
+
+- Added durable documentation governance files:
+  - `E:\WindowsDoctor\DOCUMENTATION_ARCHITECTURE.md`
+  - `E:\WindowsDoctor\DOCS_ARCHITECTURE_AUDIT.md`
+- Updated entry and policy documents:
+  - `INDEX.md`
+  - `SECURITY_POLICY.md`
+- Audit result:
+  - Safety: `PASS`
+  - Efficiency: `PASS after update`
+  - Sustainability: `PASS with watch item`
+- Link check across root and `docs` Markdown/HTML relative links found `0` broken links.
+- Validation evidence:
+  - `E:\WindowsDoctor\logs\documentation-sync.docs-architecture-20260509.json`: `PASS`
+  - `E:\WindowsDoctor\logs\system-baseline.docs-architecture-20260509.json`: `PASS`
+- Watch item: `TASK_HANDOFF.md` is large; archive by period if it exceeds `3500` lines while keeping latest status at the top.
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution.
+
+# 2026-05-09 Visual Operation Manual
+
+- Added visual-first operation manual:
+  - `E:\WindowsDoctor\docs\WINDOWSDOCTOR_VISUAL_OPERATION_MANUAL.html`
+- Manual contents:
+  - overall usage diagram
+  - USB GUI-ready startup diagram
+  - WinPE offline rescue diagram
+  - one-click repair RUN gate diagram
+  - real-data intake/import diagram
+  - application scenario examples
+  - common acceptance commands
+- The manual is standalone HTML with inline SVG diagrams and can be opened locally or from the USB package.
+- `scripts\Sync-GuiReadyUsbPatch.ps1` now syncs the visual manual to the USB package under `WindowsDoctor\docs`.
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution.
+
+# 2026-05-09 Real Data Import Intake Readiness
+
+- Added non-destructive intake readiness gate:
+  - `scripts\Test-RealDataImportReadiness.ps1`
+- Intake directories:
+  - `E:\WindowsDoctor\incoming\notebooklm`
+  - `E:\WindowsDoctor\incoming\external-diagnostics`
+  - `E:\WindowsDoctor\incoming\official-diagnostics`
+- Current readiness:
+  - `Status=WAITING`
+  - `ReadyCount=0`
+  - `FailedCount=0`
+  - `CandidateCount=0`
+  - Report: `E:\WindowsDoctor\logs\real-data-import-readiness.latest.json`
+- Behavior:
+  - Validates NotebookLM JSON candidates with `Test-NotebookLMSourcePack.ps1`.
+  - Validates external diagnostics JSON candidates with `Test-ExternalDiagnosticsPack.ps1`.
+  - Detects raw official logs named for SetupDiag, DISM, SFC, or Get Help.
+  - Does not import, repair, or rebuild KB.
+- Targeted Pester:
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*real data import readiness*','*parses safety scripts*'`
+  - Result: `PASS`, `3 passed`, `0 failed`.
+- Synced readiness gate to USB package:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - Sync report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\sync-gui-ready-usb-patch-20260509-realdata-final.json`
+- Rebuilt patched zip after readiness sync:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+- USB self-acceptance after readiness sync: `PASS`.
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-wrapper-usb-self-20260509-realdata-final.json`
+  - Zip manifest: `PASS`, `zipFiles=22954`, `missing=0`, `sizeMismatch=0`, `hashMismatch=0`
+  - Release validation: `PASS`
+  - GUI-ready preflight: `PASS`
+  - Selector: `PASS`
+- USB real-data intake readiness:
+  - `Status=WAITING`
+  - `ReadyCount=0`
+  - `CandidateCount=0`
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\real-data-import-readiness-usb.json`
+
+# 2026-05-09 One-Click Repair Operator Guidance
+
+- Added operator guidance to `scripts\Invoke-RecommendedRepairPlan.ps1` output:
+  - `EvidenceScoring`
+  - `DryRunImpact`
+  - `RunGate`
+  - `RollbackGuidance`
+  - `StopPolicy`
+- Updated GUI one-click repair panel:
+  - `gui\src\components\OneClickRepairPanel.tsx`
+  - Shows evidence scoring, dry-run impact, RUN gate, and rollback guidance in preview results.
+- Updated API types:
+  - `gui\src\types\windows-doctor.ts`
+- Updated broker tests:
+  - `gui\broker\tests\services.test.js`
+- Validation:
+  - `node --check` for broker repair service/test: `PASS`
+  - `npm run test:broker --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*recommended repair*','*parses safety scripts*'`: `PASS`, `4 passed`, `0 failed`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution.
+
+# 2026-05-09 Final USB Docs Sync Acceptance
+
+- Final USB package after script and documentation sync:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - Patched zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - USB copy: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+- USB package self-acceptance report:
+  - `E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-wrapper-usb-self-20260509-docs-final.json`
+  - Summary: `PASS`
+  - Resource safety: `PASS`
+  - Zip manifest: `PASS`, `missing=0`, `sizeMismatch=0`, `hashMismatch=0`
+  - Release validation: `PASS`
+  - GUI-ready preflight: `PASS`
+  - USB selector: `PASS`
+- Final zip byte size is not hardcoded in this handoff because syncing this file changes the archive size. Use `Test-PortableUsbZipManifest.ps1` or `Invoke-PortableUsbAcceptance.ps1` as the source of truth.
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive system maintenance.
+
+# 2026-05-09 Selector Warning, Hash Manifest, and Acceptance Summary
+
+- Resource safety before work: `PASS`, `FreeMemoryGB=6.46`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`.
+- Enhanced USB selector/status page:
+  - `scripts\New-UsbPackageSelectorPage.ps1` now reports root zip inventory.
+  - Adds per-package `ZipStatus`, `ZipIssue`, `ZipPath`, and `RelatedZipCount`.
+  - Warns for missing exact zip, stale exact zip, related patched zip, and unmatched root zip files.
+- Enhanced zip manifest validation:
+  - `scripts\Test-PortableUsbZipManifest.ps1` now supports optional `-Hash`.
+  - Default remains size-only for large GUI-ready packages.
+  - `-Hash` computes SHA-256 for zip entries and expanded files, reporting `HashComparedCount` and `HashMismatchCount`.
+- Enhanced acceptance wrapper:
+  - `scripts\Invoke-PortableUsbAcceptance.ps1` now supports `-SummaryOnly`, `-HashManifest`, and `-MinFreeMemoryGB`.
+  - Full reports now include a `Summary` object with resource safety, zip manifest, release validation, GUI-ready preflight, and selector statuses.
+- Resume publish validation:
+  - Targeted Pester now covers `-ResumeExistingTarget` on a lightweight portable USB package.
+  - It also covers `SummaryOnly` and hash manifest validation on test packages.
+- Targeted Pester:
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*portable USB*','*parses safety scripts*'`
+  - Result: `PASS`, `6 passed`, `0 failed`.
+- USB package updated again:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - Sync report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\sync-gui-ready-usb-patch-20260509-final.json`
+  - Updated file count: `22953`
+  - Updated bytes: `542200856`
+- Patched zip rebuilt and copied to USB before final docs sync:
+  - Local: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - USB: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - Superseded by the final docs-sync archive above.
+- USB self-acceptance using the USB package's own wrapper: `PASS`.
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-wrapper-usb-self-20260509-final.json`
+  - Summary: `PASS`
+  - Resource safety: `PASS`, `freeMemoryGB=7.74`
+  - Zip manifest: `PASS`, `zipFiles=22953`, `missing=0`, `sizeMismatch=0`, `hashMismatch=0`
+  - Release validation: `PASS`, `steps=9`
+  - GUI-ready preflight: `PASS`, `checks=8`
+  - USB selector: `PASS`, `packages=5`, `winPeBootWim=True`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive system maintenance.
+
+## Next Improvement Plan
+
+1. Keep `Invoke-PortableUsbAcceptance.ps1` as the default USB acceptance entry point.
+2. Use `Test-PortableUsbZipManifest.ps1 -Hash` only for small release/test packages or when final archive integrity needs deep proof.
+3. For GUI-ready package acceptance, keep size-only manifest compare unless there is a suspected bit-level copy issue.
+4. Continue one-click repair maturity with `RUN` gate only: evidence scoring, dry-run impact, rollback guidance, and clearer SafeBatch operator text.
+5. If real NotebookLM or official diagnostic outputs are provided, validate/import/rebuild normalized KB; otherwise keep external data collection limited to approved Microsoft official references.
+
+# 2026-05-09 USB Publish Resumable and Acceptance Hardening
+
+- Resource safety before work: `PASS`, `FreeMemoryGB=6.32`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`.
+- Added zip/USB manifest comparison:
+  - `scripts\Test-PortableUsbZipManifest.ps1`
+  - Compares zip file entries against an expanded package root.
+  - Detects missing files and size mismatches caused by interrupted or partial `Expand-Archive`.
+- Hardened release validation:
+  - `scripts\Test-PortableUsbReleaseValidation.ps1` now accepts `-ZipPath`.
+  - When `-ZipPath` is provided, it runs a `zip-manifest` validation step before payload/runtime/repair-preview checks.
+- Hardened publishing:
+  - `scripts\Publish-PortableUsbPackage.ps1` now writes checkpoint-style phase reports.
+  - Added `-ResumeExistingTarget` for interrupted publish recovery.
+  - Publish phases now include USB root check, payload, zip compression/reuse, USB zip copy/reuse, expand, zip manifest comparison, release validation, cleanup, and selector generation.
+  - USB zip cleanup now happens only after manifest comparison and release validation pass.
+- Added acceptance wrapper:
+  - `scripts\Invoke-PortableUsbAcceptance.ps1`
+  - Runs resource safety, optional zip manifest comparison, release validation, optional GUI-ready preflight, selector generation, and report collation.
+- Updated USB patch sync:
+  - `scripts\Sync-GuiReadyUsbPatch.ps1` now syncs `Test-PortableUsbZipManifest.ps1`, `Invoke-PortableUsbAcceptance.ps1`, and the hardened publish/release scripts.
+  - It refreshes `portable-usb-manifest.json` file count and byte totals after sync.
+- Targeted Pester:
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*portable USB*'`
+  - Result: `PASS`, `5 passed`, `0 failed`.
+- Existing USB package patched in place:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`
+  - Sync report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\sync-gui-ready-usb-patch-20260509.json`
+  - Updated file count: `22953`
+  - Updated bytes: `542195936`
+- Original local zip became stale after in-place USB patching; the new manifest check correctly detected `3` size mismatches.
+- Created patched zip aligned with the updated USB target:
+  - Local: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - USB copy: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-Patched20260509.zip`
+  - Size: `164711925` bytes
+- USB self-acceptance using the USB package's own wrapper: `PASS`.
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\acceptance-wrapper-usb-self-20260509.json`
+  - Resource safety: `PASS`, `freeMemoryGB=6.54`
+  - Zip manifest: `PASS`, `zipFiles=22953`, `missing=0`, `sizeMismatch=0`
+  - Release validation: `PASS`, `steps=9`
+  - GUI-ready preflight: `PASS`, `checks=8`
+  - USB selector: `PASS`, `packages=5`, `winPeBootWim=True`
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive system maintenance.
+
+## Next Improvement Plan
+
+1. Prefer `Invoke-PortableUsbAcceptance.ps1` for USB package acceptance before any future status report.
+2. For future interrupted publishes, rerun `Publish-PortableUsbPackage.ps1` with `-ResumeExistingTarget` instead of manually inspecting partial expands.
+3. Add a selector warning for stale or unmatched zip files when both package folders and zip files exist on USB.
+4. Add optional hash comparison to `Test-PortableUsbZipManifest.ps1` for small packages; keep size-only default for large GUI-ready packages.
+5. Continue one-click repair maturity with `RUN` gating only: improve evidence scoring, dry-run explanations, and rollback guidance.
+
+# 2026-05-08 GUI-Ready OneClickV3 USB Acceptance
+
+- Resource safety before acceptance: `PASS`, `FreeMemoryGB=5.90`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`.
+- Clean GUI-ready package target: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`.
+- Local zip produced: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3.zip`, `164707035` bytes.
+- Initial `Publish-PortableUsbPackage.ps1` run exceeded the command timeout and left a background publish process plus a partially expanded USB package.
+- The stale publish process was stopped by PID after confirming no final publish report existed.
+- The local zip was readable and contained the GUI-ready launcher, stop launcher, bundled node runtime, GUI package metadata, and release validation script.
+- Re-expanded the local zip to `G:\` with `Expand-Archive -Force` to complete the interrupted USB package.
+- USB release validation: `PASS`.
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\release-validation.json`
+  - Payload validation: `PASS`, `checks=22`
+  - Runtime self-test: `PASS`, `checks=22`
+  - Recommended repair preview: `PASS`, `mode=preview`, `executed=False`, `safeScripts=0`, `recommended=5`
+- GUI-ready target preflight: `PASS`.
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\gui-ready-preflight.json`
+  - Memory, cache write permission, ports `3000/3001`, bundled Node/npm, and PowerShell readiness all passed.
+- USB selector/status page regenerated: `PASS`.
+  - Path: `G:\START_HERE.html`
+  - Report: `E:\WindowsDoctor\logs\acceptance-oneclickv3\usb-selector.json`
+  - Package count: `5`
+  - WinPE `G:\sources\boot.wim`: present
+- New package selector status: `PASS`, `FileCount=22950`, `Bytes=542176699`, includes GUI-ready launcher and stop launcher.
+- Safety constraints honored: no GUI/Broker startup, no production build, no repair execution, no destructive system maintenance.
+- Note: `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3.zip` remains on USB because the original publish flow did not complete its cleanup phase before timeout.
+
+## Next Improvement Plan
+
+1. Make USB publishing resumable and observable: split payload, zip copy, expand, validation, selector, and cleanup into checkpointed phases with progress reports.
+2. Add a post-expand manifest comparison: compare zip entries against USB files before running release validation, so partial expands are detected immediately.
+3. Add a lightweight acceptance wrapper: one command to run resource safety, package validation, GUI-ready preflight, selector regeneration, and final report collation.
+4. Add timeout-safe cleanup policy for generated USB zips: keep by default after interrupted runs, remove only after a verified `PASS` phase or explicit operator choice.
+5. Continue one-click repair maturity without auto-repair: improve evidence scoring, RUN-gated SafeBatch UX, dry-run explanations, and rollback guidance.
+6. Keep real-data import controlled: import NotebookLM source packs and SetupDiag/DISM/SFC/Get Help outputs only when supplied or from approved Microsoft official references; do not broad-scrape arbitrary Windows repair databases.
+7. Run broader Pester only when resource safety is comfortably above threshold; otherwise keep using targeted Pester plus low-risk baseline.
+
+# 任務交接檔 (Task Handoff)
+
+Last updated: `2026-04-29`
+
+## 1. Latest Verified Baseline (最新驗證基線)
+- **核心狀態**: WindowsDoctor (v0.1.0-alpha) 已具備 PowerShell 引擎 (`WindowsDoctor.psm1`) 與 Next.js `gui` 兩大組件。
+- **網路鎖定 (Network Lock)**: `/api/vault/lock-status` API 已修復。取消了 PowerShell 的雙重 Invoke，改用快速回應保護機制。
+- **NAS 同步 (NAS Sync)**: `/api/sync` 與 `broker.js` 中的共享 RAG 路徑已完成開發與測試。
+- **介面狀態**: 支援 AI 視覺分析 (Vision API Mock)、問題回報 (Report Modal)、系統完整掃描。
+- **安全基線更新**: `/api/vision-analyze` 與 `/api/sentry/elevate` 已補齊；`/api/repair` 已限制只能執行 allowlist 內既有 `.bat` 腳本。
+- **驗證狀態**: `npm run lint`、`npm run build`、`Invoke-Pester .\core\WindowsDoctor.Tests.ps1`、`scripts\Test-BrokerSmoke.ps1`、`scripts\Build-WinPEMedia.ps1 -CheckOnly` 均通過。
+- **Smoke 測試**: 新增 `scripts\Test-BrokerSmoke.ps1`，可驗證 `/api/health`、`/api/vision-analyze`、`/api/sentry/elevate` 與 repair 阻擋。
+- **WinPE Preflight**: `scripts\Build-WinPEMedia.ps1` 新增 `-CheckOnly` 與 `-NodeExePath`，包裝前可先驗證 ADK/Node/來源路徑。
+- **模板化狀態**: 新增 `templates\KB_RULE_TEMPLATE.md`、`templates\REPAIR_SCRIPT_TEMPLATE.bat`、`scripts\New-KBRule.ps1`、`scripts\New-RepairScript.ps1`、`scripts\repair-allowlist.json`。
+- **規則索引**: Broker 新增 `/api/rules` 與 `/api/repair/allowlist`，並兼容新舊 KB Markdown 格式。
+- **Broker 正規化**: `gui\broker.js` 已拆成啟動器，實作移入 `gui\broker\routes.js` 與 `gui\broker\services\*`。
+- **Vision/Search Adapter**: 新增 `WD_VISION_PROVIDER` 與 `WD_SEARCH_TIMEOUT_MS` 設定入口；Vision 目前為 mock fallback，learn 搜尋有 timeout。
+- **KB 分層**: `knowledge_base` 已拆為 `reviewed/learned/archived`；目前 `reviewed=42`、`learned=0`、`archived=17`，Broker 僅讀取 reviewed/learned。
+- **前端元件化**: 已拆出 `VisionModal`、`ReportModal`、`SystemMonitor`、`SettingsPanel`、`RuleIndexPanel` 與共用型別；`page.tsx` 現在主要負責狀態協調與診斷結果呈現。
+- **API Envelope**: Broker 主要 API 已統一回 `{ ok, data }` / `{ ok:false, error }`；前端以 `gui\src\lib\api.ts` 與 `gui\src\lib\windowsDoctorApi.ts` 集中解析與呼叫。
+- **Diagnosis 元件化**: 新增 `gui\src\components\DiagnosisResults.tsx`，診斷結果 UI 已離開 `page.tsx`。
+- **頁內通知**: 前端 `alert()` 已替換為 `gui\src\components\StatusToast.tsx`，狀態訊息以頁內通知顯示。
+- **Broker service tests**: 新增 `gui\broker\tests\services.test.js` 與 `npm run test:broker`，並納入 `scripts\Test-SystemBaseline.ps1`。
+- **受控設定表單**: `SettingsPanel` 已移除 DOM `getElementById` 讀值，改用 React state 管理管理員帳密與 KB 路徑。
+- **診斷錯誤 UI**: `DiagnosisResults` 新增 health/analyze/connection 錯誤狀態與重試按鈕。
+- **文件正規化**: 新增 `SECURITY_POLICY.md`、`OPERATIONS.md`、`API_CONTRACT.md`、`KB_GOVERNANCE.md`；`docs\SUCCESS_EXPERIENCE.md` 與 `docs\SYSTEM_ERROR_HISTORY.md` 已改為 redirect，根目錄文件為權威來源。
+- **前端 API 標準層**: `submitReport`、`learnNewSkill`、`scanSystem`、設定面板與修復流程已改用 `gui\src\lib\windowsDoctorApi.ts`，頁面/元件不再直接散落 Broker `fetch`。
+- **單一維運入口**: 新增 `scripts\Start-WindowsDoctor.ps1`，可啟動 GUI/Broker、重啟 GUI/Broker，並可用 `-Verify` 串接完整 baseline；`-Json` 可輸出機器可讀 URL/PID 狀態。
+- **防毒/EDR 友善化**: 移除 repo 腳本與文件中的 `ExecutionPolicy Bypass` / hidden-window 預設；Broker 修復執行改為 fixed-arg `spawn`、timeout 與 allowlist。
+- **資源護欄**: 新增 `scripts\Get-WDResourceSnapshot.ps1`；`Start-WindowsDoctor.ps1 -Verify` 預設改為 fast verify，不跑 production build，並加入 `MinFreeMemoryGB` 檢查。
+- **常見故障 KB**: 已建立 Windows 系統、網路、硬體、開機、網路硬碟、印表機與 SYSTEM_MAINTENANCE 常見錯誤資料庫；63 筆 reviewed 規則中 20 筆可 allowlist 自動修復、43 筆為引導修復。
+- **低風險 UI smoke**: 新增 `scripts\Test-GuiSmoke.ps1`，只檢查既有 GUI/Broker，不自動啟動 dev server；可用 `-AllowOffline` 在服務未啟動時記錄 SKIP。
+- **診斷動作分類**: `/api/analyze` 新增 `ActionType`，前端可顯示「可自動修復 / 引導修復 / 需人工確認 / 待建立規則」。
+- **版本更新原則**: 新增 `VERSION_POLICY.md` 與 `scripts\Test-VersionPolicy.ps1`；版本採 `MAJOR.MINOR.PATCH`，每段小數點後數字最大到 `9`，超過需進位，例如 `0.1.9 -> 0.2.0`、`0.9.9 -> 1.0.0`。
+- **Vision Provider 化**: `/api/vision-analyze` 支援 `mock` 與 `gemini` provider；Gemini key 僅讀 `GEMINI_API_KEY` / `WD_GEMINI_API_KEY`，逾時、缺 key 或 provider 失敗會 fallback mock。
+- **低風險 baseline**: `scripts\Test-SystemBaseline.ps1` 新增 `-SkipServiceSmoke`，並納入 `version-policy` 與 `gui-smoke-offline`；可在不啟動 GUI/Broker、不跑 build 的狀態下做基本驗證。
+
+## 2. Do Not Repeat (禁止重試事項)
+- **Broker 進程管理**: 在修改 `broker.js` 後，**必須**透過 `netstat -ano | findstr :3001` 取得 PID 並 `taskkill` 強制殺除舊的 Node 進程，否則舊有路由會佔用 Port 導致 404 錯誤。不要依賴 PowerShell `Stop-Process -Name node`。
+
+## 3. Next Recommended Work (下一步建議工作)
+1. 先執行資源快照與程序清點，確認沒有殘留 GUI/Broker/dev/build 程序。
+2. 服務啟動後執行 `scripts\Test-GuiSmoke.ps1` 不帶 `-AllowOffline`，確認 GUI 實際可用。
+3. 若要正式使用 Gemini，需設定環境變數並在可控網路環境測試 provider 回應品質。
+## 2026-04-28 Current Work Record
+- Resource safety: `scripts\Get-WDResourceSnapshot.ps1` now hides full process command lines by default and reports `CommandLineLength`; use `-IncludeCommandLine` only when full command-line evidence is required.
+- Latest resource snapshot before validation: memory `8.26GB free / 15.89GB total`, `52%` free. Highest memory process was `vmmem` around `1761MB`; Codex around `692MB`.
+- Low-risk baseline completed without starting GUI/Broker and without production build:
+  - Command: `powershell -NoProfile -ExecutionPolicy RemoteSigned -File .\scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`
+  - Result: `PASS`
+  - Passed steps: `version-policy`, `gui-smoke-offline`, `pester`, `winpe-check`, `broker-services`, `lint`
+- GUI/Broker remained offline during validation. Offline GUI smoke was expected and treated as `SKIP` internally by `-AllowOffline`.
+- Next safe continuation order:
+  1. Keep using `Get-WDResourceSnapshot.ps1 -Json` before heavier work.
+  2. Prefer `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild` for routine checks.
+  3. Start GUI/Broker and run online smoke only after resource snapshot is healthy.
+  4. Run production build only with explicit `-FullVerify` or when memory headroom is acceptable.
+
+## 2026-04-28 Resource Exhaustion Follow-Up
+- Incident: GUI dev startup triggered `1248` abnormal WindowsDoctor `node.exe` workers running `gui\.next\dev\build\postcss.js`; Task Manager showed `Windows Command Processor` around `7.9GB` memory.
+- Recovery completed: stopped only command lines matching `E:\WindowsDoctor\gui\.next\dev\build\postcss.js`; memory recovered to more than `11GB` free.
+- Root hardening:
+  - `gui\src\app\globals.css` uses `@import "tailwindcss" source(none);`
+  - Tailwind source is restricted to `../**/*.{js,jsx,ts,tsx,mdx}`.
+  - `scripts\Stop-WDGuiDevWorkers.ps1` added for scoped cleanup.
+  - `scripts\Start-WindowsDoctor.ps1` runs scoped cleanup before GUI startup/restart.
+- Validation:
+  - `scripts\Stop-WDGuiDevWorkers.ps1 -WhatIf`: `Matched=0`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+- Operational rule: do not run GUI dev online smoke again until resource snapshot is healthy and PostCSS worker count is confirmed at `0`. If GUI startup is tested, monitor worker count immediately and stop with `scripts\Stop-WDGuiDevWorkers.ps1 -IncludeDevServer` if workers multiply.
+
+## 2026-04-28 Resource Safety Gate
+- Added `scripts\Test-ResourceSafety.ps1`.
+- Checks:
+  - free memory is at least `4GB`
+  - WindowsDoctor PostCSS dev workers are `0`
+  - WindowsDoctor-owned `node.exe` process count is at most `20`
+- `scripts\Test-SystemBaseline.ps1` now runs `resource-safety` before version, smoke, Pester, WinPE, broker service, lint, or build steps.
+- Latest low-risk verification:
+  - `scripts\Test-ResourceSafety.ps1`: `PASS`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+
+## 2026-04-28 GUI Startup Guard
+- `scripts\Start-WindowsDoctor.ps1` now runs `Test-ResourceSafety.ps1` before GUI startup.
+- After launching GUI dev server, it waits `GuiStartupGuardSeconds=5` and runs the same safety check.
+- If the guard fails, it runs `Stop-WDGuiDevWorkers.ps1 -IncludeDevServer`, stops the GUI listener, and throws a clear failure.
+- New parameters:
+  - `-DisableGuiStartupGuard`
+  - `-GuiStartupGuardSeconds`
+  - `-MaxGuiNodeProcesses`
+- Verification completed without starting services:
+  - script parse: `PASS`
+  - `Start-WindowsDoctor.ps1 -NoGui -NoBroker -Json`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+
+## 2026-04-28 Resource Safety Test Coverage
+- Added `scripts\ResourceSafety.Tests.ps1`.
+- Coverage:
+  - parses `Test-ResourceSafety.ps1`, `Stop-WDGuiDevWorkers.ps1`, and `Start-WindowsDoctor.ps1`
+  - verifies `Stop-WDGuiDevWorkers.ps1 -WhatIf` returns a structured dry-run result without stopping processes
+  - verifies `Test-ResourceSafety.ps1` passes with relaxed limits
+- `scripts\Test-SystemBaseline.ps1` now runs Pester against both:
+  - `core\WindowsDoctor.Tests.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+- Latest low-risk baseline:
+  - Pester discovery: `2 files`, `7 tests`
+  - Result: `7 passed`, `0 failed`
+  - Full low-risk baseline result: `PASS`
+
+## 2026-04-28 Machine-Readable Resource Safety
+- `scripts\Test-ResourceSafety.ps1` now supports `-Json`.
+- `scripts\Stop-WDGuiDevWorkers.ps1` now supports `-Json`.
+- JSON resource safety fields:
+  - `Status`
+  - `Root`
+  - `FreeMemoryGB`
+  - `PostCssWorkerCount`
+  - `WindowsDoctorNodeProcessCount`
+  - `Checks`
+- Pester coverage expanded to validate JSON output.
+- Latest verification:
+  - `scripts\ResourceSafety.Tests.ps1`: `5 passed`
+  - baseline Pester discovery: `2 files`, `9 tests`
+  - baseline result: `PASS`
+
+## 2026-04-28 WinPE Offline KB Readiness
+- Offline KB exists under `knowledge_base`.
+- Current offline reviewed rule count: `42`.
+- Categories covered: system, network, hardware, boot, SMB/network drives, printer.
+- `scripts\Build-WinPEMedia.ps1` copies these into WinPE:
+  - `gui`
+  - `scripts`
+  - `knowledge_base`
+  - root `*.md`
+- Broker reads rules from `knowledge_base\reviewed` and `knowledge_base\learned` through `gui\broker\services\kb.js`.
+- Fixed WinPE runtime path issue:
+  - `gui\broker\config.js` now derives default root from its own location instead of hardcoding `e:\WindowsDoctor`.
+  - WinPE `startnet.cmd` generation now sets `WD_ROOT_DIR=X:\WindowsDoctor`.
+- Verification:
+  - `npm run test:broker --prefix .\gui`: `PASS`
+  - `scripts\Build-WinPEMedia.ps1 -CheckOnly`: `Ready`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+
+## 2026-04-28 Offline KB JSON Database
+- Added `scripts\Export-OfflineKBDatabase.ps1`.
+- Output path: `offline_database\windowsdoctor-kb.json`.
+- Output includes:
+  - schema version
+  - generation timestamp
+  - allowlist
+  - rule statistics
+  - normalized rule list with `id`, `title`, `category`, `triggers`, `script`, `repairAllowed`, `actionType`, `details`, `sourceFile`
+- `scripts\Build-WinPEMedia.ps1` now generates this JSON before `-CheckOnly` and before image injection.
+- WinPE image injection now copies `offline_database`.
+- `scripts\Test-SystemBaseline.ps1` now includes `offline-kb-export`.
+- Latest export:
+  - total rules: `42`
+  - auto repair rules: `12`
+  - guided rules: `30`
+  - manual review rules: `0`
+- Latest verification:
+  - `scripts\ResourceSafety.Tests.ps1`: `6 passed`
+  - baseline Pester: `2 files`, `10 tests`, `10 passed`
+  - low-risk baseline: `PASS`
+
+## 2026-04-28 Offline KB JSON Validation
+- Added `scripts\Test-OfflineKBDatabase.ps1`.
+- Validation checks:
+  - schema version
+  - rule count and stats consistency
+  - required rule fields
+  - category values
+  - action type values
+  - repair script naming
+  - source markdown file existence
+  - allowlist script naming
+  - allowlist script file existence
+  - auto-repair rules are present in allowlist
+- `scripts\Test-SystemBaseline.ps1` now includes `offline-kb-validate`.
+- Latest verification:
+  - `scripts\Test-OfflineKBDatabase.ps1 -Json`: `PASS`
+  - total rules: `42`
+  - validation checks: `14 passed`
+  - `scripts\ResourceSafety.Tests.ps1`: `7 passed`
+  - baseline Pester: `2 files`, `11 tests`, `11 passed`
+  - low-risk baseline: `PASS`
+
+## 2026-04-28 Broker Offline DB Mode
+- Broker config now supports:
+  - `offlineDbFile = offline_database\windowsdoctor-kb.json`
+  - `WD_USE_OFFLINE_DB=1`
+- Default local behavior remains Markdown based, so newly learned Markdown rules are visible during normal development.
+- WinPE behavior uses prebuilt JSON:
+  - `Build-WinPEMedia.ps1` writes `set WD_USE_OFFLINE_DB=1` into `startnet.cmd`.
+  - `gui\broker\services\kb.js` loads `offline_database\windowsdoctor-kb.json` when offline DB mode is enabled.
+- JSON is written as UTF-8 without BOM for Node compatibility.
+- PowerShell validation reads JSON with `-Encoding UTF8` for Windows PowerShell 5.1 compatibility.
+- Verification:
+  - `npm run test:broker --prefix .\gui`: `PASS`
+  - `scripts\Test-OfflineKBDatabase.ps1 -Json`: `PASS`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+
+## 2026-04-28 Offline DB Test Compatibility
+- `scripts\ResourceSafety.Tests.ps1` now validates exported offline DB files through `scripts\Test-OfflineKBDatabase.ps1` instead of manually parsing the full JSON twice.
+- Reason: keep one source of truth for Windows PowerShell 5.1 UTF-8 JSON handling and avoid duplicated parser assumptions in tests.
+- Latest verification:
+  - `scripts\ResourceSafety.Tests.ps1`: `7 passed`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+
+## 2026-04-28 Offline KB CLI Search
+- Added `scripts\Search-OfflineKB.ps1`.
+- Purpose: WinPE/offline users can query `offline_database\windowsdoctor-kb.json` without starting Broker or GUI.
+- Supports:
+  - `-Query`
+  - `-Limit`
+  - `-Json`
+  - custom `-DatabasePath`
+- Example:
+  - `powershell -NoProfile -ExecutionPolicy RemoteSigned -File X:\WindowsDoctor\scripts\Search-OfflineKB.ps1 -Query 0x80070035`
+- Verification:
+  - query `0x80070035`: matched `RULE-SMB-0x0035`
+  - `scripts\ResourceSafety.Tests.ps1`: `8 passed`
+  - baseline Pester: `2 files`, `12 tests`, `12 passed`
+  - low-risk baseline: `PASS`
+
+## 2026-04-28 New Conversation Resume Point
+- Current priority remains resource safety first.
+- Do not start GUI/Broker or run production build unless explicitly requested and after `Test-ResourceSafety.ps1 -Json` passes.
+- Latest verified status:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory: about `9.66GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+  - `3000/3001` listener: none
+  - `scripts\Search-OfflineKB.ps1 -Query 0x80070035 -Json`: `PASS`
+  - matched rule: `RULE-SMB-0x0035`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - Pester: `2 files`, `12 tests`, `12 passed`
+- Recent completed work:
+  - WinPE offline KB JSON database: `offline_database\windowsdoctor-kb.json`
+  - JSON export: `scripts\Export-OfflineKBDatabase.ps1`
+  - JSON validation: `scripts\Test-OfflineKBDatabase.ps1`
+  - Broker offline DB mode: `WD_USE_OFFLINE_DB=1`
+  - Brokerless offline search: `scripts\Search-OfflineKB.ps1`
+  - Resource safety gate: `scripts\Test-ResourceSafety.ps1`
+  - GUI dev worker fuse/cleanup: `scripts\Stop-WDGuiDevWorkers.ps1` and guarded `scripts\Start-WindowsDoctor.ps1`
+- Safe next work candidates:
+  1. Add a simple WinPE text-menu launcher that calls `Search-OfflineKB.ps1`, `Test-OfflineKBDatabase.ps1`, and safe repair scripts.
+  2. Improve offline KB text encoding/source Markdown quality for human-readable Traditional Chinese output.
+  3. Add category/list mode to `Search-OfflineKB.ps1`.
+  4. Add a dry-run preview mode for allowlisted repair scripts before execution.
+
+## 2026-04-28 WinPE Offline Text Menu and Search Modes
+- Resource safety before work:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.83GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\Start-WinPEOfflineMenu.ps1`.
+- Launcher capabilities:
+  - interactive WinPE text menu
+  - offline KB search through `Search-OfflineKB.ps1`
+  - category list through `Search-OfflineKB.ps1 -ListCategories`
+  - rule details through `Search-OfflineKB.ps1 -RuleId`
+  - offline DB validation through `Test-OfflineKBDatabase.ps1`
+  - allowlisted repair list through `scripts\repair-allowlist.json`
+  - repair preview through `-PreviewRepair` without execution
+  - repair execution only for allowlisted scripts, with interactive `RUN` confirmation in menu mode
+- Extended `scripts\Search-OfflineKB.ps1`:
+  - `-ListCategories`
+  - `-Category`
+  - `-RuleId`
+  - `-Details`
+  - JSON output now includes `Mode`, `Category`, and `RuleId`
+- Fixed a PowerShell 5.1 JSON preview issue:
+  - `Get-Content -Raw` can retain provider metadata that makes `ConvertTo-Json` expand huge objects.
+  - `Start-WinPEOfflineMenu.ps1` now casts preview content to `[string]` before JSON output.
+- Validation:
+  - `Search-OfflineKB.ps1 -ListCategories -Json`: `PASS`, `reviewed=42`, `autoRepair=12`, `guided=30`
+  - `Search-OfflineKB.ps1 -RuleId RULE-SMB-0x0035 -Json`: `PASS`, `MatchCount=1`
+  - `Start-WinPEOfflineMenu.ps1 -ListAllowedRepairs -Json`: `PASS`, `Count=5`
+  - `Start-WinPEOfflineMenu.ps1 -PreviewRepair Repair-NetworkStack.bat -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `12 passed`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - Baseline Pester discovery: `2 files`, `16 tests`, `16 passed`
+- Services remained offline:
+  - no GUI/Broker startup
+  - no production build
+
+## 2026-04-28 Offline KB UTF-8 and Repair Preview Wrapper
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.8GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Fixed offline KB JSON readability:
+  - `scripts\Export-OfflineKBDatabase.ps1` now reads Markdown and `repair-allowlist.json` with explicit `-Encoding UTF8`.
+  - Root cause was Windows PowerShell 5.1 default ANSI decoding when reading UTF-8 Markdown.
+  - `offline_database\windowsdoctor-kb.json` was regenerated.
+- Added readable-text validation:
+  - `scripts\Test-OfflineKBDatabase.ps1` now includes `rule-readable-text`.
+  - It detects replacement characters and common mojibake patterns in title/details/triggers.
+- Added regression coverage:
+  - `scripts\ResourceSafety.Tests.ps1` verifies `RULE-SMB-0x0035` exports readable Traditional Chinese without putting non-ASCII literals directly in the test file.
+- Added `scripts\Invoke-AllowedRepair.ps1`:
+  - `-List`
+  - `-ScriptName <Repair-*.bat> -Preview`
+  - `-ScriptName <Repair-*.bat> -Execute -ConfirmToken RUN`
+  - `-Json`
+  - rejects scripts outside `scripts\repair-allowlist.json`
+- `scripts\Start-WinPEOfflineMenu.ps1` now delegates repair list/preview/run flows to `Invoke-AllowedRepair.ps1`.
+- Fixed PowerShell switch forwarding:
+  - Avoided `-Json:$Json` with nested `powershell -File`, because Windows PowerShell 5.1 can pass it as an invalid string.
+  - Menu wrapper now appends `-Json` only when the switch is present.
+- Validation:
+  - `Search-OfflineKB.ps1 -Query 找不到網路路徑 -Json`: `PASS`, matched `RULE-SMB-0x0035`
+  - `Test-OfflineKBDatabase.ps1 -Json`: `PASS`, `rule-readable-text suspect=0`
+  - `Invoke-AllowedRepair.ps1 -List -Json`: `PASS`, `Count=5`
+  - `Invoke-AllowedRepair.ps1 -ScriptName Repair-NetworkStack.bat -Preview -Json`: `PASS`
+  - `Start-WinPEOfflineMenu.ps1 -ListAllowedRepairs -Json`: `PASS`
+  - `Start-WinPEOfflineMenu.ps1 -PreviewRepair Repair-NetworkStack.bat -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `15 passed`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - Baseline Pester discovery: `2 files`, `17 tests`, `17 passed`
+- Services remained offline:
+  - no GUI/Broker startup
+  - no production build
+
+## 2026-04-28 WinPE Startup Mode
+- `scripts\Build-WinPEMedia.ps1` now supports:
+  - `-StartupMode Menu`
+  - `-StartupMode Broker`
+- Default startup mode is `Menu`.
+- `Menu` mode writes `startnet.cmd` to launch:
+  - `powershell -NoProfile -ExecutionPolicy RemoteSigned -File X:\WindowsDoctor\scripts\Start-WinPEOfflineMenu.ps1 -Root X:\WindowsDoctor`
+- `Broker` mode preserves the previous behavior:
+  - `cd /d X:\WindowsDoctor\gui`
+  - `start /b X:\WindowsDoctor\gui\node.exe broker.js`
+- `Build-WinPEMedia.ps1 -CheckOnly` now reports `StartupMode`.
+- `Broker` mode requires `node.exe`; `Menu` mode does not require Node for startup.
+- Validation:
+  - `scripts\Build-WinPEMedia.ps1 -CheckOnly`: `Ready`, `StartupMode=Menu`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `16 passed`
+- Services remained offline:
+  - no GUI/Broker startup
+  - no production build
+
+## 2026-04-28 KB Markdown Source Encoding Gate
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.68GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\Test-KBMarkdownEncoding.ps1`.
+- Scope:
+  - scans `knowledge_base\reviewed\*.md`
+  - scans `knowledge_base\learned\*.md` when present
+  - reads Markdown with explicit `-Encoding UTF8`
+- Checks:
+  - Markdown files are present
+  - no UTF-8 replacement character
+  - no common mojibake patterns
+  - each rule has either `Trigger: [...]` or `ErrorCode: "..."`
+  - each rule has a Markdown `#` title
+- Implementation detail:
+  - mojibake regex uses ASCII Unicode escapes only, to avoid Windows PowerShell 5.1 parsing issues in the validator itself.
+  - both legacy frontmatter style and newer `- Trigger: [...]` style are accepted.
+- Baseline integration:
+  - `scripts\Test-SystemBaseline.ps1` now runs `kb-markdown-encoding` after `resource-safety` and before offline export.
+  - `scripts\ResourceSafety.Tests.ps1` parses and executes the new validator.
+- Validation:
+  - `scripts\Test-KBMarkdownEncoding.ps1 -Json`: `PASS`, `TotalFiles=42`
+  - `utf8-replacement-characters`: `PASS`, `files=0`
+  - `mojibake-patterns`: `PASS`, `files=0`
+  - `trigger-lines`: `PASS`, `missing=0`
+  - `title-lines`: `PASS`, `missing=0`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `17 passed`
+
+## 2026-04-28 WinPE startnet Generator
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.61GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\New-WinPEStartNet.ps1`.
+- Purpose:
+  - generate `startnet.cmd` WindowsDoctor lines for WinPE without mounting or building media
+  - make Menu/Broker startup content testable
+- Modes:
+  - `-StartupMode Menu`: sets `WD_ROOT_DIR`, sets `WD_USE_OFFLINE_DB=1`, changes to `X:\WindowsDoctor`, launches `Start-WinPEOfflineMenu.ps1`
+  - `-StartupMode Broker`: sets `WD_ROOT_DIR`, sets `WD_USE_OFFLINE_DB=1`, changes to `X:\WindowsDoctor\gui`, launches `node.exe broker.js`
+- `scripts\Build-WinPEMedia.ps1` now delegates `startnet.cmd` content generation to `New-WinPEStartNet.ps1`.
+- Validation:
+  - `New-WinPEStartNet.ps1 -StartupMode Menu -Json`: `PASS`, contains `Start-WinPEOfflineMenu.ps1`, does not contain `broker.js`
+  - `New-WinPEStartNet.ps1 -StartupMode Broker -Json`: `PASS`, contains `broker.js`, does not contain `Start-WinPEOfflineMenu.ps1`
+  - `Build-WinPEMedia.ps1 -CheckOnly`: `Ready`, `StartupMode=Menu`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - Baseline Pester discovery: `2 files`, `23 tests`, `23 passed`
+- Services remained offline:
+  - no GUI/Broker startup
+  - no production build
+
+## 2026-04-29 Continuation Prompt Generator
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.05GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\New-ContinuationPrompt.ps1`.
+- Added `templates\CONTINUATION_PROMPT_TEMPLATE.md`.
+- Purpose:
+  - generate `NEXT_CHAT_PROMPT.md` when conversation context becomes too large
+  - preserve required read order and resource-safety constraints
+  - include current resource safety JSON unless `-SkipResourceSnapshot` is used
+  - include tails from `TASK_HANDOFF.md`, `OPERATIONS.md`, and `SYSTEM_ERROR_HISTORY.md`
+- Parameters:
+  - `-OutputPath`
+  - `-TemplatePath`
+  - `-TailLines`
+  - `-SkipResourceSnapshot`
+  - `-CopyToClipboard`
+  - `-Json`
+- Implementation detail:
+  - script body is ASCII-only for Windows PowerShell 5.1 parse stability
+  - Traditional Chinese prompt text lives in UTF-8 template
+- Validation:
+  - `New-ContinuationPrompt.ps1 -Json`: `PASS`
+  - output path: `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `20 passed`
+- Services remained offline:
+  - no GUI/Broker startup
+  - no production build
+
+## 2026-04-29 WinPE Offline Flow Integration Gate
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.95GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\Test-WinPEOfflineFlow.ps1`.
+- Purpose:
+  - one command to validate the brokerless WinPE/offline path
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+- Covered steps:
+  - `kb-markdown-encoding`
+  - `offline-kb-export`
+  - `offline-kb-validate`
+  - `offline-kb-search`
+  - `offline-kb-details`
+  - `offline-kb-categories`
+  - `allowed-repair-list`
+  - `allowed-repair-preview`
+  - `winpe-menu-preview`
+  - `startnet-menu`
+  - `startnet-broker`
+  - `winpe-checkonly`
+- Baseline integration:
+  - `scripts\Test-SystemBaseline.ps1` now runs `winpe-offline-flow`.
+  - `scripts\ResourceSafety.Tests.ps1` parses and executes the new integration gate.
+- Validation:
+  - `scripts\Test-WinPEOfflineFlow.ps1 -Json`: `PASS`, `12` steps
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `21 passed`
+
+## 2026-04-29 Machine-Readable Baseline
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.02GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- `scripts\Test-SystemBaseline.ps1` now supports:
+  - `-Json`
+  - `-SkipPester`
+- JSON shape:
+  - `Status`
+  - `Root`
+  - `SkipBuild`
+  - `SkipServiceSmoke`
+  - `SkipPester`
+  - `SkipLint`
+  - `MinFreeMemoryGB`
+  - `Steps`
+- Implementation detail:
+  - Removed internal `Out-Host` from baseline step scriptblocks.
+  - JSON mode now suppresses child command output and emits clean JSON suitable for `ConvertFrom-Json`.
+  - `-SkipPester` prevents recursive Pester calls when testing baseline JSON from Pester.
+- Validation:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -Json`: `PASS`
+  - `ConvertFrom-Json` verification: `Status=PASS`, `Steps=9`, `Failures=0`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `22 passed`
+
+## 2026-04-29 Windows Maintenance Actions
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.73GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\Invoke-WindowsMaintenance.ps1`.
+- Added `scripts\Repair-SystemMaintenance.bat`.
+- Updated `scripts\repair-allowlist.json` to include `Repair-SystemMaintenance.bat`.
+- Maintenance capabilities:
+  - force logoff disconnected user sessions only
+  - disk cleanup preview/execute for temp files older than `24` hours and Recycle Bin
+  - memory release request through .NET GC for the maintenance shell
+  - system maintenance commands: `dism /Online /Cleanup-Image /ScanHealth`, `sfc /verifyonly`, `chkdsk C: /scan`
+- Safety behavior:
+  - default mode is preview
+  - execute mode requires `-Execute -ConfirmToken RUN`
+  - logoff target filter excludes current session and requires disconnected state plus idle time threshold
+  - `MinIdleMinutes` defaults to `30`
+  - allowlisted `Repair-SystemMaintenance.bat` is a safe preview entry only
+- Validation:
+  - `Invoke-WindowsMaintenance.ps1 -Preview -ForceLogoffDisconnectedUsers -CleanDisk -ReleaseMemory -SystemMaintenance -Json`: `PASS`
+  - preview found `0` disconnected logoff targets on this machine
+  - preview estimated `732` temp files and about `805858199` bytes eligible by age
+  - `Invoke-AllowedRepair.ps1 -ScriptName Repair-SystemMaintenance.bat -Preview -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `25 passed`
+- No destructive maintenance was executed.
+
+## 2026-04-29 Windows Maintenance Offline KB Rule
+- Added `knowledge_base\reviewed\RULE-SYS-MAINTENANCE.md`.
+- Purpose:
+  - make Windows maintenance discoverable through offline KB search
+  - connect `SYSTEM_MAINTENANCE` and related triggers to `Repair-SystemMaintenance.bat`
+- Offline KB stats after export:
+  - total rules: `43`
+  - auto repair rules: `13`
+  - guided rules: `30`
+  - manual review rules: `0`
+- `scripts\Test-WinPEOfflineFlow.ps1` now verifies:
+  - `SYSTEM_MAINTENANCE` query
+  - matched rule `RULE-SYS-MAINTENANCE`
+  - mapped script `Repair-SystemMaintenance.bat`
+- Resource handling during verification:
+  - Pester briefly failed because free memory dropped to `3.79GB`.
+  - Resource snapshot showed `powershell.exe` PID `17092`, command `test_local_browser_shell.ps1`, using about `5.6GB`.
+  - Stopped that confirmed high-memory residual process.
+  - Resource safety recovered to `PASS`, free memory about `9.29GB`.
+- Validation:
+  - `Export-OfflineKBDatabase.ps1 -Json`: `PASS`, `TotalRules=43`, `AutoRepairRules=13`
+  - `Search-OfflineKB.ps1 -Query SYSTEM_MAINTENANCE -Json`: `PASS`, matched `RULE-SYS-MAINTENANCE`
+  - `Test-OfflineKBDatabase.ps1 -Json`: `PASS`
+  - `Test-WinPEOfflineFlow.ps1 -Json`: `PASS`, includes `offline-kb-maintenance-search`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `26 passed`
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - Baseline Pester discovery: `2 files`, `30 tests`, `30 passed`
+- No destructive maintenance was executed.
+
+## 2026-04-29 Windows Maintenance Preview Report
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `7.87GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- `scripts\Invoke-WindowsMaintenance.ps1` now supports `-ReportPath`.
+- Report behavior:
+  - writes the full maintenance result as UTF-8 JSON without BOM
+  - works in preview and execute modes
+  - includes `Status`, `Mode`, `Executed`, `GeneratedAt`, `ReportPath`, and `Actions`
+- Validation:
+  - `Invoke-WindowsMaintenance.ps1 -Preview -CleanDisk -ReleaseMemory -ReportPath E:\WindowsDoctor\logs\windows-maintenance.preview.json -Json`: `PASS`
+  - report path: `E:\WindowsDoctor\logs\windows-maintenance.preview.json`
+  - preview estimated `733` temp files and about `806390679` bytes eligible by age
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `27 passed`
+- No destructive maintenance was executed.
+
+## 2026-04-29 New Conversation Handoff Prompt
+- Resource safety before handoff:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `4.46GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Generated latest continuation prompt:
+  - `scripts\New-ContinuationPrompt.ps1 -Json`: `PASS`
+  - output path: `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - template path: `E:\WindowsDoctor\templates\CONTINUATION_PROMPT_TEMPLATE.md`
+  - prompt length: about `17519` characters
+  - resource snapshot included: `true`
+- Current caution:
+  - memory headroom is low but still above the `4GB` gate
+  - avoid GUI/Broker startup and production build until a fresh resource gate shows comfortable headroom
+- Latest validated baseline from prior work:
+  - `scripts\Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild`: `PASS`
+  - baseline Pester discovery: `2 files`, `31 tests`, `31 passed`
+  - `lint`: `PASS`
+  - `broker service tests`: `PASS`
+- No destructive maintenance was executed.
+
+## 2026-04-29 Baseline JSON Report Output
+- Resource safety before continuation:
+  - first gate failed because free memory was `1.56GB`
+  - two residual `test_local_browser_shell.ps1` PowerShell processes were using about `6.38GB` and `2GB`
+  - stopped only those confirmed residual processes
+  - resource safety recovered to `PASS`, free memory about `9.35GB`
+- Added `-ReportPath` to `scripts\Test-SystemBaseline.ps1`.
+- Report behavior:
+  - writes the same baseline result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable report command.
+- Validation:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`, free memory about `9.41GB`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `28 passed`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`
+  - report summary: `Status=PASS`, `StepCount=11`, `Failures=0`
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-02 WinPE Boot USB GUI Surface
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.66`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Existing backend capability confirmed:
+  - `scripts\Build-WinPEMedia.ps1` already supports `-CheckOnly`, `-StartupMode Menu|Broker`, `-OutputPath`, and `-USBPath`.
+  - `scripts\New-WinPEStartNet.ps1` generates Menu or Broker startup.
+- Added GUI surface:
+  - `E:\WindowsDoctor\gui\src\components\WinPEBootMediaPanel.tsx`
+  - mounted in `E:\WindowsDoctor\gui\src\app\page.tsx`
+- UI behavior:
+  - selects output type: boot USB or ISO
+  - sets USB drive path, default `G:\`
+  - sets ISO path
+  - toggles WinPE startup mode between offline menu and Broker
+  - shows preflight command that does not write USB
+  - shows build command for USB or ISO
+  - USB write command remains visually locked until confirmation token is `RUN`
+- Validation:
+  - `Build-WinPEMedia.ps1 -CheckOnly -StartupMode Menu -ReportPath E:\WindowsDoctor\logs\winpe-media-checkonly.latest.json -Json`: `Ready`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No actual WinPE USB was written in this run.
+- No GUI/Broker was started.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 GUI-Ready USB For Other Computers
+- User granted full unattended execution authority after asking whether GUI startup would fail on another computer.
+- Goal:
+  - reduce dependency on target computer having Node.js/npm/internet
+  - avoid GUI running directly from slow USB storage
+  - reduce Windows Firewall prompts
+- Updated payload/publish scripts:
+  - `scripts\New-PortableUsbPayload.ps1`
+    - added `-IncludeNodeRuntime`
+    - added `-NodeRuntimePath`
+    - creates `node-runtime`
+    - creates `Start-WindowsDoctor-GUI-Ready.cmd`
+  - `scripts\Publish-PortableUsbPackage.ps1`
+    - added `-IncludeNodeRuntime`
+    - passes Node runtime path into payload generation
+- Updated service binding:
+  - `gui\broker\config.js`
+    - added `host`, default `127.0.0.1`
+  - `gui\broker.js`
+    - listens on `config.host`
+  - `scripts\Start-WindowsDoctor.ps1`
+    - starts Next dev with `--hostname 127.0.0.1`
+- GUI-ready USB package:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`
+- Entrypoint for other computers:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\Start-WindowsDoctor-GUI-Ready.cmd`
+- GUI-ready behavior:
+  - syncs `node-runtime` and `WindowsDoctor` to `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY`
+  - prepends local cached `node-runtime` to PATH
+  - starts Broker and GUI from local cache
+  - opens `http://localhost:3000`
+- Validation and fixes:
+  - initial large zip-copy-expand timed out after creating zip and partial USB folder
+  - manually patched missing directories from local payload:
+    - `scripts`
+    - `offline_database`
+    - `templates`
+    - `knowledge_base`
+  - completed missing GUI dependency pieces:
+    - `.bin`
+    - `next`
+    - `@swc\helpers`
+    - `@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node`
+    - `caniuse-lite`
+    - `src`
+  - used local cache launcher smoke test:
+    - GUI returned `200`
+    - Broker health returned `ok=true`
+    - listeners were bound to `127.0.0.1:3000` and `127.0.0.1:3001`
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-gui-ready-g.latest.json -Json`: `PASS`
+  - low-risk baseline with `-SkipServiceSmoke -SkipBuild -SkipPester -SkipLint`: `PASS`, `13` steps
+  - final resource safety: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+- Stale incomplete USB zip was removed:
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503.zip`
+- WinPE remains available:
+  - `G:\sources\boot.wim`
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 USB Refresh With NotebookLM GUI
+- Published updated normal-Windows portable package to `G:\`:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI`
+- Publish command:
+  - `powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Publish-PortableUsbPackage.ps1 -USBPath G:\ -PackageName WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-notebooklm-gui-g.latest.json -Json`
+- Publish result:
+  - status: `PASS`
+  - target files: `216`
+  - target bytes: `1182229`
+  - zip-copy-expand: `true`
+  - `IncludeNodeModules=false`
+- USB now includes:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\WindowsDoctor\gui\src\components\NotebookLMImportPanel.tsx`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\WindowsDoctor\gui\broker\services\notebooklm.js`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\WindowsDoctor\offline_database\notebooklm-repair-sources.json`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\WindowsDoctor\offline_database\windowsdoctor-kb-normalized.json`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\Start-WindowsDoctor-GUI-Portable.cmd`
+- Updated USB landing page:
+  - `G:\START_HERE.html`
+- WinPE boot file remains present:
+  - `G:\sources\boot.wim`
+- Final low-risk baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Final resource safety:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- No GUI/Broker remains running.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 NotebookLM GUI User Guide
+- User requested usage instructions.
+- Added visual HTML guide:
+  - source: `E:\WindowsDoctor\docs\WINDOWSDOCTOR_NOTEBOOKLM_GUI_USER_GUIDE.html`
+  - USB copy: `G:\WINDOWSDOCTOR_NOTEBOOKLM_GUI_USER_GUIDE.html`
+- Updated USB start page:
+  - source: `E:\WindowsDoctor\docs\START_HERE_USB.html`
+  - USB copy: `G:\START_HERE.html`
+- Guide covers:
+  - launching normal Windows GUI from `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\Start-WindowsDoctor-GUI-Portable.cmd`
+  - NotebookLM source pack JSON preparation
+  - GUI import and rebuild workflow
+  - Google Pro vs NotebookLM Enterprise API boundary
+  - fallback PowerShell import command
+  - WinPE boot rescue usage remains available
+- Verification:
+  - `G:\WINDOWSDOCTOR_NOTEBOOKLM_GUI_USER_GUIDE.html`: exists
+  - `G:\START_HERE.html`: updated
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-NotebookLMGUI\Start-WindowsDoctor-GUI-Portable.cmd`: exists
+  - `G:\sources\boot.wim`: exists
+  - resource safety: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+- No GUI/Broker was started.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 NotebookLM GUI Import Panel
+- User asked for a NotebookLM-like GUI or direct NotebookLM connection, then clarified they are a Google Pro member.
+- Official integration decision:
+  - Google Pro is supported through NotebookLM web usage plus source pack JSON import.
+  - Direct programmatic API wiring is reserved for NotebookLM Enterprise because it requires Google Cloud project/IAM/access token.
+  - Consumer NotebookLM private/unofficial endpoints are not used.
+- Official source checked:
+  - Google Cloud NotebookLM Enterprise API docs show REST notebook APIs under `discoveryengine.googleapis.com` and require project/location/notebook identifiers.
+  - Google Workspace NotebookLM page lists supported source types and Workspace availability, but not a consumer direct API.
+- Added Broker service/API:
+  - `gui\broker\services\notebooklm.js`
+  - `POST /api/notebooklm/import`
+- API behavior:
+  - accepts `sourcePack` JSON from GUI
+  - writes `logs\notebooklm-gui-source-pack.json`
+  - runs `Test-NotebookLMSourcePack.ps1`
+  - runs `Import-NotebookLMSourcePack.ps1`
+  - runs `Export-NormalizedKBDatabase.ps1`
+  - runs `Test-NormalizedKBDatabase.ps1`
+- Updated GUI API client:
+  - `gui\src\lib\windowsDoctorApi.ts`
+- Rebuilt NotebookLM GUI panel:
+  - `gui\src\components\NotebookLMImportPanel.tsx`
+  - NotebookLM-style 3-column workspace
+  - JSON file picker and paste editor
+  - source/record preview
+  - validation panel
+  - `匯入並重建` button
+  - Enterprise API info tab with project/location/notebook fields and NotebookLM open link
+- Validation:
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `npm run test:broker --prefix E:\WindowsDoctor\gui`: `PASS`
+  - direct service smoke with `templates\NOTEBOOKLM_SOURCE_PACK_TEMPLATE.json`: `PASS`
+    - validate: `PASS`
+    - imported records: `1`
+    - normalized records: `73`
+    - NotebookLM records: `1`
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.latest.json -Json`: `PASS`
+  - final resource safety: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 USB Refresh With Unknown Capture
+- Published updated normal-Windows portable package to `G:\`:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture`
+- Publish command:
+  - `powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Publish-PortableUsbPackage.ps1 -USBPath G:\ -PackageName WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-unknown-capture-g.latest.json -Json`
+- Publish result:
+  - status: `PASS`
+  - target files: `214`
+  - target bytes: `1160818`
+  - zip-copy-expand: `true`
+  - `IncludeNodeModules=false`
+- USB now includes:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture\WindowsDoctor\scripts\Capture-UnknownErrorToKB.ps1`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture\WindowsDoctor\knowledge_base\learned\LEARN-0xE0FFLIVE.md`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture\WindowsDoctor\offline_database\windowsdoctor-kb.json`
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503-UnknownCapture\Start-WindowsDoctor-GUI-Portable.cmd`
+- Updated USB landing page:
+  - `G:\START_HERE.html`
+- WinPE boot file remains present:
+  - `G:\sources\boot.wim`
+- Final low-risk baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Final resource safety:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- No GUI/Broker was started.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 GUI USB Entrypoint Clarification
+- User asked why GUI was not enabled.
+- Root cause:
+  - the default USB launcher `Start-WindowsDoctor-Portable.cmd` intentionally starts the offline text menu
+  - the portable package was published with `IncludeNodeModules=false`, so GUI dependencies are deferred and not bundled
+  - earlier operating constraints said not to directly start GUI/Broker unless explicitly requested
+- Updated future portable payload generation:
+  - `scripts\New-PortableUsbPayload.ps1` now also creates `Start-WindowsDoctor-GUI-Portable.cmd`
+  - default text menu launcher remains unchanged
+  - GUI launcher checks for Node.js/npm, runs `npm ci --no-audit --no-fund` if `gui\node_modules` is missing, starts Broker/GUI with `-SkipBuild`, then opens `http://localhost:3000`
+- Updated USB landing page source:
+  - `docs\START_HERE_USB.html`
+- Patched current USB:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503\Start-WindowsDoctor-GUI-Portable.cmd`
+  - `G:\START_HERE.html`
+- Validation after patch:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-NormalWindows-GUI-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-normal-g.latest.json -Json`: `PASS`
+  - `G:\sources\boot.wim`: exists
+  - default text launcher: exists
+  - GUI launcher: exists
+  - final resource safety: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+- GUI/Broker was not started during this clarification patch.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-03 Unknown Error Capture Pipeline
+- User granted unattended task authority and asked not to interrupt for warnings.
+- Added:
+  - `scripts\Capture-UnknownErrorToKB.ps1`
+- Purpose:
+  - capture unknown errors or active scan findings without an auto-repair plan into `knowledge_base\learned`
+  - rebuild offline and normalized KB databases
+  - validate both databases
+- Supported modes:
+  - manual capture with `-Title -ErrorCode -Description`
+  - scan capture with `-FromScan -IncludeNoRepairMatches`
+- Safety behavior:
+  - generated learned records use `Script: "N/A"`
+  - generated records are `repairAllowed=false`
+  - `scripts\repair-allowlist.json` is unchanged
+  - no repair execution is performed
+- Added documentation:
+  - `OPERATIONS.md` includes `Capture-UnknownErrorToKB.ps1` commands and safety notes
+- Added test:
+  - `ResourceSafety.Tests.ps1`: captures unknown errors into learned KB without enabling auto repair
+- Live verification capture:
+  - created `knowledge_base\learned\LEARN-0xE0FFLIVE.md`
+  - report: `E:\WindowsDoctor\logs\unknown-error-capture.latest.json`
+  - offline export: `PASS`
+  - offline validation: `PASS`
+  - normalized export: `PASS`
+  - normalized validation: `PASS`
+- Current KB stats after capture:
+  - `64` reviewed/learned rules total
+  - `63` reviewed rules
+  - `1` learned rule
+  - `20` allowlist auto-repair rules
+  - `44` guided/manual rules
+  - `SYSTEM_MAINTENANCE` remains covered
+- No GUI/Broker was started.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-02 WinPE Boot USB Installed To G
+- User requested executing WinPE installation and WindowsDoctor setup.
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.86`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Target USB:
+  - `G:`
+- Preflight:
+  - `Build-WinPEMedia.ps1 -CheckOnly -StartupMode Menu -USBPath G: -ReportPath E:\WindowsDoctor\logs\winpe-media-checkonly-g.latest.json -Json`: `Ready`
+- Fixed WinPE build reliability:
+  - `scripts\Build-WinPEMedia.ps1` now loads ADK `DandISetEnv.bat` before `copype.cmd` and `MakeWinPEMedia.cmd`.
+  - native external steps now fail fast via exit-code checks.
+  - USB media creation uses unattended `MakeWinPEMedia /UFD /F`.
+  - `templates` are copied into the WinPE `WindowsDoctor` payload.
+  - `scripts\New-WinPEStartNet.ps1` now overwrites `startnet.cmd` instead of appending, preventing duplicate `wpeinit`.
+- WinPE USB creation:
+  - `Build-WinPEMedia.ps1 -StartupMode Menu -USBPath G:`: `PASS`
+  - ADK staged `C:\WinPE_WD_amd64`
+  - DISM mounted `boot.wim`, added WMI/NetFX/Scripting/PowerShell and zh-TW WMI package, injected WindowsDoctor files, committed image
+  - `MakeWinPEMedia` formatted `G:`, set boot code, and copied WinPE files successfully
+- WIM verification by mounting `G:\sources\boot.wim` read-only:
+  - `StartNet=true`
+  - `Menu=true`
+  - `OfflineDb=true`
+  - `NotebookTemplate=true`
+  - `UsesOfflineDb=true`
+  - `UsesMenu=true`
+  - `WpeInitCount=1`
+- startnet content now launches:
+  - `X:\WindowsDoctor\scripts\Start-WinPEOfflineMenu.ps1 -Root X:\WindowsDoctor`
+- DISM mount cleanup:
+  - `Dism /Get-MountedImageInfo`: no mounted images remaining
+- Final validation:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`, `FreeMemoryGB=6.58`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=2`
+  - `Build-WinPEMedia.ps1 -CheckOnly -StartupMode Menu -USBPath G: -ReportPath E:\WindowsDoctor\logs\winpe-media-checkonly-g.latest.json -Json`: `Ready`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- GUI/Broker was not started.
+- Production build was not executed.
+- Repair execution was not performed.
+- Destructive maintenance was not performed.
+
+## 2026-05-03 Complete Previously Deferred Tasks
+- User requested completing previously unexecuted tasks.
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.55`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Production build:
+  - `npm run build --prefix E:\WindowsDoctor\gui`: `PASS`
+  - Next.js compiled, TypeScript completed, static pages generated.
+- GUI/Broker startup:
+  - `Start-WindowsDoctor.ps1 -RestartBroker -RestartGui -ReportPath E:\WindowsDoctor\logs\service-start.latest.json -Json`: `PASS`
+  - GUI: `http://localhost:3000`, PID `47480`
+  - Broker: `http://localhost:3001`, PID `45860`
+- Online GUI smoke:
+  - `Test-GuiSmoke.ps1 -ReportPath E:\WindowsDoctor\logs\gui-smoke-online.latest.json -Json`: `PASS`
+  - checks: `gui-home`, `broker-rules`, `broker-allowlist`, `rules-nonempty=63`, `allowlist-nonempty=6`
+- Resource handling after GUI startup:
+  - first post-start resource check found `PostCssWorkerCount=1`
+  - ran `Stop-WDGuiDevWorkers.ps1 -IncludeDevServer -Json`
+  - final online GUI smoke remained `PASS`
+  - resource safety recovered to `PASS`, `PostCssWorkerCount=0`
+- Recommended repair execution gate:
+  - `Invoke-RecommendedRepairPlan.ps1 -Execute -ConfirmToken RUN -ReportPath E:\WindowsDoctor\logs\recommended-repair-execute.latest.json -Json`: `PASS`
+  - `ActiveRecommendedRepairCount=0`
+  - `SafeBatchScriptCount=0`
+  - `Executed=true`
+  - `Executions=[]`; no repair scripts were run because all matches were observations only.
+- Windows maintenance execution:
+  - `Invoke-WindowsMaintenance.ps1 -Execute -ConfirmToken RUN -CleanDisk -ReleaseMemory -SystemMaintenance -ReportPath E:\WindowsDoctor\logs\windows-maintenance.execute.json -Json`: `PASS`
+  - `clean-disk-space`: `PASS`, `removedFiles=3377`
+  - `release-memory`: `PASS`
+  - `system-maintenance`: `PASS`, ran `DISM /Online /Cleanup-Image /ScanHealth`, `sfc /verifyonly`, and `chkdsk C: /scan`
+- Services were stopped after online validation to restore portable USB readiness gate:
+  - stopped listeners on ports `3000` and `3001`
+  - stopped residual WindowsDoctor Next dev node process
+  - final resource safety: `PASS`, `WindowsDoctorNodeProcessCount=0`, `PostCssWorkerCount=0`
+- Final baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- Current resting state:
+  - GUI/Broker offline
+  - production build completed
+  - WinPE USB remains installed on `G:`
+  - no active repair scripts were executed
+
+## 2026-05-03 Child-Friendly USB Guide
+- User requested a mostly visual usage guide that elementary school students can understand.
+- Added:
+  - `E:\WindowsDoctor\docs\WINDOWSDOCTOR_USB_KIDS_GUIDE.html`
+- Copied to WinPE USB root:
+  - `G:\WINDOWSDOCTOR_USB_KIDS_GUIDE.html`
+- Guide content:
+  - boot from USB using pictures and large steps
+  - explains WinPE offline menu flow
+  - shows self-test, scan, KB search, recommendations, and RUN safety rule
+  - includes simple Windows GUI launch command for adults
+  - uses large visual cards, icons, red/yellow/green safety cues, and low-text layout
+- Validation:
+  - file exists in workspace and USB root
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+
+## 2026-04-29 Common Windows Error Coverage Sync
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.33GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Updated `COMMON_WINDOWS_ERRORS.md` to match the current offline KB stats:
+  - reviewed rules: `43`
+  - auto repair rules: `13`
+  - guided rules: `30`
+  - added `SYSTEM_MAINTENANCE` to the system error coverage summary
+- Added Pester coverage to keep `COMMON_WINDOWS_ERRORS.md` aligned with `offline_database\windowsdoctor-kb.json` stats.
+- Validation:
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `29` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`
+  - report summary: `Status=PASS`, `StepCount=11`, `Failures=0`
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Documentation Sync Gate
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.70GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `scripts\Test-DocumentationSync.ps1`.
+- Validation scope:
+  - `COMMON_WINDOWS_ERRORS.md` matches current offline KB stats
+  - stale `42/12` coverage counts are rejected
+  - `SYSTEM_MAINTENANCE` remains documented
+  - `OPERATIONS.md` includes resource gate, baseline report, and maintenance confirmation commands
+- Baseline integration:
+  - `scripts\Test-SystemBaseline.ps1` now runs `documentation-sync` after offline KB validation.
+  - `scripts\ResourceSafety.Tests.ps1` parses and executes the new documentation gate.
+- Validation:
+  - `Test-DocumentationSync.ps1 -Json`: `PASS`, `8` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `30` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`
+  - baseline steps: `12`, including `documentation-sync`
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Documentation Last-Updated Gate
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.84GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Updated root authority docs touched in this work to `Last updated: 2026-04-29`:
+  - `OPERATIONS.md`
+  - `TASK_HANDOFF.md`
+  - `SYSTEM_ERROR_HISTORY.md`
+- Extended `scripts\Test-DocumentationSync.ps1` to validate `Last updated` freshness for:
+  - `COMMON_WINDOWS_ERRORS.md`
+  - `OPERATIONS.md`
+  - `TASK_HANDOFF.md`
+  - `SYSTEM_ERROR_HISTORY.md`
+- Validation:
+  - `Test-DocumentationSync.ps1 -Json`: `PASS`, `12` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Handoff Current KB Stats Gate
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.77GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Updated the top `Latest Verified Baseline` KB summary:
+  - current reviewed rules: `43`
+  - current allowlist auto repair rules: `13`
+  - current guided rules: `30`
+  - includes `SYSTEM_MAINTENANCE`
+- Extended `scripts\Test-DocumentationSync.ps1` to verify `TASK_HANDOFF.md` contains current offline KB stats and `SYSTEM_MAINTENANCE`.
+- Implementation note:
+  - New handoff stat checks use ASCII-only regex fragments such as `43.*reviewed` and `13.*allowlist` to avoid Windows PowerShell 5.1 non-ASCII script parsing issues.
+- Validation:
+  - `Test-DocumentationSync.ps1 -Json`: `PASS`, `15` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `30` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Documentation Sync Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.31GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Test-DocumentationSync.ps1`.
+- Report behavior:
+  - writes the same documentation sync result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable documentation sync report command.
+- Validation:
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`, `15` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `31` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 WinPE Offline Flow Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `5.86GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Test-WinPEOfflineFlow.ps1`.
+- Report behavior:
+  - writes the same WinPE/offline flow result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable WinPE/offline flow report command.
+- Resource handling during verification:
+  - first Pester attempt failed because free memory dropped to about `3.95GB`
+  - resource snapshot showed two residual `test_local_browser_shell.ps1` PowerShell processes using about `4.19GB` and `1.47GB`
+  - stopped only those confirmed residual processes
+  - resource safety recovered to `PASS`, free memory about `9.29GB`
+- Validation:
+  - `Test-WinPEOfflineFlow.ps1 -ReportPath E:\WindowsDoctor\logs\winpe-offline-flow.latest.json -Json`: `PASS`, `13` steps
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `32` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 KB Markdown Encoding Report and Baseline JSON Stream Cleanup
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `7.55GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Test-KBMarkdownEncoding.ps1`.
+- Report behavior:
+  - writes the same KB Markdown encoding result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable KB Markdown encoding report command.
+- Hardened `scripts\Test-SystemBaseline.ps1` JSON mode:
+  - child step output now suppresses all streams with `*> $null`
+  - nonzero native command exit codes now become failed baseline steps
+  - prevents child stderr, such as transient GUI smoke memory errors, from contaminating the final JSON output
+- Pester stability:
+  - baseline JSON/report tests now pass `-MinFreeMemoryGB 0` inside Pester to avoid flaky failures from transient system memory pressure
+  - normal baseline defaults still require `4GB`
+- Validation:
+  - `Test-KBMarkdownEncoding.ps1 -ReportPath E:\WindowsDoctor\logs\kb-markdown-encoding.latest.json -Json`: `PASS`, `43` files
+  - lightweight baseline JSON parse check: `PASS`, `Steps=10`, `Failures=0`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `33` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Offline KB Validation Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.54GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Test-OfflineKBDatabase.ps1`.
+- Report behavior:
+  - writes the same offline KB validation result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable offline KB validation report command.
+- Validation:
+  - `Test-OfflineKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\offline-kb-validate.latest.json -Json`: `PASS`, `43` rules, `15` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `34` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Offline KB Export Summary Report
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.62GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Export-OfflineKBDatabase.ps1`.
+- Report behavior:
+  - writes the same export summary JSON emitted by `-Json`
+  - does not replace `-OutputPath`; database output remains `offline_database\windowsdoctor-kb.json` by default
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the summary object
+- Updated `OPERATIONS.md` with the durable offline KB export summary report command.
+- Validation:
+  - `Export-OfflineKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\offline-kb-export.latest.json -Json`: `PASS`, `TotalRules=43`, `AutoRepairRules=13`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `35` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Offline KB Search Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.51GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Search-OfflineKB.ps1`.
+- Report behavior:
+  - writes the same search/category/details result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with durable offline KB search and category report commands.
+- Validation:
+  - `Search-OfflineKB.ps1 -Query SYSTEM_MAINTENANCE -ReportPath E:\WindowsDoctor\logs\offline-kb-search.latest.json -Json`: `PASS`, matched `RULE-SYS-MAINTENANCE`
+  - `Search-OfflineKB.ps1 -ListCategories -ReportPath E:\WindowsDoctor\logs\offline-kb-categories.latest.json -Json`: `PASS`, `CategoryCount=1`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `37` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Allowlisted Repair Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.51GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Invoke-AllowedRepair.ps1`.
+- Report behavior:
+  - writes list, preview, or execute result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with durable allowlisted repair list and preview report commands.
+- Validation:
+  - `Invoke-AllowedRepair.ps1 -List -ReportPath E:\WindowsDoctor\logs\allowed-repair-list.latest.json -Json`: `PASS`, `Count=6`
+  - `Invoke-AllowedRepair.ps1 -ScriptName Repair-SystemMaintenance.bat -Preview -ReportPath E:\WindowsDoctor\logs\allowed-repair-preview.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `39` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 Intune Remediations Enterprise Export
+- User asked to continue completing recommended tasks in unattended mode.
+- Resource gate:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=5.16`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Implemented EnterpriseExport baseline for Microsoft Intune Remediations:
+  - `scripts\Export-IntuneRemediationPackage.ps1`
+  - `scripts\Test-IntuneRemediationPackage.ps1`
+- Export policy:
+  - includes only allowlisted `low` risk `auto_repair` records
+  - excludes BCD, boot, SystemIntegrity, SystemMaintenance
+  - excludes `medium`, `manual_review`, NotebookLM, and external diagnostic import records
+  - export itself does not execute repairs
+- Generated package:
+  - `E:\WindowsDoctor\releases\intune\WindowsDoctor-IntuneRemediations`
+  - manifest: `E:\WindowsDoctor\releases\intune\WindowsDoctor-IntuneRemediations\intune-remediations-manifest.json`
+- Export result:
+  - `Export-IntuneRemediationPackage.ps1 -OutputRoot E:\WindowsDoctor\releases\intune -PackageName WindowsDoctor-IntuneRemediations -ReportPath E:\WindowsDoctor\logs\intune-remediation-export.latest.json -Json`: `PASS`
+  - `ItemCount=2`
+  - `CandidateRecordCount=14`
+- Exported Intune groups:
+  - `Repair-NetworkStack.bat`: `8` rules
+  - `Repair-Services.bat`: `6` rules
+- Validation:
+  - first generated detection scripts failed PowerShell parse because `$logName:` needed `${logName}:`
+  - fixed exporter and regenerated package
+  - `Test-IntuneRemediationPackage.ps1 -PackageRoot E:\WindowsDoctor\releases\intune\WindowsDoctor-IntuneRemediations -ReportPath E:\WindowsDoctor\logs\intune-remediation-validate.latest.json -Json`: `PASS`
+  - generated PowerShell parse check: `PASS`, `4` files
+  - targeted Pester: `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*Intune remediation*'`: `PASS`, `1` passed, `0` failed
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.intune-export-final.json -Json`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -ReportPath E:\WindowsDoctor\logs\system-baseline.intune-export.json -Json`: `PASS`, `13` steps
+- Updated:
+  - `OPERATIONS.md`
+  - `EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+  - `scripts\Test-DocumentationSync.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 Official Diagnostics Converter
+- User again asked to complete recommended tasks in unattended mode.
+- Resource gate:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=4.75`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Implemented official diagnostic log converter:
+  - `scripts\Convert-OfficialDiagnosticsToExternalPack.ps1`
+- Added sample official diagnostic logs:
+  - `templates\SETUPDIAG_SAMPLE.log`
+  - `templates\DISM_SAMPLE.log`
+  - `templates\SFC_SAMPLE.log`
+  - `templates\GETHELP_SAMPLE.log`
+- Converter inputs:
+  - `-SetupDiagPath`
+  - `-DismLogPath`
+  - `-SfcLogPath`
+  - `-GetHelpPath`
+- Converter output:
+  - external diagnostics pack compatible with `Test-ExternalDiagnosticsPack.ps1`
+  - each finding remains diagnostic-only and manual-review
+- Supported official adapters now have a concrete converter path:
+  - `setupdiag`
+  - `dism`
+  - `sfc`
+  - `gethelpcmd`
+- Updated:
+  - `OPERATIONS.md`
+  - `EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+  - `scripts\Test-DocumentationSync.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+- First conversion attempt failed due PowerShell typed-list counting in `Convert-OfficialDiagnosticsToExternalPack.ps1`:
+  - error: `Argument types do not match`
+  - fixed by using `$findings.Count` and `$sources.Count`
+- Validation:
+  - `Convert-OfficialDiagnosticsToExternalPack.ps1 -SetupDiagPath E:\WindowsDoctor\templates\SETUPDIAG_SAMPLE.log -DismLogPath E:\WindowsDoctor\templates\DISM_SAMPLE.log -SfcLogPath E:\WindowsDoctor\templates\SFC_SAMPLE.log -GetHelpPath E:\WindowsDoctor\templates\GETHELP_SAMPLE.log -OutputPath E:\WindowsDoctor\logs\official-diagnostics-pack.latest.json -ReportPath E:\WindowsDoctor\logs\official-diagnostics-pack.latest.report.json -Json`: `PASS`, `SourceCount=4`, `FindingCount=4`
+  - `Test-ExternalDiagnosticsPack.ps1 -InputPath E:\WindowsDoctor\logs\official-diagnostics-pack.latest.json -ReportPath E:\WindowsDoctor\logs\official-diagnostics-pack.validate.latest.json -Json`: `PASS`
+  - `Import-ExternalDiagnosticsPack.ps1 -InputPath E:\WindowsDoctor\logs\official-diagnostics-pack.latest.json -OutputPath E:\WindowsDoctor\logs\official-diagnostic-sources.latest.json -ReportPath E:\WindowsDoctor\logs\official-diagnostics-import.latest.json -Json`: `PASS`, `FindingCount=4`
+  - `Export-NormalizedKBDatabase.ps1 -ExternalDiagnosticsPackPath E:\WindowsDoctor\logs\official-diagnostic-sources.latest.json -OutputPath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.official-diagnostics.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.official-diagnostics.json -Json`: `PASS`, `ExternalDiagnosticRecords=4`, `TotalRecords=77`
+  - `Test-NormalizedKBDatabase.ps1 -DatabasePath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.official-diagnostics.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.official-diagnostics.json -Json`: `PASS`, `external-diagnostic-safety=PASS`
+  - targeted Pester: `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*official diagnostic*'`: `PASS`, `1` passed, `0` failed
+- No real target-machine official diagnostic logs were imported into the official normalized DB yet:
+  - official DB remains ready for external diagnostics, but `ExternalDiagnosticRecords=0` until a real imported pack is written to `offline_database\external-diagnostic-sources.json`
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 External Diagnostics Adapter Baseline
+- User asked to complete the recommended next task in unattended mode after confirming the best positioning:
+  - portable Windows repair USB
+  - WinPE offline rescue
+  - official tool integration
+  - NotebookLM/KB knowledge base
+  - allowlist safety repair engine
+- Resource gate:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=4.77`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Implemented official/external diagnostic adapter baseline:
+  - `templates\EXTERNAL_DIAGNOSTICS_PACK_TEMPLATE.json`
+  - `scripts\Test-ExternalDiagnosticsPack.ps1`
+  - `scripts\Import-ExternalDiagnosticsPack.ps1`
+- Integrated into normalized KB:
+  - `scripts\Export-NormalizedKBDatabase.ps1` now accepts `-ExternalDiagnosticsPackPath`
+  - default external path: `offline_database\external-diagnostic-sources.json`
+  - external findings are emitted as `provenance.sourceType=external_diagnostic_import`
+  - external findings include `provenance.sourceTrustLevel`
+  - external findings include `provenance.adapterName`
+- Added safety validation:
+  - `scripts\Test-NormalizedKBDatabase.ps1` now validates `sourceTrustLevel`
+  - external diagnostic records must remain diagnostic-only:
+    - `repairAllowed=false`
+    - `script=N/A`
+    - `actionType=manual_review`
+- Supported adapter names in the baseline:
+  - `setupdiag`
+  - `gethelpcmd`
+  - `dism`
+  - `sfc`
+  - `eventlog`
+  - `intune-remediation-export`
+  - `wazuh-vulnerability-export`
+  - `rmm-export`
+  - `manual-external`
+- Supported trust levels:
+  - `microsoft_official`
+  - `vendor_official`
+  - `enterprise_tool`
+  - `notebooklm_export`
+  - `local_learned`
+  - `community_unverified`
+- Updated:
+  - `EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+  - `OPERATIONS.md`
+  - `scripts\Test-DocumentationSync.ps1`
+  - `scripts\ResourceSafety.Tests.ps1`
+- Local validation:
+  - `Test-ExternalDiagnosticsPack.ps1 -InputPath E:\WindowsDoctor\templates\EXTERNAL_DIAGNOSTICS_PACK_TEMPLATE.json -ReportPath E:\WindowsDoctor\logs\external-diagnostics-pack-validate.latest.json -Json`: `PASS`
+  - `Import-ExternalDiagnosticsPack.ps1 -InputPath E:\WindowsDoctor\templates\EXTERNAL_DIAGNOSTICS_PACK_TEMPLATE.json -OutputPath E:\WindowsDoctor\logs\external-diagnostic-sources.template.json -ReportPath E:\WindowsDoctor\logs\external-diagnostics-import.template.json -Json`: `PASS`
+  - `Export-NormalizedKBDatabase.ps1 -ExternalDiagnosticsPackPath E:\WindowsDoctor\logs\external-diagnostic-sources.template.json -OutputPath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.external-template.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.external-template.json -Json`: `PASS`, `ExternalDiagnosticRecords=1`
+  - `Test-NormalizedKBDatabase.ps1 -DatabasePath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.external-template.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.external-template.json -Json`: `PASS`, `external-diagnostic-safety=PASS`
+  - `Export-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.after-external-adapter.json -Json`: `PASS`, official DB still `ExternalDiagnosticRecords=0`
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.after-external-adapter.json -Json`: `PASS`
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.external-adapter.json -Json`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -ReportPath E:\WindowsDoctor\logs\system-baseline.external-adapter.json -Json`: `PASS`, `13` steps
+- Pester:
+  - full `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1` was attempted and timed out after about `5` minutes before returning a result
+  - targeted external adapter Pester run: `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1 -FullName '*external diagnostics*'`: `PASS`, `2` passed, `0` failed
+- USB sync:
+  - copied `13` changed/new files into `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\WindowsDoctor`
+  - removed portable package `.next` cache if present
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-gui-ready-external-adapter.json -Json`: `PASS`
+  - direct USB external pack validation: `Test-ExternalDiagnosticsPack.ps1 -InputPath G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\WindowsDoctor\templates\EXTERNAL_DIAGNOSTICS_PACK_TEMPLATE.json -ReportPath E:\WindowsDoctor\logs\external-diagnostics-pack-validate.usb.json -Json`: `PASS`
+- Current official normalized DB status:
+  - `TotalRecords=73`
+  - `NotebookLMRecords=1`
+  - `ExternalDiagnosticRecords=0`
+  - external diagnostic support is ready, but no real SetupDiag/Get Help/DISM/SFC pack has been imported yet
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 WinPE Offline Menu Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.7GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` passthrough to `scripts\Start-WinPEOfflineMenu.ps1`.
+- Report behavior:
+  - forwards the report path to the delegated non-interactive child script
+  - supports `-ListAllowedRepairs` and `-PreviewRepair` durable JSON reports
+  - preserves existing JSON stdout behavior
+  - does not change interactive menu behavior
+- Updated `OPERATIONS.md` with durable WinPE menu wrapper list and preview report commands.
+- Validation:
+  - `Start-WinPEOfflineMenu.ps1 -ListAllowedRepairs -ReportPath E:\WindowsDoctor\logs\winpe-menu-repairs.latest.json -Json`: `PASS`, `Count=6`
+  - `Start-WinPEOfflineMenu.ps1 -PreviewRepair Repair-SystemMaintenance.bat -ReportPath E:\WindowsDoctor\logs\winpe-menu-preview.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `41` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 WinPE Startnet Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.38GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\New-WinPEStartNet.ps1`.
+- Report behavior:
+  - writes the same generated `startnet.cmd` preview result emitted by `-Json`
+  - preserves existing `-OutputPath` behavior for writing startnet lines
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable WinPE startnet report command.
+- Validation:
+  - `New-WinPEStartNet.ps1 -StartupMode Menu -ReportPath E:\WindowsDoctor\logs\winpe-startnet.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `42` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Resource Safety Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.52GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Test-ResourceSafety.ps1`.
+- Report behavior:
+  - writes the same resource gate result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Updated `OPERATIONS.md` with the durable resource safety report command.
+- Validation:
+  - `Test-ResourceSafety.ps1 -ReportPath E:\WindowsDoctor\logs\resource-safety.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `43` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Resource Snapshot Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.43GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Get-WDResourceSnapshot.ps1`.
+- Report behavior:
+  - writes the same resource snapshot JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+  - does not include command lines unless `-IncludeCommandLine` is explicitly provided
+- Updated `OPERATIONS.md` with the durable resource snapshot report command.
+- Validation:
+  - `Get-WDResourceSnapshot.ps1 -ReportPath E:\WindowsDoctor\logs\resource-snapshot.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `44` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 GUI Dev Worker Cleanup Dry-Run Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.39GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Stop-WDGuiDevWorkers.ps1`.
+- Report behavior:
+  - writes the same worker cleanup result JSON emitted by `-Json`
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Validation was limited to `-WhatIf` dry-run mode.
+- Updated `OPERATIONS.md` with the durable GUI dev worker cleanup dry-run report command.
+- Validation:
+  - `Stop-WDGuiDevWorkers.ps1 -WhatIf -ReportPath E:\WindowsDoctor\logs\gui-dev-workers.whatif.latest.json -Json`: `PASS`, `Matched=0`, `Stopped=0`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `45` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No worker processes were stopped during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Version Policy Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.38GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-Json` and `-ReportPath` to `scripts\Test-VersionPolicy.ps1`.
+- Report behavior:
+  - writes the version policy result JSON for package/UI version consistency
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath`, `PackageJson`, and `PageFile` in the result object
+  - preserves existing default object output
+- Updated `OPERATIONS.md` with the durable version policy report command.
+- Validation:
+  - `Test-VersionPolicy.ps1 -ReportPath E:\WindowsDoctor\logs\version-policy.latest.json -Json`: `PASS`, `Version=0.1.0`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `46` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 Continuation Prompt Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `9.38GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\New-ContinuationPrompt.ps1`.
+- Report behavior:
+  - writes a JSON summary of the generated continuation prompt
+  - does not duplicate the full prompt body in the report
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+  - does not copy to clipboard unless `-CopyToClipboard` is explicitly provided
+- Updated `OPERATIONS.md` with the durable continuation prompt report command.
+- Validation:
+  - `New-ContinuationPrompt.ps1 -ReportPath E:\WindowsDoctor\logs\continuation-prompt.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `47` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-29 WinPE Media CheckOnly Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.53GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-Json` and `-ReportPath` to `scripts\Build-WinPEMedia.ps1` for `-CheckOnly` output.
+- Report behavior:
+  - writes the WinPE media preflight result JSON when `-CheckOnly` is used
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+  - does not build ISO, mount WIM, or write USB in `-CheckOnly` mode
+- Updated `OPERATIONS.md` with the durable WinPE media preflight report command.
+- Validation:
+  - `Build-WinPEMedia.ps1 -CheckOnly -ReportPath E:\WindowsDoctor\logs\winpe-media-checkonly.latest.json -Json`: `Ready`, `StartupMode=Menu`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `48` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No ISO was built.
+- No USB was written.
+- No GUI/Broker was started.
+- No production build was executed.
+
+## 2026-04-29 Service Status Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.66GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-ReportPath` to `scripts\Start-WindowsDoctor.ps1`.
+- Report behavior:
+  - writes the same service status JSON emitted by `-Json`
+  - supports `-NoGui -NoBroker` status capture without starting services
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the status object
+- Validation:
+  - `Start-WindowsDoctor.ps1 -NoGui -NoBroker -ReportPath E:\WindowsDoctor\logs\service-status.latest.json -Json`: `PASS`, `GuiPid=null`, `BrokerPid=null`
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`, `16` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `49` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `12` steps
+- No GUI/Broker was started.
+- No production build was executed.
+
+## 2026-04-29 GUI Smoke Offline Report Output
+- Resource safety before continuation:
+  - `scripts\Test-ResourceSafety.ps1 -Json`: `PASS`
+  - free memory around `8.43GB`
+  - PostCSS workers: `0`
+  - WindowsDoctor node processes: `0`
+- Added `-Json` and `-ReportPath` to `scripts\Test-GuiSmoke.ps1`.
+- Report behavior:
+  - writes the GUI smoke result JSON emitted by `-Json`
+  - supports `-AllowOffline` so GUI/Broker remain offline during low-risk validation
+  - creates the parent report directory when needed
+  - writes UTF-8 without BOM
+  - includes `ReportPath` in the result object
+- Validation:
+  - `Test-GuiSmoke.ps1 -AllowOffline -ReportPath E:\WindowsDoctor\logs\gui-smoke-offline.latest.json -Json`: `PASS`
+  - GUI/Broker checks were `SKIP` because services were intentionally offline.
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `52` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+
+## 2026-04-29 Portable USB Readiness Gate
+- User goal confirmed:
+  - build portable USB version first
+  - installer version comes after portable USB readiness is proven
+- Added `scripts\Test-PortableUsbReadiness.ps1`.
+- Gate behavior:
+  - validates `portable-usb` phase with `InstallerPhase=deferred`
+  - exports and validates offline KB
+  - confirms `SYSTEM_MAINTENANCE` searchable offline
+  - lists allowlisted repairs through standalone wrapper and WinPE menu wrapper
+  - validates `New-WinPEStartNet.ps1 -StartupMode Menu`
+  - validates `Build-WinPEMedia.ps1 -CheckOnly -StartupMode Menu`
+  - confirms GUI/Broker listeners remain offline through `Start-WindowsDoctor.ps1 -NoGui -NoBroker`
+  - writes UTF-8 JSON report with `-ReportPath`
+- Validation:
+  - `Test-PortableUsbReadiness.ps1 -ReportPath E:\WindowsDoctor\logs\portable-usb-readiness.latest.json -Json`: `PASS`, `10` steps
+  - `Phase=portable-usb`
+  - `InstallerPhase=deferred`
+  - `Build-WinPEMedia.ps1 -CheckOnly -StartupMode Menu`: `Ready`
+  - GUI/Broker listeners remained offline.
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `52` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- No USB was written.
+- No ISO was built.
+- No GUI/Broker was started.
+- No production build was executed.
+
+## 2026-04-29 Portable USB Payload Artifact
+- Added `scripts\New-PortableUsbPayload.ps1`.
+- Added `scripts\Test-PortableUsbPayload.ps1`.
+- Payload behavior:
+  - creates a timestamped package under `releases\portable-usb`
+  - includes `WindowsDoctor` payload directory
+  - includes `Start-WindowsDoctor-Portable.cmd`
+  - includes `README-PORTABLE-USB.md`
+  - includes `portable-usb-manifest.json`
+  - excludes `gui\.next` build cache
+  - does not format USB
+  - does not write ISO
+  - does not start GUI/Broker
+- Completed payload:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-20260429-204044`
+  - includes `node_modules`
+  - excludes `gui\.next`
+  - `FileCount=21135`
+  - `Bytes=435379770`
+- Validation:
+  - `New-PortableUsbPayload.ps1 -ReportPath E:\WindowsDoctor\logs\portable-usb-payload.latest.json -Json`: `PASS`
+  - `Test-PortableUsbPayload.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-20260429-204044 -ReportPath E:\WindowsDoctor\logs\portable-usb-payload-validate.latest.json -Json`: `PASS`, `13` checks
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`, free memory around `8.14GB`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `53` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- No USB was formatted or written.
+- No ISO was built.
+- No GUI/Broker was started.
+- No production build was executed.
+
+## 2026-04-29 USB Publish Zip Flow
+- User rule:
+  - future USB copy operations must compress first
+  - copy the zip to USB
+  - expand directly on the USB
+  - avoid direct per-file copy to USB
+- Added `scripts\Publish-PortableUsbPackage.ps1`.
+- Publish behavior:
+  - creates minimal portable payload by default
+  - excludes `node_modules` and `gui\.next` unless `-IncludeNodeModules` is used
+  - compresses payload to zip under `releases\portable-usb`
+  - copies the zip to `-USBPath`
+  - expands it on USB
+  - validates with `Test-PortableUsbPayload.ps1`
+  - removes USB zip by default unless `-KeepZipOnUsb` is used
+- Validation:
+  - `Publish-PortableUsbPackage.ps1 -USBPath E:\WindowsDoctor\logs\portable-usb-publish-smoke -PackageName publish-smoke -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-smoke.json -Json`: `PASS`
+  - `Publish-PortableUsbPackage.ps1 -USBPath F:\ -PackageName WindowsDoctor-PortableUSB-Minimal-20260429-2305 -ReportPath E:\WindowsDoctor\logs\portable-usb-publish.latest.json -Json`: `PASS`
+  - USB target: `F:\WindowsDoctor-PortableUSB-Minimal-20260429-2305`
+  - `CopiedByZip=true`
+  - `ExpandedOnUsb=true`
+  - `TargetFileCount=173`
+  - `TargetBytes=778170`
+  - `IncludeNodeModules=false`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `54` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Current USB note:
+  - older interrupted direct-copy folder may still exist at `F:\WindowsDoctor-PortableUSB-20260429-204044`
+  - valid completed package is `F:\WindowsDoctor-PortableUSB-Minimal-20260429-2305`
+
+## 2026-04-29 Traditional Chinese Portable UI
+- Localized `scripts\Start-WinPEOfflineMenu.ps1` interactive text:
+  - menu title
+  - menu options
+  - query prompt
+  - rule ID prompt
+  - repair script prompt
+  - RUN confirmation prompt
+  - return-to-menu prompt
+- Updated portable launcher template:
+  - runs `chcp 65001 > nul` before PowerShell menu startup
+- Localized portable USB README generated by `New-PortableUsbPayload.ps1`.
+- Validation:
+  - superseded by mojibake-safe package `F:\WindowsDoctor-PortableUSB-ZH-SCAN-20260429-2350`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `56` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+
+## 2026-04-29 Portable USB Chinese Mojibake Fix
+- Launch symptom:
+  - portable USB menu showed mojibake after startup.
+- Root cause:
+  - Windows PowerShell 5.1 can misread UTF-8 without BOM Chinese literals.
+- Fix:
+  - `Start-WinPEOfflineMenu.ps1` now keeps source ASCII-only.
+  - Traditional Chinese UI strings are generated from Unicode code points at runtime.
+  - portable launcher now sets console input/output encoding to UTF-8 before invoking the menu.
+- Current valid USB package:
+  - `F:\WindowsDoctor-PortableUSB-ZH-UTF8-20260429-2325`
+- Validation:
+  - `Publish-PortableUsbPackage.ps1 -USBPath F:\ -PackageName WindowsDoctor-PortableUSB-ZH-UTF8-20260429-2325 -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-zh-utf8.latest.json -Json`: `PASS`
+  - `Test-PortableUsbPayload.ps1 -PackageRoot F:\WindowsDoctor-PortableUSB-ZH-UTF8-20260429-2325 -ReportPath E:\WindowsDoctor\logs\portable-usb-zh-utf8-validate.latest.json -Json`: `PASS`, `13` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `55` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+
+## 2026-04-29 KB Expansion And System/Network Scan
+- User concern:
+  - database is too small
+  - system lacks system-error scan
+  - network issue handling is insufficient
+- Added `20` reviewed KB rules.
+- Current offline KB target after export:
+  - `63` reviewed rules
+  - `20` allowlist auto repair rules
+  - `43` guided rules
+- Added `scripts\Test-SystemErrorScan.ps1`.
+- Scan coverage:
+  - recent System event errors/warnings
+  - recent Application event errors/warnings
+  - network adapter status
+  - IP/default gateway/APIPA status
+  - DNS client server availability
+  - WinHTTP proxy status
+- Added USB menu scan entry:
+  - option `8`
+  - non-interactive `Start-WinPEOfflineMenu.ps1 -ScanSystem`
+- Current valid USB package:
+  - `F:\WindowsDoctor-PortableUSB-ZH-SCAN-20260429-2350`
+- Validation:
+  - `Export-OfflineKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\offline-kb-export.latest.json -Json`: `PASS`, `TotalRules=63`, `AutoRepairRules=20`, `GuidedRules=43`
+  - `Test-SystemErrorScan.ps1 -RecentHours 1 -MaxEvents 20 -ReportPath E:\WindowsDoctor\logs\system-error-scan.latest.json -Json`: `PASS`, `6` findings
+  - `Publish-PortableUsbPackage.ps1 -USBPath F:\ -PackageName WindowsDoctor-PortableUSB-ZH-SCAN-20260429-2350 -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-zh-scan.latest.json -Json`: `PASS`
+  - `Test-PortableUsbPayload.ps1 -PackageRoot F:\WindowsDoctor-PortableUSB-ZH-SCAN-20260429-2350 -ReportPath E:\WindowsDoctor\logs\portable-usb-zh-scan-validate.latest.json -Json`: `PASS`, `13` checks
+  - USB direct KB validation: `PASS`, `63` rules
+  - USB direct scan entry: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `56` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+
+## 2026-04-30 Mature Portable USB Runtime Self-Test
+- Added `scripts\Test-PortableRuntimeSelfTest.ps1`.
+- Added USB menu option:
+  - `9. 執行可攜版自我檢測`
+- Added non-interactive entry:
+  - `Start-WinPEOfflineMenu.ps1 -SelfTest`
+- Self-test validates:
+  - portable root exists
+  - offline DB exists and validates
+  - repair allowlist exists
+  - menu/search/scan scripts exist
+  - offline search works
+  - allowlisted repairs can be listed
+  - system/network scan works without repair execution
+- Current mature USB package:
+  - `F:\WindowsDoctor-PortableUSB-MATURE-20260430-0005`
+  - `TargetFileCount=195`
+  - `TargetBytes=830204`
+  - `ZipBytes=292284`
+  - `IncludeNodeModules=false`
+  - `CopiedByZip=true`
+  - `ExpandedOnUsb=true`
+- Validation:
+  - local runtime self-test: `PASS`, `10` checks
+  - portable readiness: `PASS`, `12` steps
+  - Pester: `PASS`, `57` tests
+  - low-risk baseline: `PASS`, `13` steps
+  - USB payload validation: `PASS`, `13` checks
+  - USB direct runtime self-test: `PASS`, `10` checks
+- No destructive maintenance was executed.
+
+## 2026-04-30 System Scan KB Recommendation Matching
+- Added KB recommendation matching to `scripts\Test-SystemErrorScan.ps1`.
+- Scan findings now include:
+  - `KbMatchCount`
+  - `KbMatches`
+  - matched rule id/title/category/actionType/repairAllowed/script
+- Top-level scan result now includes:
+  - `DatabasePath`
+  - `KbAvailable`
+  - `KbRuleCount`
+  - `KbMatchCount`
+- Added runtime self-test check:
+  - `scan-kb-matching`
+- Current behavior:
+  - scan still performs diagnostics only
+  - no repair script is executed by scan
+  - repair remains gated by allowlist and explicit `RUN`
+- Validation:
+  - `Test-SystemErrorScan.ps1 -RecentHours 1 -MaxEvents 20 -ReportPath E:\WindowsDoctor\logs\system-error-scan.latest.json -Json`: `PASS`, `KbRuleCount=63`, `KbMatchCount=11`
+  - `Test-PortableRuntimeSelfTest.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-self-test.latest.json -Json`: `PASS`, `11` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `57` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Current final USB package:
+  - `F:\WindowsDoctor-PortableUSB-MATURE-20260430-ScanKB-UI`
+  - `Start-WindowsDoctor-Portable.cmd`
+  - `TargetFileCount=195`
+  - `TargetBytes=840523`
+  - `ZipBytes=297182`
+  - `CopiedByZip=true`
+  - `ExpandedOnUsb=true`
+- USB direct validation:
+  - `Test-PortableUsbPayload.ps1 -PackageRoot F:\WindowsDoctor-PortableUSB-MATURE-20260430-ScanKB-UI`: `PASS`, `13` checks
+  - USB runtime self-test: `PASS`, `11` checks
+  - USB menu scan output: `PASS`, shows Traditional Chinese diagnostic labels and KB recommendations
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 Local Portable Runtime Status Summary
+- User took the current USB for testing, so this work continued on local workspace only.
+- No write to `F:` was performed.
+- Added `scripts\Get-PortableRuntimeStatus.ps1`.
+- Status summary reports:
+  - phase: `portable-usb`
+  - installer phase: `deferred`
+  - version
+  - offline KB rule count
+  - auto repair rule count
+  - guided rule count
+  - allowlisted repair script count
+  - required runtime script/file checks
+- Added menu entry:
+  - `10. 顯示版本與狀態摘要`
+- Added non-interactive menu mode:
+  - `Start-WinPEOfflineMenu.ps1 -StatusSummary`
+- Runtime self-test now validates:
+  - `status-script-exists`
+  - `portable-status-summary`
+- Validation:
+  - `Get-PortableRuntimeStatus.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-status.latest.json -Json`: `PASS`, `Version=0.1.0`, `TotalRules=63`, `AllowlistRepairs=6`
+  - `Start-WinPEOfflineMenu.ps1 -StatusSummary -ReportPath E:\WindowsDoctor\logs\winpe-menu-status.latest.json -Json`: `PASS`
+  - `Test-PortableRuntimeSelfTest.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-self-test.latest.json -Json`: `PASS`, `13` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `59` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Local payload artifact:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-LocalStatus`
+  - `FileCount=195`
+  - `Bytes=852520`
+  - `SkipNodeModules=true`
+  - payload validation: `PASS`, `13` checks
+  - payload direct status summary: `PASS`, `PackageName=WindowsDoctor-PortableUSB-MATURE-20260430-LocalStatus`
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 Typo-Compatible System Scan Entrypoints
+- User reported real USB/test error:
+  - `the argument 'e:\windowsdoctor\scripts\test-systemerroescan.ps1' to the -file parameter does not exist.`
+- Current correct script name:
+  - `scripts\Test-SystemErrorScan.ps1`
+- Source search found no current source references to the misspelled name, but old/manual entrypoints can still hit it.
+- Added compatibility wrappers:
+  - `scripts\Test-SystemErroeScan.ps1`
+  - `scripts\Test-SystemErrorsScan.ps1`
+- Both wrappers forward to `scripts\Test-SystemErrorScan.ps1` and preserve:
+  - `-Root`
+  - `-DatabasePath`
+  - `-RecentHours`
+  - `-MaxEvents`
+  - `-ReportPath`
+  - `-Json`
+- Validation:
+  - `Test-SystemErroeScan.ps1 -RecentHours 1 -MaxEvents 20 -Json`: `PASS`, `KbRuleCount=63`
+  - `Test-SystemErrorsScan.ps1 -RecentHours 1 -MaxEvents 20 -Json`: `PASS`, `KbRuleCount=63`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `60` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Local payload artifact:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-TypoCompat`
+  - `FileCount=197`
+  - `Bytes=856805`
+  - payload validation: `PASS`, `13` checks
+  - payload direct typo-compatible scan: `PASS`, `KbRuleCount=63`
+- Note:
+  - the USB already taken for testing does not contain these new compatibility wrappers until republished.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 One-Click Recommended Repair Flow
+- Added `scripts\Invoke-RecommendedRepairPlan.ps1`.
+- Added menu option:
+  - `11. 一鍵掃描並建議修復`
+- Added non-interactive menu modes:
+  - `Start-WinPEOfflineMenu.ps1 -RecommendedRepair`
+  - `Start-WinPEOfflineMenu.ps1 -RunRecommendedRepair`
+- Safety behavior:
+  - preview is default
+  - execution requires `-Execute -ConfirmToken RUN`
+  - menu option previews first and asks for `RUN`
+  - scan remains diagnostic before repair selection
+  - only allowlisted scripts can execute
+  - default batch excludes BCD/boot repair, system integrity repair, and maintenance cleanup
+- Current local preview result:
+  - `RecommendedRepairCount=5`
+  - `SafeBatchScriptCount=2`
+  - safe scripts:
+    - `Repair-NetworkStack.bat`
+    - `Repair-Services.bat`
+  - manual review:
+    - `Repair-SystemMaintenance.bat`
+- Validation:
+  - `Invoke-RecommendedRepairPlan.ps1 -ReportPath E:\WindowsDoctor\logs\recommended-repair-plan.latest.json -Json`: `PASS`, `Mode=preview`, `Executed=false`
+  - `Start-WinPEOfflineMenu.ps1 -RecommendedRepair -ReportPath E:\WindowsDoctor\logs\winpe-menu-recommended-repair.latest.json -Json`: `PASS`
+  - `Test-PortableRuntimeSelfTest.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-self-test.latest.json -Json`: `PASS`, `15` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `63` tests
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `13` steps
+- Local payload artifact:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-OneClick`
+  - `FileCount=198`
+  - `Bytes=868389`
+  - payload validation: `PASS`, `13` checks
+  - payload direct recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+
+## 2026-04-30 Portable USB Release Validation Gate
+- Added `scripts\Test-PortableUsbReleaseValidation.ps1`.
+- Purpose:
+  - validate an expanded portable USB package from its package root
+  - run payload structure validation
+  - run portable runtime self-test from the package's own `WindowsDoctor` root
+  - run one-click recommended repair preview without executing repairs
+- Updated `scripts\Publish-PortableUsbPackage.ps1`:
+  - after zip-copy-expand, it now calls `Test-PortableUsbReleaseValidation.ps1`
+  - publish report now includes:
+    - `PayloadValidationReport`
+    - `RuntimeSelfTestReport`
+    - `RecommendedRepairPreviewReport`
+- Validation on current local OneClick payload:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-OneClick -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `13` checks
+  - runtime self-test: `PASS`, `15` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `SafeBatchScriptCount=2`, `RecommendedRepairCount=5`
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `64` tests
+- USB is still assumed away for user testing, so no write to `F:` was performed.
+- When USB returns, publish with `Publish-PortableUsbPackage.ps1 -USBPath F:\ -PackageName <new-name> ...`; the publish script will now run the release validation from the expanded USB package.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 New Conversation Todo Snapshot
+- User requested complete records and a new-conversation prompt for continuing work.
+- Current resource safety:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=4.29`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Latest completed capabilities:
+  - GUI-ready USB package at `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`: `PASS`
+  - WinPE boot rescue remains at `G:\sources\boot.wim`
+  - external diagnostics pack baseline completed
+  - official diagnostics converter completed for SetupDiag, DISM, SFC, and Get Help command-line logs
+  - Intune Remediations enterprise export completed
+  - Intune package copied to `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\WindowsDoctor\releases\intune\WindowsDoctor-IntuneRemediations`
+- Latest key validation reports:
+  - `E:\WindowsDoctor\logs\portable-usb-release-validation-gui-ready-intune-export.json`: `PASS`
+  - `E:\WindowsDoctor\logs\intune-remediation-validate.usb.json`: `PASS`
+  - `E:\WindowsDoctor\logs\system-baseline.intune-export.json`: `PASS`
+  - `E:\WindowsDoctor\logs\documentation-sync.intune-export-final.json`: `PASS`
+  - `E:\WindowsDoctor\logs\intune-remediation-validate.latest.json`: `PASS`
+  - `E:\WindowsDoctor\logs\normalized-kb-validate.official-diagnostics.json`: `PASS`
+- Known validation caveat:
+  - full `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1` previously timed out around `5` minutes after the external adapter work
+  - targeted Pester checks for external diagnostics, official diagnostics, and Intune remediation passed
+- Unfinished tasks for the next conversation:
+  1. Add target-PC preflight to `Start-WindowsDoctor-GUI-Ready.cmd` or a companion script:
+     - memory threshold
+     - `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY` write permission
+     - port `127.0.0.1:3000` and `127.0.0.1:3001` availability
+     - bundled `node-runtime` integrity
+     - PowerShell execution policy/readiness
+  2. Add cache self-verify/self-repair before launching from `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY`.
+  3. Add a simple `Stop-WindowsDoctor-GUI-Ready.cmd` cleanup launcher for target PCs.
+  4. Add USB package selector/status page for multiple package folders on the same USB.
+  5. Import a real NotebookLM source pack when the user provides the JSON:
+     - run `Test-NotebookLMSourcePack.ps1`
+     - run `Import-NotebookLMSourcePack.ps1`
+     - rerun normalized KB export/validation
+     - keep NotebookLM records non-auto-repair until reviewed
+  6. Import real official diagnostic logs when available:
+     - SetupDiag result
+     - DISM log
+     - SFC/CBS summary
+     - Get Help command-line output
+     - convert with `Convert-OfficialDiagnosticsToExternalPack.ps1`
+     - import with `Import-ExternalDiagnosticsPack.ps1`
+     - validate normalized KB safety
+  7. Add Wazuh or RMM export/import support only as diagnostic evidence; keep non-auto-repair.
+  8. Add Intune export documentation for how to upload generated detection/remediation scripts into Microsoft Intune; do not call Microsoft Graph unless explicitly requested.
+  9. Run full Pester only when enough time/resources are available; otherwise keep targeted Pester plus low-risk baseline.
+  10. If publishing a refreshed USB package, use zip-copy-expand flow and then run `Test-PortableUsbReleaseValidation.ps1`.
+- Safety reminders for next conversation:
+  - always start with `Test-ResourceSafety.ps1 -Json`
+  - do not start GUI/Broker unless explicitly needed
+  - do not run production build unless explicitly requested
+  - do not execute repairs or destructive maintenance without explicit `RUN`
+  - external diagnostics, NotebookLM, Wazuh, RMM, and community findings must remain diagnostic-only until reviewed and allowlisted
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 External Repair Tool Strategy
+- User asked to research whether software products, theories, websites, or databases provide a more reasonable repair solution or better automated repair tool, then asked to complete the task in unattended mode.
+- Resource gate:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=4.5`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Created:
+  - `EXTERNAL_REPAIR_TOOLS_STRATEGY.md`
+- Updated:
+  - `INDEX.md`
+  - `SYSTEM_DESIGN.md`
+  - `OPERATIONS.md`
+  - `TASK_HANDOFF.md`
+- Strategy conclusion:
+  - WindowsDoctor should remain a portable Windows repair console, not a replacement for Intune, Autopatch, Wazuh, NinjaOne, or other RMM/SIEM/MDM platforms.
+  - Best architecture is USB/WinPE/offline repair first, official Microsoft diagnostics first, external tool outputs imported as evidence, and repairs kept preview-first plus allowlist-only.
+- External tools captured in the strategy:
+  - Microsoft Intune Remediations
+  - Windows Autopatch
+  - Windows Autopilot Reset
+  - SetupDiag
+  - Get Help command-line
+  - DISM/SFC
+  - Wazuh
+  - NinjaOne/RMM class tools
+  - Boxstarter
+  - Tron Script / Tweaking Windows Repair
+- Recommended future modules documented:
+  - `ExternalDiagnosticsAdapter`
+  - `RepairDecisionEngine`
+  - `EnterpriseExport`
+  - source trust levels for normalized KB records
+- Safety decision:
+  - no third-party cleanup suite should be integrated as automatic repair
+  - NotebookLM, learned, Wazuh, Intune, RMM, and community findings stay diagnostic-only until reviewed
+  - destructive repair, reset, scrub, DISM RestoreHealth, SFC repair, CHKDSK repair, BCD repair, and maintenance cleanup still require explicit `RUN`
+- No repair execution was performed.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-02 NotebookLM GUI Intake Surface
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.3`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Added Google-style NotebookLM intake panel:
+  - `E:\WindowsDoctor\gui\src\components\NotebookLMImportPanel.tsx`
+  - mounted in `E:\WindowsDoctor\gui\src\app\page.tsx`
+- UI behavior:
+  - accepts local `.json` source pack file selection
+  - parses source pack in-browser
+  - shows source count, record count, and repair script reference count
+  - validates source URL shape, record action type, risk level, repair script naming, source reference integrity, and diagnostic signal presence
+  - displays pre-import validation and import PowerShell commands
+  - uses a clean white Google-like surface with blue/red/yellow/green accent marks without depending on live Google APIs
+- Validation:
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No GUI/Broker was started, so no browser screenshot was captured during this safe run.
+- No real NotebookLM source pack was imported into `offline_database\notebooklm-repair-sources.json`; this remains pending until user provides exported source data.
+- No repair execution was performed during validation.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-02 Portable USB Published To G
+- User reported current USB drive letter is `G:`.
+- Resource safety before publish:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.5`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- `G:\` was present and contained only `System Volume Information` before publish.
+- Published latest portable USB package by zip-copy-expand flow:
+  - package: `WindowsDoctor-PortableUSB-MATURE-20260502-NotebookLMPreflight-USB`
+  - target: `G:\WindowsDoctor-PortableUSB-MATURE-20260502-NotebookLMPreflight-USB`
+  - source payload: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260502-NotebookLMPreflight-USB`
+  - source zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260502-NotebookLMPreflight-USB.zip`
+  - `ZipBytes=342563`
+  - `TargetFileCount=207`
+  - `TargetBytes=1095288`
+  - `IncludeNodeModules=false`
+  - `CopiedByZip=true`
+  - `ExpandedOnUsb=true`
+- Publish report:
+  - `E:\WindowsDoctor\logs\portable-usb-publish-notebooklm-preflight-g.latest.json`
+- Post-expand release validation:
+  - status: `PASS`
+  - validation report: `E:\WindowsDoctor\logs\portable-usb-publish-validate.json`
+  - payload validation report: `E:\WindowsDoctor\logs\portable-usb-release-payload.json`
+  - runtime self-test report: `E:\WindowsDoctor\logs\portable-usb-release-runtime-self-test.json`
+  - recommended repair preview report: `E:\WindowsDoctor\logs\portable-usb-release-recommended-repair.json`
+- Final low-risk baseline after publish:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-02 NotebookLM Source Pack Preflight Gate
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=7.14`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Added standalone NotebookLM source pack validation:
+  - `E:\WindowsDoctor\scripts\Test-NotebookLMSourcePack.ps1`
+  - validates source presence, record presence, source URL shape, record action/risk/script shape, source-reference integrity, and diagnostic signals before import
+  - supports `-ReportPath` and `-Json`
+- Updated documentation:
+  - `OPERATIONS.md` now includes pre-import validation command:
+    - `Test-NotebookLMSourcePack.ps1 -InputPath <NOTEBOOKLM_SOURCE_PACK_JSON> -ReportPath E:\WindowsDoctor\logs\notebooklm-source-pack-validate.latest.json -Json`
+- Updated validation gates:
+  - `scripts\ResourceSafety.Tests.ps1` parses `Test-NotebookLMSourcePack.ps1`
+  - added Pester coverage for writing a NotebookLM source pack validation report
+  - `scripts\Test-DocumentationSync.ps1` now checks the NotebookLM validation command is documented
+- Direct validation:
+  - `Test-NotebookLMSourcePack.ps1 -InputPath E:\WindowsDoctor\templates\NOTEBOOKLM_SOURCE_PACK_TEMPLATE.json -ReportPath E:\WindowsDoctor\logs\notebooklm-source-pack-validate.latest.json -Json`: `PASS`, `SourceCount=1`, `RecordCount=1`
+- Regression validation:
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1`: `PASS`, `68` tests
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No real NotebookLM source pack was imported into `offline_database\notebooklm-repair-sources.json`; this remains pending until user provides exported source data.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-02 NotebookLM Template And Import Compatibility
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.78`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Added NotebookLM source pack template:
+  - `E:\WindowsDoctor\templates\NOTEBOOKLM_SOURCE_PACK_TEMPLATE.json`
+  - includes one source and one sample DNS/network repair record
+- Updated documentation:
+  - `OPERATIONS.md` now points to the NotebookLM source pack template path.
+- Fixed Windows PowerShell 5.1 parser compatibility in:
+  - `scripts\Import-NotebookLMSourcePack.ps1`
+  - replaced `$recordId:` / `$sourceId:` interpolation inside error strings with `${recordId}:` / `${sourceId}:`
+- Added regression coverage:
+  - `scripts\ResourceSafety.Tests.ps1` now validates the template import, normalized export, and normalized validation path.
+- Direct template validation:
+  - `Import-NotebookLMSourcePack.ps1 -InputPath E:\WindowsDoctor\templates\NOTEBOOKLM_SOURCE_PACK_TEMPLATE.json -OutputPath E:\WindowsDoctor\logs\notebooklm-template-repair-sources.latest.json -ReportPath E:\WindowsDoctor\logs\notebooklm-template-import.latest.json -Json`: `PASS`, `RecordCount=1`
+  - `Export-NormalizedKBDatabase.ps1 -NotebookLMPackPath E:\WindowsDoctor\logs\notebooklm-template-repair-sources.latest.json -OutputPath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.notebooklm-template.latest.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.notebooklm-template.latest.json -Json`: `PASS`, `NotebookLMRecords=1`, `TotalRecords=72`
+  - `Test-NormalizedKBDatabase.ps1 -DatabasePath E:\WindowsDoctor\logs\windowsdoctor-kb-normalized.notebooklm-template.latest.json -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.notebooklm-template.latest.json -Json`: `PASS`, `NotebookLMRecords=1`
+- Regression validation:
+  - `Invoke-Pester -Path E:\WindowsDoctor\scripts\ResourceSafety.Tests.ps1`: `PASS`, `67` tests
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No real NotebookLM source pack was imported into `offline_database\notebooklm-repair-sources.json`; this remains pending until user provides exported source data.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 Mature Portable USB ReleaseGate Output
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=7.39`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- `F:\` was checked and was not present, so no USB write was performed.
+- Created current mature local portable USB payload:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate`
+  - `FileCount=199`
+  - `Bytes=880399`
+  - `SkipNodeModules=true`
+- Created current mature local portable USB zip:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate.zip`
+  - `ZipBytes=309120`
+- Release validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-releasegate.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `13` checks
+  - runtime self-test: `PASS`, `15` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `SafeBatchScriptCount=2`, `RecommendedRepairCount=5`
+- Current best output to hand to USB publishing:
+  - folder: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate`
+  - zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate.zip`
+- When USB returns, publish a fresh USB copy with:
+  - `Publish-PortableUsbPackage.ps1 -USBPath F:\ -PackageName WindowsDoctor-PortableUSB-MATURE-20260430-ReleaseGate-USB -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-releasegate.latest.json -Json`
+  - The publish script uses zip-copy-expand and runs release validation after expansion.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 Repair Plan Engine v2
+- Upgraded `scripts\Invoke-RecommendedRepairPlan.ps1`.
+- New behavior:
+  - adds `RepairPlanVersion=2`
+  - adds `RepairPlanScoring`
+  - adds `PrioritizedRecommendations`
+  - adds per-item `Confidence`
+  - adds per-item `RiskLevel`
+  - adds per-item `Priority`
+  - adds per-item `RecommendationState`
+  - adds `ActiveRecommendedRepairCount`
+  - adds `ObservationRecommendations`
+- Safety improvement:
+  - PASS-only KB matches are now observations, not active repair recommendations.
+  - Default batch requires `RecommendationState=recommended`, `RiskLevel=low`, and allowlisted script membership.
+  - Default safe batch is limited to:
+    - `Repair-NetworkStack.bat`
+    - `Repair-Services.bat`
+  - `Repair-WUSoftwareDistribution.bat`, BCD/boot, system integrity, and maintenance cleanup are excluded from default batch.
+- Current local smart preview:
+  - `Invoke-RecommendedRepairPlan.ps1 -ReportPath E:\WindowsDoctor\logs\recommended-repair-plan.latest.json -Json`: `PASS`
+  - `RepairPlanVersion=2`
+  - `RecommendedRepairCount=5`
+  - `ActiveRecommendedRepairCount=0`
+  - `ObservationCount=5`
+  - `SafeBatchScriptCount=0`
+  - `Executed=false`
+- Validation:
+  - `Test-PortableRuntimeSelfTest.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-self-test.latest.json -Json`: `PASS`, `15` checks
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `64` tests
+- Current mature local portable USB payload with Repair Plan v2:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2`
+  - `FileCount=199`
+  - `Bytes=888781`
+  - `SkipNodeModules=true`
+- Current mature local portable USB zip with Repair Plan v2:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2.zip`
+  - `ZipBytes=311027`
+- Release validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-repairplanv2.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `13` checks
+  - runtime self-test: `PASS`, `15` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `safeScripts=0`, `recommended=5`
+- Final rebuilt payload after documentation sync:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2-Final`
+  - `FileCount=199`
+  - `Bytes=892918`
+  - `SkipNodeModules=true`
+- Final rebuilt zip after documentation sync:
+  - `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2-Final.zip`
+  - `ZipBytes=314385`
+- Final release validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-RepairPlanV2-Final -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-repairplanv2-final.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `13` checks
+  - runtime self-test: `PASS`, `15` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `safeScripts=0`, `recommended=5`
+- `F:\` was not present during this work, so no USB write was performed.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-04-30 Normalized Repair Knowledge Database v2
+- User requested expanding repair database content from known online sources and building it in a structured, normalized way.
+- Important scope note:
+  - "all known online data" is not a finite or verifiable target.
+  - Current implementation creates the normalized database architecture and seeds it with verified Microsoft public official references plus the existing reviewed local KB.
+- Added source seed:
+  - `offline_database\known-windows-repair-sources.json`
+  - currently includes `6` Microsoft public official source records:
+    - Microsoft Learn: Repair a Windows Image
+    - Microsoft Learn: netsh winsock
+    - Microsoft Support: Troubleshoot problems updating Windows
+    - Microsoft Support: Get help with Windows upgrade and installation errors
+    - Microsoft Learn: Data corruption and disk errors troubleshooting
+    - Microsoft Learn: Application or service crashing behavior troubleshooting
+- Added normalized export:
+  - `scripts\Export-NormalizedKBDatabase.ps1`
+  - output: `offline_database\windowsdoctor-kb-normalized.json`
+  - schema: `schemaVersion=2`
+  - normalized fields include:
+    - `component`
+    - `symptoms`
+    - `errorCodes`
+    - `eventIds`
+    - `triggerTerms`
+    - `recommendedActions`
+    - `action.script`
+    - `action.actionType`
+    - `action.repairAllowed`
+    - `action.riskLevel`
+    - `provenance.sourceType`
+    - `provenance.sourceIds`
+- Added normalized validation:
+  - `scripts\Test-NormalizedKBDatabase.ps1`
+  - validates schema, required fields, unique ids, action types, risk levels, Microsoft official URL scope, source-reference integrity, public reference count, and component coverage.
+- Integrated normalized DB gates into:
+  - `Test-SystemBaseline.ps1`
+  - `Test-PortableUsbReadiness.ps1`
+  - `Test-PortableRuntimeSelfTest.ps1`
+  - `Test-PortableUsbPayload.ps1`
+  - `ResourceSafety.Tests.ps1`
+  - `Test-DocumentationSync.ps1`
+  - `OPERATIONS.md`
+- Current normalized DB validation:
+  - `Export-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.latest.json -Json`: `PASS`
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.latest.json -Json`: `PASS`
+  - `TotalRecords=71`
+  - `LocalRecords=63`
+  - `PublicReferenceRecords=8`
+  - `SourceCount=6`
+  - `component coverage=7`
+- Validation:
+  - `Test-PortableRuntimeSelfTest.ps1 -ReportPath E:\WindowsDoctor\logs\portable-runtime-self-test.latest.json -Json`: `PASS`, `17` checks
+  - `Test-PortableUsbReadiness.ps1 -ReportPath E:\WindowsDoctor\logs\portable-usb-readiness.latest.json -Json`: `PASS`, `14` steps
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`, `65` tests
+- Final mature portable output with normalized KB v2:
+  - folder: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-NormalizedKBv2-Final`
+  - zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-NormalizedKBv2-Final.zip`
+  - `FileCount=203`
+  - `Bytes=1060881`
+  - `ZipBytes=332705`
+  - `SkipNodeModules=true`
+- Final release validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260430-NormalizedKBv2-Final -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-normalizedkbv2-final.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `16` checks
+  - runtime self-test: `PASS`, `17` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `safeScripts=0`, `recommended=5`
+- Final low-risk baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No USB write was performed unless `F:\` returns.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-08 Architecture Fit Check
+- User asked whether the current system still fits Windows repair needs and whether architecture changes are required.
+- Resource gate:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=4.51`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Low-risk baseline, without GUI/Broker startup and without production build:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester -SkipLint -ReportPath E:\WindowsDoctor\logs\system-baseline.architecture-check.latest.json -Json`: `PASS`
+  - `13` steps checked in the report output, including resource safety, KB export/validation, documentation sync, WinPE offline flow, portable USB readiness, GUI smoke offline, WinPE check, and broker services.
+- Repair database validation:
+  - `Test-OfflineKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\offline-kb-validate.architecture-check.json -Json`: `PASS`
+  - `TotalRules=64`
+  - `reviewed=63`
+  - `learned=1`
+  - `autoRepair=20`
+  - `guided/manual=44`
+- Normalized KB validation:
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.architecture-check.json -Json`: `PASS`
+  - `TotalRecords=73`
+  - `PublicReferenceRecords=8`
+  - `NotebookLMRecords=1`
+  - `SourceCount=7`
+- WinPE offline repair path:
+  - `Test-WinPEOfflineFlow.ps1 -ReportPath E:\WindowsDoctor\logs\winpe-offline-flow.architecture-check.json -Json`: `PASS`
+  - confirms offline KB search, maintenance search, allowlist preview, WinPE menu preview, startnet menu/broker modes, and check-only mode.
+- Documentation sync:
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.architecture-check.json -Json`: `PASS`
+- USB package verification:
+  - attempted `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`
+  - initial architecture-check session was blocked because `G:` was not visible
+  - user later brought `G:` online
+  - `Get-PSDrive -PSProvider FileSystem` confirmed `G:\`, `Free=28565094400`, `Used=2458075136`
+  - first validation failed only on `no-next-build-cache` because `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\WindowsDoctor\gui\.next` existed
+  - removed the portable package `.next` cache after verifying the resolved path was under `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503\WindowsDoctor\gui`
+  - re-run `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-gui-ready-g-drive.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `16` checks
+  - runtime self-test: `PASS`, `17` checks
+  - recommended repair preview: `PASS`, `Executed=false`, `safeScripts=0`, `recommended=5`
+- Architecture conclusion:
+  - current architecture is adequate for current repair requirements
+  - no major architecture rewrite is required before continued use
+  - normal Windows GUI-ready mode, WinPE offline mode, normalized KB, NotebookLM source-pack import, unknown-error learned KB capture, allowlist-only repair gating, and report-based validation are already covered
+- Recommended hardening only, not blockers:
+  - add target-PC preflight to the GUI-ready launcher for memory, cache write permission, port availability, PowerShell execution policy, and bundled Node runtime integrity
+  - add a cache self-verify/repair step before launching from `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY`
+  - add a USB package selector/status page when multiple release folders exist on the same USB
+  - keep learned and NotebookLM records as non-auto-repair until reviewed and explicitly allowlisted
+  - add a simple stop/cleanup launcher for GUI-ready sessions
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-03 G: Integrated USB: Normal Windows + WinPE
+- User asked whether the two functions can be integrated into one USB.
+- `G:\` now contains both:
+  - WinPE boot media files, including `G:\sources\boot.wim`
+  - normal Windows portable package: `G:\WindowsDoctor-NormalWindows-GUI-20260503`
+- Added USB landing page:
+  - source: `E:\WindowsDoctor\docs\START_HERE_USB.html`
+  - USB copy: `G:\START_HERE.html`
+- Normal Windows entrypoint:
+  - `G:\WindowsDoctor-NormalWindows-GUI-20260503\Start-WindowsDoctor-Portable.cmd`
+- Publish command used:
+  - `powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scripts\Publish-PortableUsbPackage.ps1 -USBPath G:\ -PackageName WindowsDoctor-NormalWindows-GUI-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-publish-normal-gui-g.latest.json -Json`
+- Publish result:
+  - status: `PASS`
+  - target: `G:\WindowsDoctor-NormalWindows-GUI-20260503`
+  - target files: `210`
+  - target bytes: `1135064`
+  - zip-copy-expand: `true`
+  - `IncludeNodeModules=false`
+- Post-publish validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot G:\WindowsDoctor-NormalWindows-GUI-20260503 -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-normal-g.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `16` checks
+  - runtime self-test: `PASS`, `17` checks
+  - recommended repair preview: `PASS`, `Executed=false`, `safeScripts=0`, `recommended=4`
+- WinPE offline validation:
+  - `Test-WinPEOfflineFlow.ps1 -ReportPath E:\WindowsDoctor\logs\winpe-offline-flow.latest.json -Json`: `PASS`, `13` steps
+- Final resource safety:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Attempted final low-risk baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`
+  - result: timed out after approximately `5` minutes before returning a new result
+  - stale prior report at `E:\WindowsDoctor\logs\system-baseline.latest.json` still showed an older `PASS`, but it was not counted as a fresh validation
+  - leftover PowerShell validation child processes were stopped
+  - resource safety after cleanup: `PASS`, `PostCssWorkerCount=0`, `WindowsDoctorNodeProcessCount=0`
+- No GUI/Broker was started.
+- No production build was executed.
+- No repair execution or destructive maintenance was performed.
+
+## 2026-05-01 NotebookLM Portable USB Published To F
+- Resource safety before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.47`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- `F:\` was present during this continuation, so the latest NotebookLM import portable package was published by zip-copy-expand flow.
+- USB package:
+  - `F:\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final-USB`
+  - `TargetFileCount=205`
+  - `TargetBytes=1078148`
+  - `IncludeNodeModules=false`
+  - `CopiedByZip=true`
+  - `ExpandedOnUsb=true`
+- Local source payload and zip generated for this USB publish:
+  - folder: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final-USB`
+  - zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final-USB.zip`
+  - `ZipBytes=339853`
+- Publish report:
+  - `E:\WindowsDoctor\logs\portable-usb-publish-notebooklmimport-final-usb.latest.json`
+- Post-expand release validation:
+  - status: `PASS`
+  - validation report: `E:\WindowsDoctor\logs\portable-usb-publish-validate.json`
+  - payload validation report: `E:\WindowsDoctor\logs\portable-usb-release-payload.json`
+  - runtime self-test report: `E:\WindowsDoctor\logs\portable-usb-release-runtime-self-test.json`
+  - recommended repair preview report: `E:\WindowsDoctor\logs\portable-usb-release-recommended-repair.json`
+- Final low-risk baseline after publish:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`, `15` steps
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+
+## 2026-05-01 NotebookLM Source Pack Import
+- User asked whether NotebookLM can be added as a database source.
+- Current NotebookLM integration decision:
+  - use exported NotebookLM notes/sources as an interchange JSON source pack
+  - do not depend on an unofficial live NotebookLM API
+  - keep runtime portable/offline
+- Added:
+  - `scripts\Import-NotebookLMSourcePack.ps1`
+- NotebookLM import behavior:
+  - input: exported JSON source pack from NotebookLM-derived notes/sources
+  - output: `offline_database\notebooklm-repair-sources.json`
+  - validates:
+    - source IDs
+    - source URLs
+    - record IDs
+    - action types
+    - risk levels
+    - repair script naming
+    - source-reference integrity
+  - normalizes record IDs with `NBLM-` prefix
+  - normalizes source IDs with `NBLM-SRC-` prefix
+- Integrated into normalized KB:
+  - `Export-NormalizedKBDatabase.ps1` now accepts `-NotebookLMPackPath`
+  - default path: `offline_database\notebooklm-repair-sources.json`
+  - NotebookLM records are emitted with `provenance.sourceType=notebooklm_export`
+  - `Test-NormalizedKBDatabase.ps1` validates notebooklm source URL shape
+- Documentation:
+  - `OPERATIONS.md` includes import command:
+    - `Import-NotebookLMSourcePack.ps1 -InputPath <NOTEBOOKLM_SOURCE_PACK_JSON> -ReportPath E:\WindowsDoctor\logs\notebooklm-import.latest.json -Json`
+- Validation:
+  - `Export-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.latest.json -Json`: `PASS`
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.latest.json -Json`: `PASS`
+  - `Test-DocumentationSync.ps1 -ReportPath E:\WindowsDoctor\logs\documentation-sync.latest.json -Json`: `PASS`
+  - `Invoke-Pester -Path scripts\ResourceSafety.Tests.ps1`: `PASS`
+- Current normalized DB has no real NotebookLM imported records yet:
+  - `NotebookLMRecords=0`
+  - this is expected until a NotebookLM source pack JSON is provided/imported.
+- Final mature portable output with NotebookLM import support:
+  - folder: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final`
+  - zip: `E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final.zip`
+  - `FileCount=204`
+  - `Bytes=1076468`
+  - `ZipBytes=338037`
+  - `SkipNodeModules=true`
+- Final release validation:
+  - `Test-PortableUsbReleaseValidation.ps1 -PackageRoot E:\WindowsDoctor\releases\portable-usb\WindowsDoctor-PortableUSB-MATURE-20260501-NotebookLMImport-Final -ReportPath E:\WindowsDoctor\logs\portable-usb-release-validation-notebooklmimport-final.latest.json -Json`: `PASS`
+  - payload validation: `PASS`, `16` checks
+  - runtime self-test: `PASS`, `17` checks
+  - recommended repair preview: `PASS`, `Mode=preview`, `Executed=false`, `safeScripts=0`, `recommended=5`
+- Final low-risk baseline:
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -ReportPath E:\WindowsDoctor\logs\system-baseline.latest.json -Json`: `PASS`
+- No USB write was performed unless `F:\` returns.
+- No repair execution was performed during validation.
+- No GUI/Broker was started.
+- No production build was executed.
+- No destructive maintenance was executed.
+## 2026-05-08 GUI-Ready Preflight And Cache Safety
+- Resource gate before work:
+  - `Test-ResourceSafety.ps1 -Json`: `FAIL`
+  - `FreeMemoryGB=1.89`
+  - `Required=4GB`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Work stayed low-risk because the resource gate failed.
+- Added GUI-ready target preflight:
+  - `scripts\Test-GuiReadyTargetPreflight.ps1`
+  - checks memory, `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY` write permission, ports `3000/3001`, bundled `node-runtime`, and PowerShell readiness.
+- Added GUI-ready cache self-verify/self-repair:
+  - `scripts\Test-GuiReadyCache.ps1`
+  - `-Repair` mirrors package `node-runtime` and `WindowsDoctor` into `%LOCALAPPDATA%\WindowsDoctorPortable\GUIREADY`.
+- Added GUI-ready cleanup script and launcher support:
+  - `scripts\Stop-GuiReadySession.ps1`
+  - generated `Stop-WindowsDoctor-GUI-Ready.cmd`
+  - cleanup is scoped to WindowsDoctor GUI dev workers and ports `3000/3001`.
+- Updated portable payload generation:
+  - `scripts\New-PortableUsbPayload.ps1`
+  - `Start-WindowsDoctor-GUI-Ready.cmd` now runs preflight before cache sync and uses `Test-GuiReadyCache.ps1 -Repair`.
+- Updated validation gates:
+  - `scripts\Test-PortableUsbPayload.ps1`
+  - `scripts\Test-PortableRuntimeSelfTest.ps1`
+- Validation performed:
+  - PowerShell AST parse check: `PASS` for the new/changed scripts.
+- Validation intentionally skipped:
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+  - no full baseline because the resource gate failed.
+
+## 2026-05-08 USB Selector Status Page
+- Resource gate before work:
+  - `Test-ResourceSafety.ps1 -Json`: `FAIL`
+  - `FreeMemoryGB=3.10`
+  - `Required=4GB`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Work stayed low-risk because the resource gate failed.
+- Added USB multi-package selector/status generator:
+  - `scripts\New-UsbPackageSelectorPage.ps1`
+  - scans USB root folders containing `WindowsDoctor`
+  - reports package status, text launcher, GUI portable launcher, GUI-ready launcher, stop launcher, and WinPE `sources\boot.wim`
+  - writes `START_HERE.html` and a JSON report
+- Integrated selector generation into:
+  - `scripts\Publish-PortableUsbPackage.ps1`
+- Added existing USB patch helper:
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+  - copies latest GUI-ready preflight/cache/stop/selector scripts into an existing GUI-ready USB package
+  - also copies updated portable payload/runtime/release validation scripts into that package
+  - writes `Start-WindowsDoctor-GUI-Ready.cmd` and `Stop-WindowsDoctor-GUI-Ready.cmd`
+- Updated validation gates:
+  - `scripts\Test-PortableUsbPayload.ps1`
+  - `scripts\Test-PortableRuntimeSelfTest.ps1`
+- G: USB update completed:
+  - `Sync-GuiReadyUsbPatch.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`: `PASS`
+  - `New-UsbPackageSelectorPage.ps1 -UsbRoot G:\ -OutputPath G:\START_HERE.html`: `PASS`
+  - selector found `4` WindowsDoctor packages
+  - WinPE `G:\sources\boot.wim`: present
+  - GUI-ready package now includes `Stop-WindowsDoctor-GUI-Ready.cmd`
+- Targeted package validation:
+  - `Test-PortableUsbPayload.ps1 -PackageRoot G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`: `PASS`
+  - checks: `22`
+  - `Test-GuiReadyTargetPreflight.ps1` from G: package: `PASS`
+  - `Test-PortableUsbReleaseValidation.ps1` from G: package: `PASS`
+  - payload validation checks: `22`
+  - runtime self-test checks: `21`
+  - recommended repair preview: `PASS`, `executed=False`, `safeScripts=0`, `recommended=5`
+- AST validation:
+  - new/changed scripts: `PASS`
+- Validation intentionally skipped:
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+  - no full baseline because the resource gate failed.
+
+## 2026-05-08 Microsoft Official Repair Source Update
+- Resource gate before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=5.98`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Added Microsoft official source updater:
+  - `scripts\Update-MicrosoftOfficialRepairSources.ps1`
+  - accepts only `learn.microsoft.com` and `support.microsoft.com`
+  - rejects script bindings and `repairAllowed=true` for imported official references
+  - does not update `scripts\repair-allowlist.json`
+- Online official source collection used Microsoft official pages for:
+  - SetupDiag
+  - Windows Update corruption and installation failures
+  - Windows Update download errors
+  - Windows Update `0x80070002`
+  - Windows Update `0x80070490`
+  - Windows Update `0x800f0823`
+  - Windows Update `0x800f0831`
+  - Windows unexpected restart / stop code evidence
+  - Get Help command-line for Microsoft 365 diagnostics
+- Source pack update:
+  - `Update-MicrosoftOfficialRepairSources.ps1 -ReportPath E:\WindowsDoctor\logs\microsoft-official-source-update.latest.json -Json`: `PASS`
+  - added sources: `9`
+  - added rules: `9`
+  - source pack totals: `SourceCount=15`, `RuleCount=17`
+- Normalized KB rebuild:
+  - `Export-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-export.microsoft-official.latest.json -Json`: `PASS`
+  - `TotalRecords=82`
+  - `LocalRecords=64`
+  - `PublicReferenceRecords=17`
+  - `NotebookLMRecords=1`
+  - `ExternalDiagnosticRecords=0`
+  - `SourceCount=16`
+- Normalized KB validation:
+  - `Test-NormalizedKBDatabase.ps1 -ReportPath E:\WindowsDoctor\logs\normalized-kb-validate.microsoft-official.latest.json -Json`: `PASS`
+  - checks: `18`
+- Safety status:
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+  - no destructive maintenance
+
+## 2026-05-08 RepairDecisionEngine v3 And SafeBatch Policy
+- Resource gate before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.41`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Upgraded one-click repair planner:
+  - `scripts\Invoke-RecommendedRepairPlan.ps1`
+  - `RepairPlanVersion=3`
+  - `DecisionEngineVersion=3`
+- Decision states:
+  - `observation`
+  - `preview_repair_only`
+  - `manual_review_required`
+  - `auto_repair_allowed`
+- SafeBatch requirements:
+  - active evidence required
+  - `RiskLevel=low`
+  - allowlisted script
+  - confidence at least `70`
+  - script must be in default safe batch list
+  - execution requires `-Execute -ConfirmToken RUN`
+  - stops on first failure
+- Default SafeBatch scripts remain:
+  - `Repair-NetworkStack.bat`
+  - `Repair-Services.bat`
+- Default exclusions:
+  - `Repair-BCDBoot.bat`
+  - `Repair-SystemIntegrity.bat`
+  - `Repair-SystemMaintenance.bat`
+  - `Repair-WUSoftwareDistribution.bat`
+- Updated validation:
+  - `scripts\ResourceSafety.Tests.ps1`
+  - `scripts\Test-PortableRuntimeSelfTest.ps1`
+  - `scripts\Sync-GuiReadyUsbPatch.ps1`
+- Validation:
+  - AST parse: `PASS`
+  - `Invoke-RecommendedRepairPlan.ps1 -ReportPath E:\WindowsDoctor\logs\recommended-repair-plan-v3.latest.json -Json`: `PASS`
+  - `Mode=preview`
+  - `Executed=false`
+  - `SafeBatchScriptCount=0` on current healthy scan
+  - execution without `RUN` was rejected with `Execution requires -ConfirmToken RUN`
+  - targeted Pester recommended repair tests: `3 passed`
+  - `Test-PortableRuntimeSelfTest.ps1`: `PASS`, `22` checks
+  - G: GUI-ready package synced with v3 planner
+  - G: release validation: `PASS`, runtime self-test checks `22`, recommended repair preview `executed=False`
+- Safety status:
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+  - no destructive maintenance
+
+## 2026-05-08 GUI One-Click Repair Panel
+- Resource gate before work:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=6.05`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Added Broker repair plan service:
+  - `gui\broker\services\repairPlan.js`
+  - delegates to `scripts\Invoke-RecommendedRepairPlan.ps1`
+  - uses `windowsHide=true`, fixed arguments, no shell
+- Added Broker API:
+  - `GET /api/repair-plan`
+  - `POST /api/repair-plan/execute`
+  - execution requires body `{ "confirmToken": "RUN" }`
+- Added GUI API client:
+  - `windowsDoctorApi.getRepairPlan()`
+  - `windowsDoctorApi.executeRepairPlan(confirmToken)`
+- Added GUI panel:
+  - `gui\src\components\OneClickRepairPanel.tsx`
+  - preview button
+  - RUN input
+  - execute button disabled unless `RUN` and safe batch exists
+  - status counters for safe batch, active, manual, and engine version
+- Integrated panel into:
+  - `gui\src\app\page.tsx`
+- Added types:
+  - `RepairPlan`
+  - `RepairRecommendation`
+- Added broker service test coverage:
+  - `gui\broker\tests\services.test.js`
+- Validation:
+  - `node --check` for changed broker JS files: `PASS`
+  - `npm run test:broker --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `npm run lint --prefix E:\WindowsDoctor\gui`: `PASS`
+  - `Test-SystemBaseline.ps1 -SkipServiceSmoke -SkipBuild -SkipPester`: `PASS`, `14` steps including lint
+- G: GUI-ready package sync:
+  - `scripts\Sync-GuiReadyUsbPatch.ps1` now copies GUI/Broker one-click repair files as well as PowerShell scripts
+  - `G:\WindowsDoctor-PortableUSB-GUI-READY-20260503`: synced
+  - G: release validation: `PASS`
+  - payload validation checks: `22`
+  - runtime self-test checks: `22`
+  - recommended repair preview: `PASS`, `executed=False`
+- Final resource safety:
+  - `Test-ResourceSafety.ps1 -Json`: `PASS`
+  - `FreeMemoryGB=5.94`
+  - `PostCssWorkerCount=0`
+  - `WindowsDoctorNodeProcessCount=0`
+- Safety status:
+  - no GUI/Broker startup
+  - no production build
+  - no repair execution
+  - no destructive maintenance

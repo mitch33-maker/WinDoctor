@@ -1,0 +1,49 @@
+{
+    "schemaVersion":  1,
+    "notebookTitle":  "WindowsDoctor NotebookLM Repair Source Pack",
+    "generatedAt":  "2026-05-03 11:22:46",
+    "sources":  [
+                    {
+                        "id":  "NBLM-SRC-EXAMPLE",
+                        "vendor":  "NotebookLM",
+                        "title":  "Example exported NotebookLM source",
+                        "url":  "https://example.com/notebooklm/windows-repair-source",
+                        "sourceType":  "notebooklm_export",
+                        "retrievedDate":  "2026-05-02"
+                    }
+                ],
+    "records":  [
+                    {
+                        "id":  "NBLM-EXAMPLE-DNS",
+                        "title":  "Example DNS troubleshooting note",
+                        "component":  "network",
+                        "symptoms":  [
+                                         "DNS lookup failure",
+                                         "Browser cannot resolve host names"
+                                     ],
+                        "errorCodes":  [
+                                           "0x80072ee7"
+                                       ],
+                        "eventIds":  [
+
+                                     ],
+                        "triggerTerms":  [
+                                             "DNS",
+                                             "0x80072ee7",
+                                             "name resolution"
+                                         ],
+                        "recommendedActions":  [
+                                                   "Check configured DNS servers",
+                                                   "Flush DNS cache",
+                                                   "Reset network stack only when the issue is active"
+                                               ],
+                        "script":  "Repair-NetworkStack.bat",
+                        "actionType":  "auto_repair",
+                        "repairAllowed":  true,
+                        "riskLevel":  "low",
+                        "sourceIds":  [
+                                          "NBLM-SRC-EXAMPLE"
+                                      ]
+                    }
+                ]
+}

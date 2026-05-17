@@ -1,0 +1,33 @@
+# Runtime and dependency caches
+node_modules/
+gui/node_modules/
+gui/.next/
+gui/out/
+gui/dist/
+gui/coverage/
+
+# Logs and generated reports
+logs/
+debug.log*
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+test-report-*.txt
+test-report-final.txt
+
+# Release artifacts and portable package payloads
+releases/
+*.zip
+*.7z
+*.rar
+
+# Local/system noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak
+
+# Local vault or machine-specific data
+.vault/
+incoming/

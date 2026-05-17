@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WindowsDoctor Low Resource Console</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Segoe UI", Arial, sans-serif; background: #0b1020; color: #e5e7eb; }
+    body { margin: 0; padding: 24px; }
+    main { max-width: 1120px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; gap: 16px; align-items: center; border-bottom: 1px solid #263044; padding-bottom: 16px; }
+    h1 { margin: 0; font-size: 26px; }
+    h2 { margin: 0 0 12px; font-size: 18px; color: #93c5fd; }
+    button { border: 0; border-radius: 8px; padding: 10px 14px; color: #fff; background: #2563eb; font-weight: 700; cursor: pointer; }
+    button.stop { background: #dc2626; }
+    button.secondary { background: #334155; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+    .panel { background: #111827; border: 1px solid #263044; border-radius: 10px; padding: 16px; }
+    .wide { grid-column: span 3; }
+    .metric { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-bottom: 1px solid #1f2937; }
+    .metric:last-child { border-bottom: 0; }
+    .ok { color: #86efac; }
+    .warn { color: #fde68a; }
+    .bad { color: #fca5a5; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #030712; border-radius: 8px; padding: 12px; max-height: 320px; overflow: auto; }
+    ul { margin: 0; padding-left: 20px; }
+    li { margin: 6px 0; }
+    @media (max-width: 840px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: span 1; } header { align-items: flex-start; flex-direction: column; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>WindowsDoctor 低資源主控台</h1>
+      <div id="status">等待 Broker 回應...</div>
+    </div>
+    <div>
+      <button onclick="refreshAll()">更新</button>
+      <button class="secondary" onclick="startRepairPreview()">修復預覽</button>
+      <button class="stop" onclick="cancelWork()">中斷工作</button>
+    </div>
+  </header>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>資源</h2>
+      <div class="metric"><span>Resource</span><strong id="rs-status">-</strong></div>
+      <div class="metric"><span>Free RAM</span><strong id="rs-free">-</strong></div>
+      <div class="metric"><span>Node</span><strong id="rs-node">-</strong></div>
+      <div class="metric"><span>Total WS</span><strong id="rs-total">-</strong></div>
+      <div class="metric"><span>Max WS</span><strong id="rs-max">-</strong></div>
+    </div>
+
+    <div class="panel">
+      <h2>健康</h2>
+      <div class="metric"><span>OS</span><strong id="health-os">-</strong></div>
+      <div class="metric"><span>RAM</span><strong id="health-ram">-</strong></div>
+      <div class="metric"><span>Admin</span><strong id="health-admin">-</strong></div>
+    </div>
+
+    <div class="panel">
+      <h2>AI 研判</h2>
+      <div class="metric"><span>Risk</span><strong id="ai-risk">-</strong></div>
+      <div class="metric"><span>Findings</span><strong id="ai-findings">-</strong></div>
+      <div class="metric"><span>Safe batch</span><strong id="ai-safe">-</strong></div>
+    </div>
+
+    <div class="panel wide">
+      <h2>目前工作</h2>
+      <div class="metric"><span>Status</span><strong id="work-status">-</strong></div>
+      <div class="metric"><span>Step</span><strong id="work-step">-</strong></div>
+      <div class="metric"><span>Report</span><strong id="work-report">-</strong></div>
+      <h2>完成報告</h2>
+      <div id="work-summary">尚無完成工作。</div>
+    </div>
+
+    <div class="panel wide">
+      <h2>後續建議</h2>
+      <ul id="ai-actions"><li>尚未取得 AI 研判。</li></ul>
+    </div>
+  </section>
+</main>
+
+<script>
+const apiBase = "http://127.0.0.1:3001";
+const byId = (id) => document.getElementById(id);
+
+async function getJson(path, options) {
+  const res = await fetch(apiBase + path, options);
+  const body = await res.json();
+  if (!res.ok || body.status === "error") throw new Error(body.message || res.statusText);
+  return body.data;
+}
+
+function tone(el, status) {
+  el.className = status === "PASS" ? "ok" : status === "FAIL" ? "bad" : "warn";
+}
+
+async function refreshHealth() {
+  const data = await getJson("/api/health");
+  byId("health-os").textContent = data.OS || "-";
+  byId("health-ram").textContent = (data.RAM_Total_GB || "-") + " GB";
+  byId("health-admin").textContent = data.IsAdmin ? "Yes" : "No";
+}
+
+async function refreshAi() {
+  const data = await getJson("/api/ai/triage");
+  byId("ai-risk").textContent = data.Summary.OverallRisk;
+  byId("ai-findings").textContent = data.Summary.FindingCount;
+  byId("ai-safe").textContent = data.Summary.SafeBatchScriptCount;
+  const actions = byId("ai-actions");
+  actions.innerHTML = "";
+  data.NextActions.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    actions.appendChild(li);
+  });
+}
+
+function renderWorkSummary(summary) {
+  if (!summary) return "尚無完成工作。";
+  return `<div class="grid">
+    <div class="panel"><h2>已修復</h2><ul>${summary.repaired.map(x => `<li>${x.title} (${x.script})</li>`).join("") || "<li>無</li>"}</ul></div>
+    <div class="panel"><h2>無法自動修復</h2><ul>${summary.notRepaired.slice(0, 8).map(x => `<li>${x.title}: ${x.reason}</li>`).join("") || "<li>無</li>"}</ul></div>
+    <div class="panel"><h2>建議</h2><ul>${summary.nextSteps.map(x => `<li>${x}</li>`).join("")}</ul></div>
+  </div>`;
+}
+
+async function refreshWork() {
+  const data = await getJson("/api/work/status");
+  const item = data.active || data.last;
+  if (!item) {
+    byId("work-status").textContent = "-";
+    byId("work-step").textContent = "-";
+    byId("work-report").textContent = "-";
+    byId("work-summary").textContent = "尚無完成工作。";
+    return;
+  }
+  byId("work-status").textContent = item.status;
+  byId("work-step").textContent = item.currentStep || "-";
+  byId("work-report").textContent = item.reportPath || "-";
+  if (item.latestResource) {
+    const rs = item.latestResource;
+    byId("rs-status").textContent = rs.status || "-";
+    tone(byId("rs-status"), rs.status);
+    byId("rs-free").textContent = (rs.freeMemoryGB ?? "-") + " GB";
+    byId("rs-node").textContent = rs.windowsDoctorNodeProcessCount ?? "-";
+    byId("rs-total").textContent = (rs.windowsDoctorTotalWorkingSetMB ?? "-") + " MB";
+    byId("rs-max").textContent = (rs.windowsDoctorMaxProcessWorkingSetMB ?? "-") + " MB";
+  }
+  byId("work-summary").innerHTML = renderWorkSummary(item.result && item.result.summary);
+}
+
+async function refreshAll() {
+  byId("status").textContent = "更新中...";
+  try {
+    await Promise.all([refreshHealth(), refreshAi(), refreshWork()]);
+    byId("status").textContent = "Broker online";
+  } catch (err) {
+    byId("status").textContent = "Broker unavailable: " + err.message;
+  }
+}
+
+async function startRepairPreview() {
+  await getJson("/api/work/repair-plan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ execute: false })
+  });
+  await refreshWork();
+}
+
+async function cancelWork() {
+  await getJson("/api/work/cancel", { method: "POST" });
+  await refreshWork();
+}
+
+setInterval(refreshWork, 3000);
+refreshAll();
+</script>
+</body>
+</html>

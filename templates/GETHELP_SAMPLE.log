@@ -1,0 +1,4 @@
+Scenario: Microsoft 365 activation diagnostic
+Product: Office
+Issue: Activation failed with error 0xCAA50021
+Result: Manual review required before running scrub or account reset.
