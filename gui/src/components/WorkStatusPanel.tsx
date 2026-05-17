@@ -7,6 +7,14 @@ type WorkStatusPanelProps = {
   onCancel: () => void;
 };
 
+const diagnosticStateLabels: Record<string, string> = {
+  no_issue_detected: "未找到問題記錄",
+  evidence_found: "已找到證據",
+  manual_review_required: "需要人工判讀",
+  repair_candidate_preview_only: "只允許修復預覽",
+  blocked_by_policy: "安全政策阻擋",
+};
+
 export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: WorkStatusPanelProps) {
   const item = workStatus?.active || workStatus?.last || null;
   const latest = item?.latestResource;
@@ -111,7 +119,7 @@ export function WorkStatusPanel({ workStatus, loading, onRefresh, onCancel }: Wo
               <div key={`${finding.id}-${finding.state}`} className="rounded-md border border-white/10 bg-black/30 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-white">{finding.title}</div>
-                  <div className="text-xs text-cyan-100">{finding.state}</div>
+                  <div className="text-xs text-cyan-100">{diagnosticStateLabels[finding.state] || finding.state}</div>
                 </div>
                 <p className="mt-2 text-xs text-slate-200">{finding.userMessage}</p>
                 <p className="mt-2 text-xs text-slate-400">{finding.evidence}</p>

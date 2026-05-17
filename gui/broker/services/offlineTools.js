@@ -51,6 +51,17 @@ const COMPONENT_TOOL_MAP = {
     ],
 };
 
+const SAFE_CLI_TOOL_MAP = {
+    printer: ['handle', 'autoruns', 'sigcheck'],
+    windows_update: ['setupdiag', 'sigcheck'],
+    network: ['tcpview', 'handle'],
+    boot: ['autoruns', 'sigcheck'],
+    performance: ['handle', 'tcpview', 'sigcheck'],
+    hardware: ['sigcheck', 'autoruns'],
+    system_integrity: ['sigcheck', 'handle'],
+    general: ['setupdiag', 'sigcheck', 'tcpview', 'handle', 'autoruns'],
+};
+
 function readJson(filePath) {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
@@ -182,7 +193,13 @@ function selectToolsForComponent(component) {
     };
 }
 
+function getSafeCliToolIdsForComponent(component) {
+    const ids = SAFE_CLI_TOOL_MAP[component] || SAFE_CLI_TOOL_MAP.general;
+    return [...ids];
+}
+
 module.exports = {
     getToolPackageStatus,
     selectToolsForComponent,
+    getSafeCliToolIdsForComponent,
 };

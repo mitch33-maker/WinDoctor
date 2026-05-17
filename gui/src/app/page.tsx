@@ -283,7 +283,7 @@ export default function Home() {
     const component = issuePlan?.Classification.component || "general";
     setIssueLoading(true);
     try {
-      const statusData = await windowsDoctorApi.startOfflineDiagnosticWork({ component, execute: false });
+      const statusData = await windowsDoctorApi.startOfflineDiagnosticWork({ component, problemText, execute: false });
       setWorkStatus(statusData);
       setStatus({ tone: "info", message: "已建立離線工具序列化診斷預覽；未執行工具。" });
     } catch {

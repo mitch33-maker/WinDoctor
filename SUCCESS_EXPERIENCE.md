@@ -4,6 +4,14 @@ Last updated: `2026-05-17`
 
 本文件記錄 `WindowsDoctor` 開發過程中所累積的「高價值」成功解除阻塞或優化架構的經驗。未來若遇到類似技術需求，應優先檢索此文件。
 
+## [SUCCESS-20260517-17] 自然語言 safe CLI 診斷批次
+### 問題描述
+使用者希望只輸入要解決的 Windows 問題，系統自動選擇低風險診斷工具，但不能一次全部並行、不能造成資源失控，也不能在未授權時執行修復或清理。
+### 成功解決方案
+在 issue plan 加入 `SafeCliDiagnosticBatch`，由 `offlineTools.js` 將分類結果對應到 reviewed safe CLI 工具；`work.js` 接收 `problemText` 後自動分類並產生 `ToolId` 批次，runner 透過 `ProgressPath` 回報目前工具，工作視窗顯示繁中診斷狀態。
+### 驗證方式
+新增 `Test-OfflineDiagnosticNaturalLanguageBatch.ps1`，並以 Pester parse、runner skill validation、broker service tests、lint、preview runner、system baseline safe mode、USB validation 與 incremental patch validation 驗證；全程未執行修復、清理、GUI/Broker 或 production build。
+
 ## [SUCCESS-20260517-16] 離線診斷使用者報告分級
 ### 問題描述
 safe CLI runner 已能產生 JSON evidence，但一般使用者與 MIS 不應直接讀 raw JSON；工作視窗需要清楚顯示目前找到的是問題、證據、需人工判讀，或只是沒有找到相關記錄。

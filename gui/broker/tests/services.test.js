@@ -7,7 +7,7 @@ const { getAllowedRepairScripts, isAllowedRepairScript } = require('../services/
 const { invokeRecommendedRepairPlan } = require('../services/repairPlan');
 const { getAiAssistantTriage } = require('../services/aiAssistant');
 const { classifyIssue, buildIssuePlan } = require('../services/issuePlanner');
-const { getToolPackageStatus, selectToolsForComponent } = require('../services/offlineTools');
+const { getToolPackageStatus, selectToolsForComponent, getSafeCliToolIdsForComponent } = require('../services/offlineTools');
 const { analyzeVision, getVisionStatus } = require('../services/vision');
 const { hashToken, verifyTokenHash, roleAllows, getManagementStatus } = require('../services/admin');
 const config = require('../config');
@@ -159,6 +159,8 @@ async function testIssuePlanner() {
     assert.ok(plan.OfflineToolPlan);
     assert.strictEqual(plan.OfflineToolPlan.SafetyPolicy.NoToolExecuted, true);
     assert.ok(plan.OfflineToolPlan.SelectedTools.length >= 1);
+    assert.ok(plan.SafeCliDiagnosticBatch.ToolIds.includes('handle'));
+    assert.strictEqual(plan.SafeCliDiagnosticBatch.SafetyPolicy.SafeCliOnly, true);
     assert.ok(plan.RepairPreview.RepairPlanVersion >= 4);
 }
 
@@ -177,6 +179,8 @@ function testOfflineTools() {
     assert.strictEqual(selected.Mode, 'offline-tool-auto-selection-preview');
     assert.strictEqual(selected.SafetyPolicy.NoToolExecuted, true);
     assert.ok(selected.SelectedTools.some((item) => item.id === 'rammap'));
+    const safeCli = getSafeCliToolIdsForComponent('network');
+    assert.deepStrictEqual(safeCli, ['tcpview', 'handle']);
 }
 
 function testOfflineDiagnosticWorkReportIntegration() {
@@ -184,6 +188,9 @@ function testOfflineDiagnosticWorkReportIntegration() {
     assert.ok(source.includes('DiagnosticReport'));
     assert.ok(source.includes('diagnosticReport'));
     assert.ok(source.includes('summarizeOfflineDiagnostics'));
+    assert.ok(source.includes('problemText'));
+    assert.ok(source.includes('getSafeCliToolIdsForComponent'));
+    assert.ok(source.includes('ProgressPath'));
 }
 
 (async () => {

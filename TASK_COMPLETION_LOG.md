@@ -6,6 +6,36 @@ Last updated: `2026-05-17`
 
 <!-- New records are inserted below this line by scripts\Add-TaskCompletionRecord.ps1. -->
 
+## [20260517-161808] Natural language safe CLI diagnostic batch and progress
+- Time: `2026-05-17 16:18:08 +08:00`
+- Status: `PASS`
+- Summary: Added natural-language issue mapping to safe CLI diagnostic batches, work-window progress reporting, Traditional Chinese diagnostic state labels, USB sync, and incremental patch validation without repair or cleanup execution.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-runner-skill-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-preview-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-preview-progress-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify-natural-language-safe-cli-diagnostics-20260517.json`
+- Changed paths:
+  - `E:\WindowsDoctor\gui\broker\services\offlineTools.js`
+  - `E:\WindowsDoctor\gui\broker\services\issuePlanner.js`
+  - `E:\WindowsDoctor\gui\broker\services\work.js`
+  - `E:\WindowsDoctor\gui\broker\routes.js`
+  - `E:\WindowsDoctor\gui\src\components\ProblemSolverPanel.tsx`
+  - `E:\WindowsDoctor\gui\src\components\WorkStatusPanel.tsx`
+  - `E:\WindowsDoctor\gui\src\types\windows-doctor.ts`
+  - `E:\WindowsDoctor\scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `E:\WindowsDoctor\scripts\Test-OfflineDiagnosticNaturalLanguageBatch.ps1`
+  - `E:\WindowsDoctor\skills\windowsdoctor-offline-diagnostic-runner\SKILL.md`
+  - `E:\WindowsDoctor\TASK_HANDOFF.md`
+  - `E:\WindowsDoctor\NEXT_CHAT_PROMPT.md`
+  - `E:\WindowsDoctor\SUCCESS_EXPERIENCE.md`
+- Next actions:
+  - Mount or confirm F: USB package path before the next USB sync if the drive letter changed.
+
+
 ## [20260517-160239] Offline diagnostic user report and work window integration
 - Time: `2026-05-17 16:02:39 +08:00`
 - Status: `PASS`

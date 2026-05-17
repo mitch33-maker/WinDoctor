@@ -5,7 +5,7 @@ const config = require('../config');
 const { loadKbRules } = require('./kb');
 const { invokeRecommendedRepairPlan } = require('./repairPlan');
 const { getAiAssistantTriage } = require('./aiAssistant');
-const { selectToolsForComponent } = require('./offlineTools');
+const { selectToolsForComponent, getSafeCliToolIdsForComponent } = require('./offlineTools');
 
 const COMPONENTS = [
     {
@@ -211,6 +211,7 @@ async function buildIssuePlan(problemText) {
     const relevantRules = findRelevantRules(userProblem, classification.component);
     const repairOutcome = summarizeRepairOutcome(repairPlan);
     const offlineToolPlan = selectToolsForComponent(classification.component);
+    const safeCliToolIds = getSafeCliToolIdsForComponent(classification.component);
     const canAutoExecute = repairOutcome.autoRepairReady.length > 0;
 
     const nextActions = [
@@ -239,6 +240,17 @@ async function buildIssuePlan(problemText) {
         RelevantRules: relevantRules,
         SpecializedDiagnostics: specializedDiagnostics,
         OfflineToolPlan: offlineToolPlan,
+        SafeCliDiagnosticBatch: {
+            ToolIds: safeCliToolIds,
+            ExecutionModel: 'sequential-run-gated',
+            PreviewCommandHint: `Invoke-OfflineDiagnosticTools.ps1 -ToolId ${safeCliToolIds.join(',')} -Json`,
+            SafetyPolicy: {
+                SafeCliOnly: true,
+                RunGateRequired: true,
+                NoRepairExecuted: true,
+                NoCleanupExecuted: true,
+            },
+        },
         AiTriageSummary: triage.Summary,
         RepairPreview: {
             RepairPlanVersion: repairPlan.RepairPlanVersion,

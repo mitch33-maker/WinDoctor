@@ -7,6 +7,7 @@ param(
     [int]$MaxOutputKB = 1024,
     [switch]$Execute,
     [string]$ConfirmToken = "",
+    [string]$ProgressPath = "",
     [string]$ReportPath = "",
     [switch]$Json
 )
@@ -60,6 +61,29 @@ function Expand-ToolIdArgument {
         }
     }
     return @($items)
+}
+
+function Write-ProgressState {
+    param(
+        [string]$Path,
+        [string]$CurrentToolId,
+        [int]$CompletedCount,
+        [int]$ToolCount,
+        [string]$Status
+    )
+    if (-not $Path) { return }
+    $progress = [PSCustomObject]@{
+        Status = $Status
+        CurrentToolId = $CurrentToolId
+        CompletedCount = $CompletedCount
+        ToolCount = $ToolCount
+        UpdatedAt = (Get-Date).ToString("o")
+    }
+    $progressParent = Split-Path -Parent $Path
+    if ($progressParent -and -not (Test-Path -LiteralPath $progressParent)) {
+        New-Item -Path $progressParent -ItemType Directory -Force | Out-Null
+    }
+    [System.IO.File]::WriteAllText($Path, ($progress | ConvertTo-Json -Depth 5), [System.Text.UTF8Encoding]::new($false))
 }
 
 function New-CommandPreview {
@@ -287,6 +311,8 @@ foreach ($id in $selectedIds) {
 }
 
 $executed = New-Object System.Collections.Generic.List[object]
+$initialProgressStatus = if ($Execute) { "READY" } else { "PREVIEW" }
+Write-ProgressState -Path $ProgressPath -CurrentToolId "" -CompletedCount 0 -ToolCount $planned.Count -Status $initialProgressStatus
 if ($Execute) {
     if (-not (Test-Path -LiteralPath $resolvedOutputRoot)) {
         New-Item -Path $resolvedOutputRoot -ItemType Directory -Force | Out-Null
@@ -294,6 +320,7 @@ if ($Execute) {
     for ($i = 0; $i -lt $planned.Count; $i++) {
         $item = $planned[$i]
         if ($item.Status -ne "READY_TO_RUN") { continue }
+        Write-ProgressState -Path $ProgressPath -CurrentToolId $item.Id -CompletedCount $executed.Count -ToolCount $planned.Count -Status "RUNNING"
         $pre = Invoke-ResourceSafety -RootPath $resolvedRoot
         if ($pre.Status -ne "PASS") {
             $executed.Add([PSCustomObject]@{ Id = $item.Id; Status = "SKIPPED_RESOURCE_SAFETY"; Detail = "Pre-tool resource safety failed" }) | Out-Null
@@ -309,7 +336,13 @@ if ($Execute) {
             PreResourceStatus = $pre.Status
             PostResourceStatus = $post.Status
         }) | Out-Null
+        Write-ProgressState -Path $ProgressPath -CurrentToolId $item.Id -CompletedCount $executed.Count -ToolCount $planned.Count -Status $result.Status
         if ($post.Status -ne "PASS") { break }
+    }
+}
+else {
+    for ($i = 0; $i -lt $planned.Count; $i++) {
+        Write-ProgressState -Path $ProgressPath -CurrentToolId $planned[$i].Id -CompletedCount $i -ToolCount $planned.Count -Status "PREVIEW"
     }
 }
 
@@ -375,6 +408,7 @@ $resultObject = [PSCustomObject]@{
         MaxOutputKB = $MaxOutputKB
     }
     ReportPath = $ReportPath
+    ProgressPath = $ProgressPath
 }
 
 $resultJson = $resultObject | ConvertTo-Json -Depth 12

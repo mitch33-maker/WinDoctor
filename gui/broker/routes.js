@@ -113,7 +113,7 @@ function registerRoutes(app) {
     });
 
     app.post('/api/work/offline-diagnostics', (req, res) => {
-        try { ok(res, startOfflineDiagnosticWork({ component: req.body.component || 'general', execute: !!req.body.execute, confirmToken: req.body.confirmToken || '' })); }
+        try { ok(res, startOfflineDiagnosticWork({ component: req.body.component || 'general', problemText: req.body.problemText || req.body.problem || '', toolId: req.body.toolId || '', execute: !!req.body.execute, confirmToken: req.body.confirmToken || '' })); }
         catch (err) { fail(res, err.status || 500, err.status === 409 ? 'WORK_ALREADY_RUNNING' : err.status === 400 ? 'RUN_CONFIRMATION_REQUIRED' : 'OFFLINE_DIAGNOSTIC_WORK_FAILED', err.message); }
     });
 

@@ -8,6 +8,7 @@ description: Use when extending, validating, or packaging WindowsDoctor offline 
 Use this skill in `E:\WindowsDoctor` when the task involves:
 - offline Microsoft diagnostic tool packaging or validation.
 - automatic tool selection from a user problem category.
+- natural-language problem text mapping into a safe CLI diagnostic batch.
 - `Invoke-OfflineDiagnosticTools.ps1`.
 - `Convert-OfflineDiagnosticToolOutput.ps1`.
 - `New-OfflineDiagnosticUserReport.ps1`.
@@ -65,6 +66,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File E:\WindowsDoctor\scrip
 The runner must:
 - select tools by component.
 - accept comma-separated `-ToolId` batches.
+- write progress to `ProgressPath` so the work window can show the current tool.
 - validate package SHA-256 before use.
 - run tools sequentially.
 - run Resource Safety before and after each tool.

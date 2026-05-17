@@ -1,3 +1,37 @@
+# 2026-05-17 Natural Language Safe CLI Diagnostic Batch
+
+- Continued the unattended follow-up plan without new repair authorization.
+- Added:
+  - natural-language issue classification to safe CLI diagnostic batch mapping.
+  - `SafeCliDiagnosticBatch` in issue plans.
+  - work-window progress file support via `ProgressPath` and `CurrentToolId`.
+  - Traditional Chinese diagnostic state labels in the work window.
+  - `scripts\Test-OfflineDiagnosticNaturalLanguageBatch.ps1`.
+- Safe CLI batch mapping:
+  - printer: `handle`, `autoruns`, `sigcheck`
+  - windows_update: `setupdiag`, `sigcheck`
+  - network: `tcpview`, `handle`
+  - performance: `handle`, `tcpview`, `sigcheck`
+  - general: `setupdiag`, `sigcheck`, `tcpview`, `handle`, `autoruns`
+- USB sync:
+  - User said current USB is F: drive, but F: was not mounted.
+  - Existing GUI-ready package was found and synced on `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3`.
+- Evidence:
+  - `E:\WindowsDoctor\logs\offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-preview-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\offline-diagnostic-preview-progress-20260517.json`
+  - `E:\WindowsDoctor\logs\system-baseline.offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\gui-ready-sync-offline-diagnostic-natural-language-batch-20260517.json`
+  - `E:\WindowsDoctor\logs\incremental-patch-verify-natural-language-safe-cli-diagnostics-20260517.json`
+- Incremental patch:
+  - `E:\WindowsDoctor\releases\portable-usb\incremental-patches\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3-IncrementalPatch-20260517-NaturalLanguageSafeCliDiagnostics.zip`
+- Safety:
+  - no repair executed.
+  - no cleanup executed.
+  - no GUI/Broker startup.
+  - no production build.
+  - preview runner did not execute external diagnostic tools.
+
 # 2026-05-17 Offline Diagnostic User Report And Work Window
 
 - Continued the post-safe-CLI plan without new repair authorization.

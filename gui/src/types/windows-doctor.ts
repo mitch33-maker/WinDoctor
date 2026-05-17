@@ -212,6 +212,7 @@ export type OfflineDiagnosticRun = {
     SequentialExecution: boolean;
     RunGateRequired: boolean;
   };
+  ProgressPath?: string;
 };
 
 export type OfflineDiagnosticUserReport = {
@@ -405,6 +406,17 @@ export type IssuePlan = {
     Checks: Array<{ Name: string; Status: string; Detail: string; Data?: unknown }>;
   };
   OfflineToolPlan?: OfflineToolPlan;
+  SafeCliDiagnosticBatch?: {
+    ToolIds: string[];
+    ExecutionModel: string;
+    PreviewCommandHint: string;
+    SafetyPolicy: {
+      SafeCliOnly: boolean;
+      RunGateRequired: boolean;
+      NoRepairExecuted: boolean;
+      NoCleanupExecuted: boolean;
+    };
+  };
   AiTriageSummary: AiTriageResult["Summary"];
   RepairPreview: {
     RepairPlanVersion: number;

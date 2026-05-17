@@ -56,6 +56,7 @@ Add-Check -Checks $checks -Name "runner-requires-run" -Passed ($runner -match 'C
 Add-Check -Checks $checks -Name "runner-resource-gated" -Passed ($runner -match 'Invoke-ResourceSafety' -and $runner -match 'Sequential') -Detail $runnerPath
 Add-Check -Checks $checks -Name "runner-safe-cli-tools" -Passed ($runner -match 'Get-SafeCliSpec' -and $runner -match 'sigcheck64\.exe' -and $runner -match 'tcpvcon64\.exe' -and $runner -match 'autorunsc64\.exe' -and $runner -match 'handle64\.exe') -Detail $runnerPath
 Add-Check -Checks $checks -Name "runner-output-limits" -Passed ($runner -match 'MaxOutputKB' -and $runner -match 'Limit-TextFile') -Detail $runnerPath
+Add-Check -Checks $checks -Name "runner-progress-path" -Passed ($runner -match 'ProgressPath' -and $runner -match 'Write-ProgressState') -Detail $runnerPath
 Add-Check -Checks $checks -Name "runner-batch-toolid" -Passed ($runner -match 'Expand-ToolIdArgument' -and $runner -match '\$item -split ","') -Detail $runnerPath
 Add-Check -Checks $checks -Name "converter-external-pack" -Passed ($converter -match 'ExternalPackPath' -and $converter -match 'repairAllowed = \$false' -and $converter -match 'actionType = "manual_review"') -Detail $converterPath
 Add-Check -Checks $checks -Name "converter-tool-parsers" -Passed ($converter -match 'setupdiag' -and $converter -match 'sigcheck' -and $converter -match 'tcpview' -and $converter -match 'handle' -and $converter -match 'autoruns') -Detail $converterPath

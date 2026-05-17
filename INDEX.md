@@ -77,6 +77,7 @@ Last updated: `2026-05-17`
 | `scripts\Save-OfflineRepairTools.ps1` | 下載 Microsoft 官方離線診斷工具、驗證 SHA-256/簽章並封裝 |
 | `scripts\Test-OfflineToolAutomation.ps1` | 驗證離線介面可自動選用診斷工具、顯示命令預覽，且不安裝、不執行、不改 allowlist |
 | `scripts\Test-OfflineDiagnosticRunnerSkill.ps1` | 驗證離線診斷 runner skill、parser、RUN gate、USB 同步清單與安全限制 |
+| `scripts\Test-OfflineDiagnosticNaturalLanguageBatch.ps1` | 驗證自然語言問題可對應 safe CLI 診斷批次、工作視窗進度與繁中報告狀態 |
 | `scripts\Invoke-OfflineDiagnosticTools.ps1` | RUN-gated 離線診斷工具序列化 runner；預設只產生 preview |
 | `scripts\Convert-OfflineDiagnosticToolOutput.ps1` | 將離線診斷工具輸出轉成 WindowsDoctor JSON 證據，不執行修復 |
 | `scripts\New-OfflineDiagnosticUserReport.ps1` | 將離線診斷 evidence 轉成使用者/MIS 可讀的分級報告 |

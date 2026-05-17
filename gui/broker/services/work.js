@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path');
+const fs = require('fs');
 const { spawn } = require('child_process');
 const config = require('../config');
-const { buildIssuePlan } = require('./issuePlanner');
+const { buildIssuePlan, classifyIssue } = require('./issuePlanner');
+const { getSafeCliToolIdsForComponent } = require('./offlineTools');
 
 let activeWork = null;
 let lastWork = null;
@@ -313,7 +315,16 @@ function startIssueDiagnosticWork({ problemText = '' } = {}) {
     return getWorkStatus();
 }
 
-function startOfflineDiagnosticWork({ component = 'general', execute = false, confirmToken = '' } = {}) {
+function readProgressFile(progressPath) {
+    try {
+        if (!progressPath || !fs.existsSync(progressPath)) return null;
+        return JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+    } catch {
+        return null;
+    }
+}
+
+function startOfflineDiagnosticWork({ component = 'general', problemText = '', toolId = '', execute = false, confirmToken = '' } = {}) {
     if (activeWork && activeWork.status === 'running') {
         const err = new Error('Another WindowsDoctor work item is already running');
         err.status = 409;
@@ -326,8 +337,12 @@ function startOfflineDiagnosticWork({ component = 'general', execute = false, co
     }
 
     const id = `work-${Date.now()}`;
+    const classification = String(problemText || '').trim() ? classifyIssue(problemText) : { component: component || 'general' };
+    const selectedComponent = classification.component || component || 'general';
+    const safeToolIds = toolId || getSafeCliToolIdsForComponent(selectedComponent).join(',');
     const scriptPath = path.join(config.scriptsDir, 'Invoke-OfflineDiagnosticTools.ps1');
     const reportPath = path.join(config.rootDir, 'logs', execute ? 'gui-work-offline-diagnostics-execute.latest.json' : 'gui-work-offline-diagnostics-preview.latest.json');
+    const progressPath = path.join(config.rootDir, 'logs', 'gui-work-offline-diagnostics-progress.latest.json');
     const args = [
         '-NoProfile',
         '-ExecutionPolicy',
@@ -337,7 +352,11 @@ function startOfflineDiagnosticWork({ component = 'general', execute = false, co
         '-Root',
         config.rootDir,
         '-Component',
-        component || 'general',
+        selectedComponent,
+        '-ToolId',
+        safeToolIds,
+        '-ProgressPath',
+        progressPath,
         '-ReportPath',
         reportPath,
         '-Json',
@@ -353,6 +372,7 @@ function startOfflineDiagnosticWork({ component = 'general', execute = false, co
         currentStep: execute ? 'Running offline diagnostic tools sequentially' : 'Building offline diagnostic tool preview',
         canCancel: true,
         reportPath,
+        progressPath,
         resourceSamples: [],
         result: null,
         error: null,
@@ -379,6 +399,10 @@ function startOfflineDiagnosticWork({ component = 'general', execute = false, co
     const sample = async () => {
         if (!activeWork || activeWork.id !== id) return;
         const snapshot = await readResourceSnapshot(config.rootDir);
+        const progress = readProgressFile(progressPath);
+        if (progress && progress.CurrentToolId) {
+            work.currentStep = `${execute ? 'Running' : 'Previewing'} ${progress.CurrentToolId} (${progress.CompletedCount || 0}/${progress.ToolCount || '?'})`;
+        }
         work.resourceSamples.push(snapshot);
         if (work.resourceSamples.length > 30) work.resourceSamples.shift();
         work.updatedAt = nowIso();

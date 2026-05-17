@@ -108,6 +108,17 @@ export function ProblemSolverPanel({ problemText, loading, plan, workStatus, onT
               </div>
             </div>
           )}
+          {displayPlan.SafeCliDiagnosticBatch && (
+            <div className="md:col-span-3 rounded-md border border-cyan-500/20 bg-cyan-950/10 p-3">
+              <div className="text-sm font-medium text-white">Safe CLI 診斷批次</div>
+              <div className="mt-1 text-xs text-cyan-100">
+                {displayPlan.SafeCliDiagnosticBatch.ExecutionModel} · {displayPlan.SafeCliDiagnosticBatch.ToolIds.join(", ")}
+              </div>
+              <code className="mt-2 block break-all rounded border border-white/10 bg-black/40 p-2 text-xs text-slate-200">
+                {displayPlan.SafeCliDiagnosticBatch.PreviewCommandHint}
+              </code>
+            </div>
+          )}
           <div className="md:col-span-3 rounded-md border border-white/10 bg-black/30 p-3">
             <div className="text-sm font-medium text-white">{displayPlan.UserReport.Summary}</div>
             <ul className="mt-2 list-disc pl-5 text-sm text-slate-300">

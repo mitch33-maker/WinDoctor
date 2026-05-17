@@ -1,5 +1,40 @@
 請在 `E:\WindowsDoctor` 繼續 WindowsDoctor 系統開發工作。
 
+最新狀態 `2026-05-17 natural-language-safe-cli-diagnostic-batch`：
+- 已完成自然語言問題到 safe CLI 診斷批次的 preview-first 接線。
+- 新增/更新：
+  - `gui\broker\services\offlineTools.js`
+  - `gui\broker\services\issuePlanner.js`
+  - `gui\broker\services\work.js`
+  - `gui\broker\routes.js`
+  - `gui\src\app\page.tsx`
+  - `gui\src\lib\windowsDoctorApi.ts`
+  - `gui\src\components\ProblemSolverPanel.tsx`
+  - `gui\src\components\WorkStatusPanel.tsx`
+  - `gui\src\types\windows-doctor.ts`
+  - `scripts\Invoke-OfflineDiagnosticTools.ps1`
+  - `scripts\Test-OfflineDiagnosticNaturalLanguageBatch.ps1`
+- 功能：
+  - issue plan 會輸出 `SafeCliDiagnosticBatch`。
+  - work runner 可接收 `problemText`，自動分類後轉成 safe CLI `ToolId` 批次。
+  - runner 支援 `ProgressPath`，工作視窗可顯示目前 tool 與完成數。
+  - 診斷報告 state 顯示繁中對照。
+- 驗證：
+  - Resource Safety PASS。
+  - Pester parse PASS。
+  - `Test-OfflineDiagnosticNaturalLanguageBatch.ps1` PASS。
+  - `Test-OfflineDiagnosticRunnerSkill.ps1` PASS。
+  - broker service tests PASS。
+  - lint PASS。
+  - preview runner PASS，未執行外部工具。
+  - system baseline safe mode PASS。
+  - USB sync to `G:\WindowsDoctor-PortableUSB-GUI-READY-20260508-OneClickV3` PASS。
+  - USB natural-language batch validation PASS。
+  - incremental patch validation PASS。
+- 注意：
+  - 使用者表示 USB 是 F 槽，但本輪 F 槽未掛載；實際可用 package 在 G 槽。
+  - 未執行修復、清理、production build、GUI/Broker。
+
 最新狀態 `2026-05-17 offline-diagnostic-user-report-work-window`：
 - 已新增 safe CLI 診斷報告產生器：
   - `scripts\New-OfflineDiagnosticUserReport.ps1`
